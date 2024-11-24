@@ -3,7 +3,7 @@ import { cva, cx } from 'cva.config';
 import { PropsWithChildren } from 'react';
 
 export const buttonVariants = cva({
-    base: 'px-4 py-3 rounded-md text-white',
+    base: 'px-4 py-2.5 rounded-md text-white',
     variants: {
         variant: {
             primary: 'bg-primary-500 hover:bg-primary-600',

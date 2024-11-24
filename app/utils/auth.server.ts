@@ -11,7 +11,7 @@ const sessionSecret = getEnvVariable('SESSION_SECRET');
 
 const storage = createCookieSessionStorage({
     cookie: {
-        name: 'tws-boilerplate',
+        name: 'tws-ai',
         secure: process.env.NODE_ENV === 'production',
         secrets: [sessionSecret],
         sameSite: 'lax',
