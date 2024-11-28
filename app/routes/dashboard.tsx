@@ -11,21 +11,24 @@ import { HorizontalRule } from "~/components/HorizontalRule";
 import { Paths } from "~/utils/paths";
 import { Route } from "./+types/dashboard";
 import { Banner } from "~/components/Banner";
+import { FileQuestion } from "lucide-react";
+import { Button } from "~/components/Button";
 
 export async function loader({ request }: Route.LoaderArgs) {
     const userId = await getUserId(request);
     invariant(userId, "User ID is not defined");
 
     const assistantsResponse = await getUsersAssistants(userId);
-    const assistants = assistantsResponse.map(({ id, name }) => ({
-        id,
-        name,
-    }));
+    const assistants = assistantsResponse.map(
+        ({ id, name, description, instructions }) => ({
+            description,
+            id,
+            instructions,
+            name,
+        }),
+    );
 
-    const threadsResponse = await getThreadsByUserId(userId);
-    const threads = threadsResponse.map(({ id }) => ({
-        id,
-    }));
+    const threads = await getThreadsByUserId(userId);
 
     return {
         assistants,
@@ -41,22 +44,27 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
             <div className="px-4">
                 <div className="mb-4 flex gap-4">
                     <Heading>Assistants</Heading>
-                    <ButtonLink variant="outline" to={Paths.ASSISTANT_CREATE}>
+                    <ButtonLink variant="outline" to={Paths.CREATE_ASSISTANT}>
                         Create assistant
                     </ButtonLink>
                 </div>
                 <div className="flex flex-wrap gap-4">
                     {assistants && assistants.length > 0 ? (
-                        assistants.map((assistant) => (
-                            <Card
-                                key={assistant.id}
-                                className="min-w-[200px] basis-1/4"
-                            >
-                                {assistant.name}
-                            </Card>
-                        ))
+                        assistants.map(
+                            ({ id, name, description, instructions }) => (
+                                <Card
+                                    key={id}
+                                    className="min-w-[200px] basis-1/4"
+                                >
+                                    <Heading as="h4">{name}</Heading>
+                                    {description && <p>{description}</p>}
+                                    <p>{instructions}</p>
+                                </Card>
+                            ),
+                        )
                     ) : (
                         <Banner
+                            icon={<FileQuestion className="h-6 w-6" />}
                             className="min-w-[200px] basis-1/4"
                             variant="warning"
                         >
@@ -67,7 +75,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                 <HorizontalRule space="lg" />
                 <div className="mb-4 flex gap-4">
                     <Heading>Threads</Heading>
-                    <ButtonLink variant="outline" to={Paths.THREAD_CREATE}>
+                    <ButtonLink variant="outline" to={Paths.CREATE_THREAD}>
                         Create thread
                     </ButtonLink>
                 </div>
@@ -78,11 +86,19 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                 key={thread.id}
                                 className="min-w-[200px] basis-1/4"
                             >
-                                {thread.id}
+                                <Heading as="h4">
+                                    {thread.name ?? "Untitled"}
+                                </Heading>
+                                <ButtonLink
+                                    to={`/dashboard/${thread.assistant.oId}/${thread.id}`}
+                                >
+                                    Open chat
+                                </ButtonLink>
                             </Card>
                         ))
                     ) : (
                         <Banner
+                            icon={<FileQuestion className="h-6 w-6" />}
                             className="min-w-[200px] basis-1/4"
                             variant="warning"
                         >

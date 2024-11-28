@@ -20,11 +20,11 @@ interface DrawerProps {
 }
 
 const drawerVariants = cva({
-    base: `fixed z-50 transition-transform bg-white dark:bg-zinc-900 border-r dark:border-r-zinc-800 border dark:border-zinc-800`,
+    base: `fixed z-50 transition-transform bg-white dark:bg-zinc-900`,
     variants: {
         position: {
-            left: `top-0 left-0 h-screen -translate-x-full rounded-tr-xl rounded-br-xl`,
-            right: `top-0 right-0 h-screen translate-x-full rounded-tl-xl rounded-bl-xl`,
+            left: `border-r border-r-zinc-300 dark:border-r-zinc-600 top-0 left-0 h-screen -translate-x-full rounded-tr-xl rounded-br-xl`,
+            right: `border-l border-l-zinc-300 dark:border-l-zinc-600 top-0 right-0 h-screen translate-x-full rounded-tl-xl rounded-bl-xl`,
             bottom: `w-full bottom-0 translate-y-full rounded-tl-xl rounded-tr-xl`,
         },
         isOpen: {
@@ -77,11 +77,11 @@ export function Drawer({
 }: PropsWithChildren<DrawerProps>) {
     const orientedIcon =
         position === "bottom" ? (
-            <PanelBottomCloseIcon className="fill-zinc-500 dark:fill-zinc-200" />
+            <PanelBottomCloseIcon className="stroke-zinc-500 dark:stroke-zinc-200" />
         ) : position === "left" ? (
-            <PanelLeftCloseIcon className="fill-zinc-500 dark:fill-zinc-200" />
+            <PanelLeftCloseIcon className="stroke-zinc-500 dark:stroke-zinc-200" />
         ) : position === "right" ? (
-            <PanelRightCloseIcon className="fill-zinc-500 dark:fill-zinc-200" />
+            <PanelRightCloseIcon className="stroke-zinc-500 dark:stroke-zinc-200" />
         ) : null;
 
     return (
@@ -96,7 +96,7 @@ export function Drawer({
                 aria-labelledby={`${id}-label`}
             >
                 <div className="flex h-full flex-col">
-                    <div className="border-b border-zinc-400 p-4 dark:border-zinc-800">
+                    <div className="border-b border-b-zinc-400 p-4 dark:border-b-zinc-600">
                         <Button variant="icon" onClick={handleClose}>
                             {orientedIcon}
                         </Button>

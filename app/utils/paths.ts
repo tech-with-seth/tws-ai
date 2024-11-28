@@ -1,19 +1,60 @@
 export enum Paths {
-    API = "/api",
-    ASSISTANTS = "/assistants",
-    API_ASSISTANTS = "/api/assistants",
     BASE = "/",
+    API = "/api",
     DASHBOARD = "/dashboard",
     FILES = "/files",
     JOIN = "/join",
     LOGIN = "/login",
     LOGOUT = "/logout",
-    THREADS = "/threads",
-    THREAD_CREATE = "/dashboard/create-thread",
-    ASSISTANT_CREATE = "/dashboard/create-assistant",
+    // ASSISTANT ==========
+    ASSISTANTS = "assistants",
+    CREATE_ASSISTANT = "create-assistant",
+    API_ASSISTANTS = "/api/assistants",
+    // THREAD ==========
+    THREADS = "threads",
+    CREATE_THREAD = "create-thread",
+    API_THREADS = "/api/threads",
+    // STREAM ==========
+    STREAM = "/stream",
+}
+
+// ASSISTANTS ==========
+export function getAssistantPath(assistantId: string) {
+    return `${Paths.ASSISTANTS}/${assistantId}`;
+}
+
+export function getAssistantFilesPath(assistantId: string) {
+    return `${Paths.API}${Paths.ASSISTANTS}/${assistantId}${Paths.FILES}`;
+}
+
+export function getAssistantAPIPath(assistantId: string) {
+    return `${Paths.API}${Paths.ASSISTANTS}/${assistantId}`;
 }
 
 // AUTH ==========
 export function getLoginPath(searchParams: string) {
     return `${Paths.LOGIN}?${searchParams}`;
+}
+
+// CHAT ==========
+export function getChatPath(assistantId: string, threadId: string) {
+    return `${Paths.DASHBOARD}/${assistantId}/${threadId}`;
+}
+
+export function getThreadStream(assistantId: string, threadId: string) {
+    return `${Paths.API}/stream/${assistantId}/${threadId}`;
+}
+
+// FILES ==========
+export function getFilePath(fileId: string) {
+    return `${Paths.FILES}/${fileId}`;
+}
+
+export function getFileCreatePath(assistantId: string) {
+    return `${Paths.DASHBOARD}/${assistantId}/files/create`;
+}
+
+// THREADS ==========
+export function deleteThreadPath(threadId: string) {
+    return `${Paths.API}${Paths.THREADS}/${threadId}`;
 }

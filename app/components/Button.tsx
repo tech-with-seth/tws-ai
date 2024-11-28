@@ -6,9 +6,10 @@ export const buttonVariants = cva({
     base: "rounded-xl text-white",
     variants: {
         variant: {
-            primary: "bg-primary-500 hover:bg-primary-600",
+            primary:
+                "border border-primary-700 dark:border-primary-300 bg-primary-500 dark:bg-primary-700 dark:hover:bg-primary-600 hover:bg-primary-600",
             secondary: "bg-gray-500 hover:bg-gray-600",
-            icon: "rounded-xl border border-zinc-300 dark:border-zinc-800",
+            icon: "rounded-xl border border-zinc-300 dark:border-zinc-600",
             ghost: "bg-transparent",
             outline:
                 "border border-primary-500 text-primary-500 bg-transparent dark:hover:bg-zinc-800/50",

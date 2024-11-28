@@ -15,8 +15,14 @@ export default [
     ]),
     layout("./routes/restricted.tsx", [
         route(Paths.DASHBOARD, "routes/dashboard.tsx", [
-            route(Paths.ASSISTANT_CREATE, "routes/create-assistant.tsx"),
+            route(Paths.CREATE_ASSISTANT, "routes/create-assistant.tsx"),
+            route(Paths.CREATE_THREAD, "routes/create-thread.tsx"),
+            route(":assistantId/:threadId", "routes/chat.tsx"),
         ]),
     ]),
-    ...prefix(Paths.API, [route(Paths.ASSISTANTS, "routes/api/assistants.ts")]),
+    ...prefix(Paths.API, [
+        route(Paths.ASSISTANTS, "routes/api/assistants.ts"),
+        route(Paths.THREADS, "routes/api/threads.ts"),
+        route(`${Paths.STREAM}/:assistantId/:threadId`, "routes/api/stream.ts"),
+    ]),
 ] satisfies RouteConfig;

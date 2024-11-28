@@ -3,7 +3,7 @@ import { cva, cx } from "cva.config";
 import { PropsWithChildren } from "react";
 
 export const bannerVariants = cva({
-    base: "p-4 border rounded-xl",
+    base: "flex items-center gap-4 p-4 border rounded-xl",
     variants: {
         variant: {
             primary:
@@ -20,16 +20,20 @@ export const bannerVariants = cva({
 
 interface BannerProps
     extends React.HTMLAttributes<HTMLDivElement>,
-        VariantProps<typeof bannerVariants> {}
+        VariantProps<typeof bannerVariants> {
+    icon?: React.ReactNode;
+}
 
 export function Banner({
     children,
     className,
+    icon,
     variant,
 }: PropsWithChildren<BannerProps>) {
     return (
         <div className={cx(bannerVariants({ variant }), className)}>
-            {children}
+            {icon && <div>{icon}</div>}
+            <div>{children}</div>
         </div>
     );
 }

@@ -4,12 +4,12 @@ import {
     MessageListParams,
     MessagesPage,
 } from "openai/resources/beta/threads/messages.mjs";
-import { prisma } from "~/db.server";
 
+import { prisma } from "~/db.server";
 import { ai } from "~/open-ai";
 import { kebab } from "~/utils/string";
 
-export async function getThreadsByUserId(userId: string) {
+export async function getThreadsByUserId(userId: string): Promise<any[]> {
     const threads = await prisma.thread.findMany({
         where: {
             userId,
@@ -19,9 +19,24 @@ export async function getThreadsByUserId(userId: string) {
         },
     });
 
-    return Promise.all(
+    const userThreads = await Promise.all(
         threads.map((thread) => ai.beta.threads.retrieve(thread.oId)),
     );
+
+    return new Promise((resolve) => {
+        const mapped = userThreads.map((thread) => {
+            const prismaThread = threads.find((t) => t.oId === thread.id);
+
+            return {
+                ...thread,
+                name: prismaThread?.name,
+                slug: prismaThread?.slug,
+                assistant: prismaThread?.assistant,
+            };
+        });
+
+        resolve(mapped);
+    });
 }
 
 export async function getPrismaThreadsByUserId(userId: string) {
