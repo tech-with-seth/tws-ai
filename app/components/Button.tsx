@@ -3,16 +3,24 @@ import { cva, cx } from 'cva.config';
 import { PropsWithChildren } from 'react';
 
 export const buttonVariants = cva({
-    base: 'px-4 py-2.5 rounded-md text-white',
+    base: 'rounded-md text-white',
     variants: {
         variant: {
             primary: 'bg-primary-500 hover:bg-primary-600',
-            secondary: 'bg-gray-500 hover:bg-gray-600'
+            secondary: 'bg-gray-500 hover:bg-gray-600',
+            icon: 'p-2 rounded-xl',
+            ghost: 'bg-transparent',
+            outline:
+                'border border-primary-500 text-primary-500 bg-transparent dark:hover:bg-zinc-700/50'
         },
-        size: {}
+        size: {
+            md: 'px-3 py-1.5',
+            lg: 'px-6 py-3 text-xl'
+        }
     },
     defaultVariants: {
-        variant: 'primary'
+        variant: 'primary',
+        size: 'md'
     },
     compoundVariants: []
 });
@@ -28,7 +36,7 @@ export function Button({
     className,
     variant,
     size,
-    type
+    ...rest
 }: PropsWithChildren<ButtonProps>) {
     return (
         <button
@@ -39,7 +47,7 @@ export function Button({
                 }),
                 className
             )}
-            type={type}
+            {...rest}
         >
             {children}
         </button>

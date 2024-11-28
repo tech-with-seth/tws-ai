@@ -3,19 +3,23 @@ import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
-async function seed() {
-    const email = 'seth@mail.com';
+async function getOrCreateUser(email: string) {
+    const user = await prisma.user.findUnique({
+        where: {
+            email
+        }
+    });
 
-    await prisma.user.deleteMany({}).catch(() => {});
+    if (user) {
+        return user;
+    }
 
-    const hashedPassword = await bcrypt.hash('asdfasdfasdf', 10);
-
-    await prisma.user.create({
+    const created = await prisma.user.create({
         data: {
             email,
             password: {
                 create: {
-                    hash: hashedPassword
+                    hash: await bcrypt.hash('asdfasdfasdf', 10)
                 }
             },
             profile: {
@@ -27,14 +31,18 @@ async function seed() {
         }
     });
 
-    console.log(`Database has been seeded. 🌱`);
+    return created;
 }
 
-seed()
-    .catch((e) => {
-        console.error(e);
-        process.exit(1);
-    })
-    .finally(async () => {
-        await prisma.$disconnect();
-    });
+async function seed() {
+    await getOrCreateUser('seth@mail.com');
+}
+
+try {
+    await seed();
+} catch (error) {
+    console.error(error);
+    process.exit(1);
+} finally {
+    await prisma.$disconnect();
+}

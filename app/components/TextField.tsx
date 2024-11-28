@@ -14,6 +14,8 @@ export const textFieldVariants = cva({
     compoundVariants: []
 });
 
-export default function TextField({ type }: TextFieldProps) {
-    return <input className={cx(textFieldVariants({}))} type={type} />;
+export default function TextField({ type, ...rest }: TextFieldProps) {
+    return (
+        <input className={cx(textFieldVariants({}))} type={type} {...rest} />
+    );
 }

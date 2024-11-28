@@ -19,6 +19,7 @@ export function ButtonLink({
         <Link
             to={to}
             className={cx(
+                'inline-block',
                 buttonVariants({
                     variant,
                     size,

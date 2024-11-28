@@ -72,12 +72,18 @@ export function updatePrismaAssistant(id: string, name: string) {
     });
 }
 
-export function getUsersAssistants(userId: string) {
-    return prisma.assistant.findMany({
+export async function getUsersAssistants(userId: string) {
+    const assistants = await prisma.assistant.findMany({
         where: {
             userId
         }
     });
+
+    return Promise.all(
+        assistants.map((assistant) =>
+            ai.beta.assistants.retrieve(assistant.oId)
+        )
+    );
 }
 
 export function getAssistants() {

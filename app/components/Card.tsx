@@ -27,7 +27,7 @@ export interface CardProps extends VariantProps<typeof cardVariants> {
     className?: string;
 }
 
-export default function Card({
+export function Card({
     border,
     children,
     className
