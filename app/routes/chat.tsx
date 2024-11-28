@@ -12,10 +12,13 @@ import TextField from "~/components/TextField";
 import { Button } from "~/components/Button";
 import { getThreadByOpenId, getThreadMessages } from "~/models/thread.server";
 import { shapeMessages } from "~/utils/common";
+import { getAssistant } from "~/models/assistant.server";
 
 export async function loader({ params }: Route.LoaderArgs) {
-    const { threadId } = params;
+    const { assistantId, threadId } = params;
     invariant(threadId, "Thread ID does not exist");
+
+    const assistant = await getAssistant(assistantId);
 
     const thread = await getThreadByOpenId(threadId);
     const hasName = Boolean(thread?.name);
@@ -24,6 +27,7 @@ export async function loader({ params }: Route.LoaderArgs) {
     const messageHistory = shapeMessages(messagesResponse.data);
 
     return data({
+        assistant,
         thread,
         hasName,
         messageHistory,
@@ -31,16 +35,17 @@ export async function loader({ params }: Route.LoaderArgs) {
 }
 
 export default function Chat({ loaderData }: Route.ComponentProps) {
-    const { thread, hasName, messageHistory } = loaderData;
+    const { assistant, thread, hasName, messageHistory } = loaderData;
     const { assistantId, threadId } = useParams();
     invariant(assistantId, "Assistant ID is undefined");
     invariant(threadId, "Thread ID is undefined");
+
     const navigate = useNavigate();
     const { isDrawerOpen, closeDrawer } = useDrawer({
         openOnRender: true,
         onClose: () => navigate(Paths.DASHBOARD),
     });
-    const chatFetcher = useFetcher();
+
     const threadNameFetcher = useFetcher();
 
     const { status, messages, input, submitMessage, handleInputChange, error } =
@@ -77,6 +82,8 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
+    const isInProgress = status === "in_progress";
+
     return (
         <Drawer
             handleClose={closeDrawer}
@@ -87,7 +94,12 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
         >
             <div className="flex h-full flex-col">
                 <div className="border-b border-b-zinc-300 p-4 dark:border-b-zinc-600">
-                    <Heading as="h3">Chat</Heading>
+                    <Heading as="h3">
+                        <span className="block text-sm text-zinc-300 dark:text-zinc-400">
+                            Chatting with {assistant.name}
+                        </span>
+                        {thread?.name}
+                    </Heading>
                 </div>
                 <div className="flex-1 overflow-y-auto p-4">
                     {JSON.stringify(messageHistory)}
@@ -95,19 +107,14 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
                     <div ref={messagesEndRef} />
                 </div>
                 <div className="border-t border-t-zinc-300 p-4 dark:border-t-zinc-600">
-                    <chatFetcher.Form
-                        method="POST"
-                        action={""}
-                        className="flex gap-2"
-                        onSubmit={handleFormSubmit}
-                    >
+                    <form className="flex gap-2" onSubmit={handleFormSubmit}>
                         <TextField
                             className="flex-1"
                             onChange={handleInputChange}
                             value={input}
                         />
-                        <Button>Send</Button>
-                    </chatFetcher.Form>
+                        <Button disabled={isInProgress}>Send</Button>
+                    </form>
                 </div>
             </div>
         </Drawer>
