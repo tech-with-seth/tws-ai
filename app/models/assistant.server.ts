@@ -1,40 +1,40 @@
-import { AssistantTool } from 'openai/resources/beta/assistants.mjs';
+import { AssistantTool } from "openai/resources/beta/assistants.mjs";
 
-import { prisma } from '~/db.server';
-import { ai } from '~/open-ai';
-import { kebab } from '~/utils/string';
+import { prisma } from "~/db.server";
+import { ai } from "~/open-ai";
+import { kebab } from "~/utils/string";
 
 export function createAssistant(
     name: string,
     instructions: string,
-    extraTools?: AssistantTool[]
+    extraTools?: AssistantTool[],
 ) {
     const tools: AssistantTool[] = [
-        { type: 'file_search' },
-        ...(extraTools ?? [])
+        { type: "file_search" },
+        ...(extraTools ?? []),
     ];
-    const model = 'gpt-4o';
+    const model = "gpt-4o";
 
     return ai.beta.assistants.create({
         name,
         instructions,
         tools,
-        model
+        model,
     });
 }
 
 export function createPrismaAssistant(
     name: string,
     oId: string,
-    userId: string
+    userId: string,
 ) {
     return prisma.assistant.create({
         data: {
             name,
             slug: kebab(name),
             oId,
-            userId
-        }
+            userId,
+        },
     });
 }
 
@@ -45,51 +45,51 @@ export function getAssistant(assistantId: string) {
 export function getPrismaAssistantByOpenId(assistantId: string) {
     return prisma.assistant.findUnique({
         where: {
-            oId: assistantId
-        }
+            oId: assistantId,
+        },
     });
 }
 
 export function updateAssistant(
     id: string,
     name: string,
-    instructions: string
+    instructions: string,
 ) {
     return ai.beta.assistants.update(id, {
         instructions,
-        name
+        name,
     });
 }
 
 export function updatePrismaAssistant(id: string, name: string) {
     return prisma.assistant.update({
         where: {
-            oId: id
+            oId: id,
         },
         data: {
-            name
-        }
+            name,
+        },
     });
 }
 
 export async function getUsersAssistants(userId: string) {
     const assistants = await prisma.assistant.findMany({
         where: {
-            userId
-        }
+            userId,
+        },
     });
 
     return Promise.all(
         assistants.map((assistant) =>
-            ai.beta.assistants.retrieve(assistant.oId)
-        )
+            ai.beta.assistants.retrieve(assistant.oId),
+        ),
     );
 }
 
 export function getAssistants() {
     return ai.beta.assistants.list({
-        order: 'desc',
-        limit: 20
+        order: "desc",
+        limit: 20,
     });
 }
 
@@ -99,14 +99,14 @@ export function getAssistantVectorStores() {
 
 export function updateAssistantVectorStore(
     assistantId: string,
-    vectorStoreId: string
+    vectorStoreId: string,
 ) {
     return ai.beta.assistants.update(assistantId, {
         tool_resources: {
             file_search: {
-                vector_store_ids: [vectorStoreId]
-            }
-        }
+                vector_store_ids: [vectorStoreId],
+            },
+        },
     });
 }
 
@@ -117,7 +117,7 @@ export function deleteAssistant(assistantId: string) {
 export function deletePrismaAssistant(id: string) {
     return prisma.assistant.delete({
         where: {
-            id
-        }
+            id,
+        },
     });
 }

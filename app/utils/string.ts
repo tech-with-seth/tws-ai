@@ -1,18 +1,18 @@
-import kebabCase from 'lodash/kebabCase';
+import kebabCase from "lodash/kebabCase";
 
 export function getUniqueId(
-    prefix = 'my-prefix',
+    prefix = "my-prefix",
     length = 8,
-    characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()'
+    characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()",
 ) {
     const getRandomChar = (chars: string) =>
         chars.charAt(Math.floor(Math.random() * chars.length));
 
     const hash = [...Array(length)]
         .map(() => getRandomChar(characters))
-        .join('');
+        .join("");
 
-    return `${prefix ? `${prefix}-` : ''}${hash}`;
+    return `${prefix ? `${prefix}-` : ""}${hash}`;
 }
 
 export function getEnvVariable(key: string): string {
@@ -24,7 +24,7 @@ export function getEnvVariable(key: string): string {
 
     if (!value) {
         throw Error(
-            `Environment variable "${key}" does not exist on process.env`
+            `Environment variable "${key}" does not exist on process.env`,
         );
     }
 

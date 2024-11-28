@@ -1,16 +1,16 @@
-import { useFetcher, useNavigate } from 'react-router';
-import { Button } from '~/components/Button';
-import { Drawer } from '~/components/Drawer';
-import { Heading } from '~/components/Heading';
-import { TextFormField } from '~/components/TextFormField';
-import useDrawer from '~/hooks/useDrawer';
-import { Paths } from '~/utils/paths';
+import { useFetcher, useNavigate } from "react-router";
+import { Button } from "~/components/Button";
+import { Drawer } from "~/components/Drawer";
+import { Heading } from "~/components/Heading";
+import { TextFormField } from "~/components/TextFormField";
+import useDrawer from "~/hooks/useDrawer";
+import { Paths } from "~/utils/paths";
 
 export default function CreateAssistant() {
     const navigate = useNavigate();
     const { isDrawerOpen, closeDrawer } = useDrawer({
         openOnRender: true,
-        onClose: () => navigate(Paths.DASHBOARD)
+        onClose: () => navigate(Paths.DASHBOARD),
     });
     const assistantFetcher = useFetcher();
 

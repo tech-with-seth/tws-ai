@@ -1,13 +1,13 @@
-import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcryptjs';
+import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function getOrCreateUser(email: string) {
     const user = await prisma.user.findUnique({
         where: {
-            email
-        }
+            email,
+        },
     });
 
     if (user) {
@@ -19,23 +19,23 @@ async function getOrCreateUser(email: string) {
             email,
             password: {
                 create: {
-                    hash: await bcrypt.hash('asdfasdfasdf', 10)
-                }
+                    hash: await bcrypt.hash("asdfasdfasdf", 10),
+                },
             },
             profile: {
                 create: {
-                    firstName: 'Seth',
-                    lastName: 'Davis'
-                }
-            }
-        }
+                    firstName: "Seth",
+                    lastName: "Davis",
+                },
+            },
+        },
     });
 
     return created;
 }
 
 async function seed() {
-    await getOrCreateUser('seth@mail.com');
+    await getOrCreateUser("seth@mail.com");
 }
 
 try {

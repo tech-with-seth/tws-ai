@@ -1,28 +1,28 @@
-import type { VariantProps } from 'cva';
-import { cva, cx } from 'cva.config';
-import { PropsWithChildren } from 'react';
+import type { VariantProps } from "cva";
+import { cva, cx } from "cva.config";
+import { PropsWithChildren } from "react";
 
 export const buttonVariants = cva({
-    base: 'rounded-md text-white',
+    base: "rounded-xl text-white",
     variants: {
         variant: {
-            primary: 'bg-primary-500 hover:bg-primary-600',
-            secondary: 'bg-gray-500 hover:bg-gray-600',
-            icon: 'p-2 rounded-xl',
-            ghost: 'bg-transparent',
+            primary: "bg-primary-500 hover:bg-primary-600",
+            secondary: "bg-gray-500 hover:bg-gray-600",
+            icon: "p-2 rounded-xl",
+            ghost: "bg-transparent",
             outline:
-                'border border-primary-500 text-primary-500 bg-transparent dark:hover:bg-zinc-700/50'
+                "border border-primary-500 text-primary-500 bg-transparent dark:hover:bg-zinc-700/50",
         },
         size: {
-            md: 'px-3 py-1.5',
-            lg: 'px-6 py-3 text-xl'
-        }
+            md: "px-3.5 py-2",
+            lg: "px-6 py-3 text-xl",
+        },
     },
     defaultVariants: {
-        variant: 'primary',
-        size: 'md'
+        variant: "primary",
+        size: "md",
     },
-    compoundVariants: []
+    compoundVariants: [],
 });
 
 export interface ButtonProps
@@ -43,9 +43,9 @@ export function Button({
             className={cx(
                 buttonVariants({
                     variant,
-                    size
+                    size,
                 }),
-                className
+                className,
             )}
             {...rest}
         >

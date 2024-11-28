@@ -1,48 +1,63 @@
-import { PagePromise, RequestOptions } from 'openai/core.mjs';
+import { PagePromise, RequestOptions } from "openai/core.mjs";
 import {
     Message,
     MessageListParams,
-    MessagesPage
-} from 'openai/resources/beta/threads/messages.mjs';
-import { prisma } from '~/db.server';
+    MessagesPage,
+} from "openai/resources/beta/threads/messages.mjs";
+import { prisma } from "~/db.server";
 
-import { ai } from '~/open-ai';
-import { kebab } from '~/utils/string';
+import { ai } from "~/open-ai";
+import { kebab } from "~/utils/string";
 
-export function getThreadsByUserId(userId: string) {
-    return prisma.thread.findMany({
+export async function getThreadsByUserId(userId: string) {
+    const threads = await prisma.thread.findMany({
         where: {
-            userId
+            userId,
         },
         include: {
-            assistant: true
-        }
+            assistant: true,
+        },
+    });
+
+    return Promise.all(
+        threads.map((thread) => ai.beta.threads.retrieve(thread.oId)),
+    );
+}
+
+export async function getPrismaThreadsByUserId(userId: string) {
+    return prisma.thread.findMany({
+        where: {
+            userId,
+        },
+        include: {
+            assistant: true,
+        },
     });
 }
 
 export function getThreadByOpenId(
     oId: string,
-    includeAssistant: boolean = true
+    includeAssistant: boolean = true,
 ) {
     return prisma.thread.findUnique({
         where: {
-            oId
+            oId,
         },
         include: {
-            assistant: includeAssistant
-        }
+            assistant: includeAssistant,
+        },
     });
 }
 
 export function getThreadMessages(
     threadId: string,
     query?: MessageListParams,
-    options?: RequestOptions
+    options?: RequestOptions,
 ): PagePromise<MessagesPage, Message> {
     return ai.beta.threads.messages.list(
         threadId,
-        { order: 'asc', ...query },
-        options
+        { order: "asc", ...query },
+        options,
     );
 }
 
@@ -50,7 +65,7 @@ export function createPrismaThread(
     userId: string,
     threadId: string,
     name: string,
-    assistantId: string
+    assistantId: string,
 ) {
     return prisma.thread.create({
         data: {
@@ -58,22 +73,22 @@ export function createPrismaThread(
             oId: threadId,
             name,
             slug: kebab(name),
-            assistantId
-        }
+            assistantId,
+        },
     });
 }
 
 export function createPrismaBareThread(
     userId: string,
     threadId: string,
-    assistantId: string
+    assistantId: string,
 ) {
     return prisma.thread.create({
         data: {
             userId,
             oId: threadId,
-            assistantId
-        }
+            assistantId,
+        },
     });
 }
 
@@ -83,24 +98,24 @@ export function createBareThread() {
 
 export function createThread(
     content: string,
-    metadata?: Record<string, unknown>
+    metadata?: Record<string, unknown>,
 ) {
     return ai.beta.threads.create({
         messages: [
             {
-                role: 'user',
-                content
-            }
+                role: "user",
+                content,
+            },
         ],
-        metadata
+        metadata,
     });
 }
 
 export async function hasThreadName(id: string) {
     const thread = await prisma.thread.findUnique({
         where: {
-            id
-        }
+            id,
+        },
     });
 
     return !!thread?.name;
@@ -109,26 +124,26 @@ export async function hasThreadName(id: string) {
 export function updatePrismaThread(id: string, name: string) {
     return prisma.thread.update({
         where: {
-            id
+            id,
         },
         data: {
             name,
-            slug: kebab(name)
-        }
+            slug: kebab(name),
+        },
     });
 }
 
 export function updateThread(id: string, metadata?: Record<string, unknown>) {
     return ai.beta.threads.update(id, {
-        metadata
+        metadata,
     });
 }
 
 export function deletePrismaThread(id: string) {
     return prisma.thread.delete({
         where: {
-            id
-        }
+            id,
+        },
     });
 }
 

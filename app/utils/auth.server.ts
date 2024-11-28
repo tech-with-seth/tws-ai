@@ -1,24 +1,24 @@
-import { createCookieSessionStorage, redirect } from 'react-router';
-import bcrypt from 'bcryptjs';
+import { createCookieSessionStorage, redirect } from "react-router";
+import bcrypt from "bcryptjs";
 
-import { prisma } from '../db.server';
-import { LoginForm, RegisterForm } from './types.server';
-import { createUser } from '~/models/user.server';
-import { getLoginPath, Paths } from './paths';
-import { getEnvVariable } from './string';
+import { prisma } from "../db.server";
+import { LoginForm, RegisterForm } from "./types.server";
+import { createUser } from "~/models/user.server";
+import { getLoginPath, Paths } from "./paths";
+import { getEnvVariable } from "./string";
 
-const sessionSecret = getEnvVariable('SESSION_SECRET');
+const sessionSecret = getEnvVariable("SESSION_SECRET");
 
 const storage = createCookieSessionStorage({
     cookie: {
-        name: 'tws-ai',
-        secure: process.env.NODE_ENV === 'production',
+        name: "tws-ai",
+        secure: process.env.NODE_ENV === "production",
         secrets: [sessionSecret],
-        sameSite: 'lax',
-        path: '/',
+        sameSite: "lax",
+        path: "/",
         maxAge: 60 * 60 * 24 * 30,
-        httpOnly: true
-    }
+        httpOnly: true,
+    },
 });
 
 export async function register(user: RegisterForm) {
@@ -27,7 +27,7 @@ export async function register(user: RegisterForm) {
     if (exists) {
         return new Response(
             JSON.stringify({ error: `User already exists with that email` }),
-            { status: 400, headers: { 'Content-Type': 'application/json' } }
+            { status: 400, headers: { "Content-Type": "application/json" } },
         );
     }
 
@@ -37,21 +37,21 @@ export async function register(user: RegisterForm) {
         return new Response(
             JSON.stringify({
                 error: `Something went wrong trying to create a new user.`,
-                fields: { email: user.email, password: user.password }
+                fields: { email: user.email, password: user.password },
             }),
-            { status: 400, headers: { 'Content-Type': 'application/json' } }
+            { status: 400, headers: { "Content-Type": "application/json" } },
         );
     }
 
-    return createUserSession(newUser.id, '/');
+    return createUserSession(newUser.id, "/");
 }
 
 export async function login({ email, password }: LoginForm) {
     const user = await prisma.user.findUnique({
         where: { email },
         include: {
-            password: true
-        }
+            password: true,
+        },
     });
 
     if (
@@ -61,7 +61,7 @@ export async function login({ email, password }: LoginForm) {
     ) {
         return new Response(JSON.stringify({ error: `Incorrect login` }), {
             status: 400,
-            headers: { 'Content-Type': 'application/json' }
+            headers: { "Content-Type": "application/json" },
         });
     }
 
@@ -70,24 +70,24 @@ export async function login({ email, password }: LoginForm) {
 
 export async function createUserSession(userId: string, redirectTo: string) {
     const session = await storage.getSession();
-    session.set('userId', userId);
+    session.set("userId", userId);
 
     return redirect(redirectTo, {
         headers: {
-            'Set-Cookie': await storage.commitSession(session)
-        }
+            "Set-Cookie": await storage.commitSession(session),
+        },
     });
 }
 
 export async function requireUserId(
     request: Request,
-    redirectTo: string = new URL(request.url).pathname
+    redirectTo: string = new URL(request.url).pathname,
 ) {
     const session = await getUserSession(request);
-    const userId = session.get('userId');
+    const userId = session.get("userId");
 
-    if (!userId || typeof userId !== 'string') {
-        const searchParams = new URLSearchParams([['redirectTo', redirectTo]]);
+    if (!userId || typeof userId !== "string") {
+        const searchParams = new URLSearchParams([["redirectTo", redirectTo]]);
 
         throw redirect(getLoginPath(String(searchParams)));
     }
@@ -96,14 +96,14 @@ export async function requireUserId(
 }
 
 function getUserSession(request: Request) {
-    return storage.getSession(request.headers.get('Cookie'));
+    return storage.getSession(request.headers.get("Cookie"));
 }
 
 export async function getUserId(request: Request) {
     const session = await getUserSession(request);
-    const userId = session.get('userId');
+    const userId = session.get("userId");
 
-    if (!userId || typeof userId !== 'string') return null;
+    if (!userId || typeof userId !== "string") return null;
 
     return userId;
 }
@@ -111,14 +111,14 @@ export async function getUserId(request: Request) {
 export async function getUser(request: Request) {
     const userId = await getUserId(request);
 
-    if (typeof userId !== 'string') {
+    if (typeof userId !== "string") {
         return null;
     }
 
     try {
         const user = await prisma.user.findUnique({
             where: { id: userId },
-            select: { id: true, email: true, profile: true }
+            select: { id: true, email: true, profile: true },
         });
 
         return user;
@@ -132,7 +132,7 @@ export async function logout(request: Request) {
 
     return redirect(Paths.LOGIN, {
         headers: {
-            'Set-Cookie': await storage.destroySession(session)
-        }
+            "Set-Cookie": await storage.destroySession(session),
+        },
     });
 }

@@ -1,18 +1,18 @@
-import { VariantProps } from 'cva';
-import { cva, cx } from 'cva.config';
-import { PropsWithChildren } from 'react';
+import { VariantProps } from "cva";
+import { cva, cx } from "cva.config";
+import { PropsWithChildren } from "react";
 
 export const linkVariants = cva({
-    base: 'text-primary-500 hover:text-primary-600 underline',
+    base: "text-primary-500 hover:text-primary-600 underline",
     variants: {
         variant: {
-            primary: ''
-        }
+            primary: "",
+        },
     },
     defaultVariants: {
-        variant: 'primary'
+        variant: "primary",
     },
-    compoundVariants: []
+    compoundVariants: [],
 });
 
 interface ExternalLinkProps
@@ -22,7 +22,7 @@ interface ExternalLinkProps
 export default function ExternalLink({
     children,
     href,
-    variant
+    variant,
 }: PropsWithChildren<ExternalLinkProps>) {
     return (
         <a href={href} className={cx(linkVariants({ variant }))}>

@@ -1,10 +1,10 @@
-import { ai } from '~/open-ai';
-import { getAssistant, updateAssistantVectorStore } from './assistant.server';
-import { kebab } from '~/utils/string';
+import { ai } from "~/open-ai";
+import { getAssistant, updateAssistantVectorStore } from "./assistant.server";
+import { kebab } from "~/utils/string";
 
 export function createVectorStore(name: string) {
     return ai.beta.vectorStores.create({
-        name
+        name,
     });
 }
 
@@ -18,13 +18,13 @@ export function getVectorStore(storeId: string) {
 
 export function updateVectorStore(storeId: string, name: string) {
     return ai.beta.vectorStores.update(storeId, {
-        name
+        name,
     });
 }
 
 export function addFileToVectorStore(vectorStoreId: string, file_id: string) {
     return ai.beta.vectorStores.files.create(vectorStoreId, {
-        file_id
+        file_id,
     });
 }
 
@@ -42,7 +42,7 @@ export async function getOrCreateVectorStore(assistantId: string) {
     }
     // otherwise, create a new vector store and attatch it to the assistant
     const vectorStore = await createVectorStore(
-        `${kebab(assistant.name!)}-store`
+        `${kebab(assistant.name!)}-store`,
     );
 
     await updateAssistantVectorStore(assistantId, vectorStore.id);

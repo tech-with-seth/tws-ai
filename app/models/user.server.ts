@@ -1,7 +1,7 @@
-import bcrypt from 'bcryptjs';
-import type { RegisterForm } from '~/utils/types.server';
-import { prisma } from '../db.server';
-import { Password, User } from '@prisma/client';
+import bcrypt from "bcryptjs";
+import type { RegisterForm } from "~/utils/types.server";
+import { prisma } from "../db.server";
+import { Password, User } from "@prisma/client";
 
 export const createUser = async (user: RegisterForm) => {
     const passwordHash = await bcrypt.hash(user.password, 10);
@@ -11,30 +11,30 @@ export const createUser = async (user: RegisterForm) => {
             email: user.email,
             password: {
                 create: {
-                    hash: passwordHash
-                }
+                    hash: passwordHash,
+                },
             },
             profile: {
                 create: {
                     firstName: user.firstName,
-                    lastName: user.lastName
-                }
-            }
-        }
+                    lastName: user.lastName,
+                },
+            },
+        },
     });
 
     return { id: newUser.id, email: user.email };
 };
 
 export async function verifyLogin(
-    email: User['email'],
-    password: Password['hash']
+    email: User["email"],
+    password: Password["hash"],
 ) {
     const userWithPassword = await prisma.user.findUnique({
         where: { email },
         include: {
-            password: true
-        }
+            password: true,
+        },
     });
 
     if (!userWithPassword || !userWithPassword.password) {
@@ -43,7 +43,7 @@ export async function verifyLogin(
 
     const isValid = await bcrypt.compare(
         password,
-        userWithPassword.password.hash
+        userWithPassword.password.hash,
     );
 
     if (!isValid) {

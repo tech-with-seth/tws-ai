@@ -1,26 +1,26 @@
-import { VariantProps } from 'cva';
-import { cva, cx } from 'cva.config';
-import { PropsWithChildren } from 'react';
+import { VariantProps } from "cva";
+import { cva, cx } from "cva.config";
+import { PropsWithChildren } from "react";
 
 export const cardVariants = cva({
-    base: 'bg-white dark:bg-zinc-800 rounded-lg',
+    base: "bg-white dark:bg-zinc-800 rounded-xl",
     variants: {
         border: {
-            true: 'border border-zinc-200 dark:border-zinc-600',
-            false: 'border-0'
+            true: "border border-zinc-200 dark:border-zinc-600",
+            false: "border-0",
         },
         padding: {
-            none: 'p-0',
-            sm: 'p-2',
-            md: 'p-4',
-            lg: 'p-6'
-        }
+            none: "p-0",
+            sm: "p-2",
+            md: "p-4",
+            lg: "p-6",
+        },
     },
     defaultVariants: {
         border: true,
-        padding: 'md'
+        padding: "md",
     },
-    compoundVariants: []
+    compoundVariants: [],
 });
 
 export interface CardProps extends VariantProps<typeof cardVariants> {
@@ -30,7 +30,7 @@ export interface CardProps extends VariantProps<typeof cardVariants> {
 export function Card({
     border,
     children,
-    className
+    className,
 }: PropsWithChildren<CardProps>) {
     return (
         <div className={cx(cardVariants({ border }), className)}>

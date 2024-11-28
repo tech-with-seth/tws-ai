@@ -1,16 +1,18 @@
-import { Link, NavLink, NavLinkRenderProps } from 'react-router';
-import { Paths } from '~/utils/paths';
+import { Link, NavLink, NavLinkRenderProps } from "react-router";
+import { Paths } from "~/utils/paths";
 
 export default function Header() {
     const navLinkClassName = ({ isActive }: NavLinkRenderProps) =>
-        `${isActive ? 'bg-primary-500' : 'bg-zinc-500'} p-2 rounded-lg`;
+        `${isActive ? "bg-primary-500" : "bg-zinc-500"} p-2 rounded-xl`;
 
     return (
-        <header className="p-4">
-            <nav className="flex items-center p-4 bg-zinc-300 dark:bg-zinc-800 rounded-xl">
-                <ul className="flex items-center gap-4 mr-4">
+        <header className="mb-4 p-4">
+            <nav className="flex items-center rounded-xl bg-zinc-300 p-4 dark:bg-zinc-800">
+                <ul className="mr-4 flex items-center gap-4">
                     <li>
-                        <Link to={Paths.DASHBOARD}>TWS AI</Link>
+                        <Link to={Paths.DASHBOARD} className="font-bold">
+                            TWS AI
+                        </Link>
                     </li>
                 </ul>
                 <ul className="flex items-center gap-2">

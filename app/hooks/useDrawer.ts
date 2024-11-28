@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 export default function useDrawer({
     openOnRender,
     onClose,
-    delay = 150
+    delay = 150,
 }: {
     openOnRender?: boolean;
     onClose?: () => void;
@@ -33,6 +33,6 @@ export default function useDrawer({
         },
         toggleDrawer: () => {
             setDrawerOpen((prev) => !prev);
-        }
+        },
     };
 }

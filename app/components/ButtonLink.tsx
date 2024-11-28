@@ -1,8 +1,8 @@
-import type { VariantProps } from 'cva';
-import { cva, cx } from 'cva.config';
-import { PropsWithChildren } from 'react';
-import { Link, LinkProps } from 'react-router';
-import { buttonVariants } from './Button';
+import type { VariantProps } from "cva";
+import { cva, cx } from "cva.config";
+import { PropsWithChildren } from "react";
+import { Link, LinkProps } from "react-router";
+import { buttonVariants } from "./Button";
 
 export interface ButtonLinkProps
     extends LinkProps,
@@ -13,18 +13,18 @@ export function ButtonLink({
     className,
     variant,
     size,
-    to
+    to,
 }: PropsWithChildren<ButtonLinkProps>) {
     return (
         <Link
             to={to}
             className={cx(
-                'inline-block',
+                "inline-block",
                 buttonVariants({
                     variant,
                     size,
-                    className
-                })
+                    className,
+                }),
             )}
         >
             {children}

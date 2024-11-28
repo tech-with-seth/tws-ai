@@ -1,13 +1,13 @@
-import { ai } from '~/open-ai';
+import { ai } from "~/open-ai";
 
 export function createMessage(
     threadId: string,
     content: string,
-    metadata?: unknown
+    metadata?: unknown,
 ) {
     return ai.beta.threads.messages.create(threadId, {
-        role: 'user',
+        role: "user",
         content,
-        metadata
+        metadata,
     });
 }

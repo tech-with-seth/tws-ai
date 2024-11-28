@@ -1,8 +1,8 @@
-import { ai } from '~/open-ai';
+import { ai } from "~/open-ai";
 
 export function createRun(threadId: string, assistant_id: string) {
     return ai.beta.threads.runs.create(threadId, {
-        assistant_id
+        assistant_id,
     });
 }
 
@@ -16,7 +16,7 @@ export function getRun(threadId: string, runId: string) {
 
 export function updateRun(threadId: string, runId: string, metadata: unknown) {
     return ai.beta.threads.runs.update(threadId, runId, {
-        metadata
+        metadata,
     });
 }
 

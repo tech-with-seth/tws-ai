@@ -1,4 +1,4 @@
-import TextField, { TextFieldProps } from './TextField';
+import TextField, { TextFieldProps } from "./TextField";
 
 interface TextFormFieldProps extends TextFieldProps {
     label: string;
@@ -17,12 +17,12 @@ export function TextFormField({
         <div className="flex flex-col">
             <label
                 htmlFor={id}
-                className={`font-bold text-lg ${helperText ? '' : 'mb-2'}`}
+                className={`text-lg font-bold ${helperText ? "" : "mb-2"}`}
             >
                 {label}
             </label>
             {helperText && (
-                <p className="text-zinc-300 dark:text-zinc-400 text-sm mb-2">
+                <p className="mb-2 text-sm text-zinc-300 dark:text-zinc-400">
                     {helperText}
                 </p>
             )}

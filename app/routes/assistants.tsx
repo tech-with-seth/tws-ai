@@ -1,6 +1,6 @@
-import { Outlet } from 'react-router';
+import { Outlet } from "react-router";
 
-import { Heading } from '~/components/Heading';
+import { Heading } from "~/components/Heading";
 
 export default function Assistants() {
     return (
