@@ -6,7 +6,7 @@ export const cardVariants = cva({
     base: "bg-white dark:bg-zinc-800 rounded-xl",
     variants: {
         border: {
-            true: "border border-zinc-200 dark:border-zinc-600",
+            true: "border border-zinc-300 dark:border-zinc-600",
             false: "border-0",
         },
         padding: {

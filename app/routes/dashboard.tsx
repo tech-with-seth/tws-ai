@@ -56,7 +56,12 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                             </Card>
                         ))
                     ) : (
-                        <Banner>No assistants available</Banner>
+                        <Banner
+                            className="min-w-[200px] basis-1/4"
+                            variant="warning"
+                        >
+                            No assistants available
+                        </Banner>
                     )}
                 </div>
                 <HorizontalRule space="lg" />
@@ -66,13 +71,23 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                         Create thread
                     </ButtonLink>
                 </div>
-                <div>
+                <div className="flex flex-wrap gap-4">
                     {threads && threads.length > 0 ? (
                         threads.map((thread) => (
-                            <Card key={thread.id}>{thread.id}</Card>
+                            <Card
+                                key={thread.id}
+                                className="min-w-[200px] basis-1/4"
+                            >
+                                {thread.id}
+                            </Card>
                         ))
                     ) : (
-                        <Banner>No threads available</Banner>
+                        <Banner
+                            className="min-w-[200px] basis-1/4"
+                            variant="warning"
+                        >
+                            No threads available
+                        </Banner>
                     )}
                 </div>
             </div>

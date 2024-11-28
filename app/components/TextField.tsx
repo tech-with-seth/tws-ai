@@ -4,7 +4,7 @@ export interface TextFieldProps
     extends React.InputHTMLAttributes<HTMLInputElement> {}
 
 export const textFieldVariants = cva({
-    base: "p-2 border border-zinc-300 dark:border-zinc-600 rounded-xl",
+    base: "p-2 border border-zinc-400 dark:border-zinc-600 rounded-xl",
     variants: {
         hasError: {
             true: "border-red-500 dark:border-red-600",
@@ -14,8 +14,16 @@ export const textFieldVariants = cva({
     compoundVariants: [],
 });
 
-export default function TextField({ type, ...rest }: TextFieldProps) {
+export default function TextField({
+    className,
+    type,
+    ...rest
+}: TextFieldProps) {
     return (
-        <input className={cx(textFieldVariants({}))} type={type} {...rest} />
+        <input
+            className={cx(textFieldVariants({}), className)}
+            type={type}
+            {...rest}
+        />
     );
 }

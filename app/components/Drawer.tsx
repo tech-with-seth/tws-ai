@@ -20,7 +20,7 @@ interface DrawerProps {
 }
 
 const drawerVariants = cva({
-    base: `fixed z-50 transition-transform bg-white dark:bg-zinc-900 border-r dark:border-r-zinc-700 border dark:border-zinc-700`,
+    base: `fixed z-50 transition-transform bg-white dark:bg-zinc-900 border-r dark:border-r-zinc-800 border dark:border-zinc-800`,
     variants: {
         position: {
             left: `top-0 left-0 h-screen -translate-x-full rounded-tr-xl rounded-br-xl`,
@@ -77,11 +77,11 @@ export function Drawer({
 }: PropsWithChildren<DrawerProps>) {
     const orientedIcon =
         position === "bottom" ? (
-            <PanelBottomCloseIcon />
+            <PanelBottomCloseIcon className="fill-zinc-500 dark:fill-zinc-200" />
         ) : position === "left" ? (
-            <PanelLeftCloseIcon />
+            <PanelLeftCloseIcon className="fill-zinc-500 dark:fill-zinc-200" />
         ) : position === "right" ? (
-            <PanelRightCloseIcon />
+            <PanelRightCloseIcon className="fill-zinc-500 dark:fill-zinc-200" />
         ) : null;
 
     return (
@@ -89,13 +89,14 @@ export function Drawer({
             <div
                 id={id}
                 className={cx(
-                    drawerVariants({ position, className, size, isOpen }),
+                    drawerVariants({ position, size, isOpen }),
+                    className,
                 )}
                 tabIndex={-1}
                 aria-labelledby={`${id}-label`}
             >
                 <div className="flex h-full flex-col">
-                    <div className="border-b p-4 dark:border-zinc-700">
+                    <div className="border-b border-zinc-400 p-4 dark:border-zinc-800">
                         <Button variant="icon" onClick={handleClose}>
                             {orientedIcon}
                         </Button>

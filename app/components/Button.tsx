@@ -8,10 +8,10 @@ export const buttonVariants = cva({
         variant: {
             primary: "bg-primary-500 hover:bg-primary-600",
             secondary: "bg-gray-500 hover:bg-gray-600",
-            icon: "p-2 rounded-xl",
+            icon: "rounded-xl border border-zinc-300 dark:border-zinc-800",
             ghost: "bg-transparent",
             outline:
-                "border border-primary-500 text-primary-500 bg-transparent dark:hover:bg-zinc-700/50",
+                "border border-primary-500 text-primary-500 bg-transparent dark:hover:bg-zinc-800/50",
         },
         size: {
             md: "px-3.5 py-2",
@@ -22,7 +22,18 @@ export const buttonVariants = cva({
         variant: "primary",
         size: "md",
     },
-    compoundVariants: [],
+    compoundVariants: [
+        {
+            variant: "icon",
+            size: "md",
+            className: "p-2",
+        },
+        {
+            variant: "icon",
+            size: "lg",
+            className: "p-3",
+        },
+    ],
 });
 
 export interface ButtonProps

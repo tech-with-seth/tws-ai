@@ -1,22 +1,22 @@
 import type { VariantProps } from "cva";
 import { cx } from "cva.config";
 import { PropsWithChildren } from "react";
-import { Link, LinkProps } from "react-router";
+import { LinkProps, NavLink } from "react-router";
 import { buttonVariants } from "./Button";
 
-export interface ButtonLinkProps
+export interface ButtonNavLinkProps
     extends LinkProps,
         VariantProps<typeof buttonVariants> {}
 
-export function ButtonLink({
+export function ButtonNavLink({
     children,
     className,
     variant,
     size,
     to,
-}: PropsWithChildren<ButtonLinkProps>) {
+}: PropsWithChildren<ButtonNavLinkProps>) {
     return (
-        <Link
+        <NavLink
             to={to}
             className={cx(
                 "inline-block",
@@ -28,6 +28,6 @@ export function ButtonLink({
             )}
         >
             {children}
-        </Link>
+        </NavLink>
     );
 }

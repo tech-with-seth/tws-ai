@@ -22,7 +22,7 @@ export function TextFormField({
                 {label}
             </label>
             {helperText && (
-                <p className="mb-2 text-sm text-zinc-300 dark:text-zinc-400">
+                <p className="mb-2 text-sm text-zinc-800 dark:text-zinc-400">
                     {helperText}
                 </p>
             )}
