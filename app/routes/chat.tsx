@@ -15,6 +15,9 @@ import { getThreadByOpenId, getThreadMessages } from "~/models/thread.server";
 import { shapeMessages } from "~/utils/common";
 import { getAssistant } from "~/models/assistant.server";
 import { Message } from "~/components/Message";
+import useLocalStorage from "~/hooks/useLocalStorage";
+import { cx } from "cva.config";
+import { SendHorizonalIcon } from "lucide-react";
 
 export async function loader({ params }: Route.LoaderArgs) {
     const { assistantId, threadId } = params;
@@ -85,14 +88,55 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
     }, [messages]);
 
     const isInProgress = status === "in_progress";
+    const [drawerSize, setDrawerSize] = useLocalStorage<"sm" | "md" | "lg">(
+        "CHAT_DRAWER_SIZE",
+        "md",
+    );
 
     return (
         <Drawer
             handleClose={closeDrawer}
             id="createChat"
+            aux={
+                <div className="flex items-center gap-2">
+                    <div>
+                        <p>Window size:</p>
+                    </div>
+                    <Button
+                        className={cx(
+                            drawerSize === "sm" &&
+                                "border-primary-500 dark:border-primary-500",
+                        )}
+                        variant="icon"
+                        onClick={() => setDrawerSize("sm")}
+                    >
+                        Small
+                    </Button>
+                    <Button
+                        className={cx(
+                            drawerSize === "md" &&
+                                "border-primary-500 dark:border-primary-500",
+                        )}
+                        variant="icon"
+                        onClick={() => setDrawerSize("md")}
+                    >
+                        Medium
+                    </Button>
+                    <Button
+                        className={cx(
+                            drawerSize === "lg" &&
+                                "border-primary-500 dark:border-primary-500",
+                        )}
+                        variant="icon"
+                        onClick={() => setDrawerSize("lg")}
+                    >
+                        Large
+                    </Button>
+                </div>
+            }
             isOpen={isDrawerOpen}
             position="right"
-            size="md"
+            size={drawerSize}
         >
             <div className="flex h-full flex-col">
                 <div className="border-b border-b-zinc-300 p-4 dark:border-b-zinc-600">
@@ -111,9 +155,7 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
                     ))}
                     {messages.map((m) => (
                         <Message key={m.id} role={m.role}>
-                            <Markdown className={`animate-in fade-in`}>
-                                {m.content}
-                            </Markdown>
+                            <Markdown>{m.content}</Markdown>
                         </Message>
                     ))}
                     <div ref={messagesEndRef} />
@@ -126,7 +168,10 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
                             value={input}
                             placeholder="Type a message..."
                         />
-                        <Button disabled={isInProgress}>Send</Button>
+                        <Button className="flex gap-2" disabled={isInProgress}>
+                            Send
+                            <SendHorizonalIcon />
+                        </Button>
                     </form>
                 </div>
             </div>

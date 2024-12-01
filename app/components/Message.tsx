@@ -25,7 +25,7 @@ export function Message({ children, role }: PropsWithChildren<MessageProps>) {
     return (
         <div
             className={cx(
-                "prose prose-p:my-0 prose-strong:dark:text-primary-200 flex items-start gap-2",
+                "prose prose-p:my-0 prose-strong:dark:text-primary-200 flex items-start gap-2 md:max-w-[90%]",
                 isUser && "self-end text-right",
                 isAssistant && "self-start text-left",
             )}

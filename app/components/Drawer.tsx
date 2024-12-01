@@ -7,18 +7,6 @@ import {
 import { cva, cx } from "cva.config";
 import { Button } from "./Button";
 
-interface DrawerProps {
-    id: string;
-    backdrop?: boolean;
-    className?: string;
-    containerClassName?: string;
-    heading?: string;
-    isOpen?: boolean;
-    handleClose?: () => void;
-    position?: "left" | "right" | "bottom";
-    size?: "sm" | "md" | "lg" | "full";
-}
-
 const drawerVariants = cva({
     base: `fixed z-50 transition-transform bg-white dark:bg-zinc-900`,
     variants: {
@@ -64,7 +52,21 @@ const drawerVariants = cva({
     },
 });
 
+interface DrawerProps {
+    id: string;
+    aux?: React.ReactNode;
+    backdrop?: boolean;
+    className?: string;
+    containerClassName?: string;
+    heading?: string;
+    isOpen?: boolean;
+    handleClose?: () => void;
+    position?: "left" | "right" | "bottom";
+    size?: "sm" | "md" | "lg" | "full";
+}
+
 export function Drawer({
+    aux,
     children,
     className,
     containerClassName,
@@ -96,10 +98,11 @@ export function Drawer({
                 aria-labelledby={`${id}-label`}
             >
                 <div className="flex h-full flex-col">
-                    <div className="border-b border-b-zinc-400 p-4 dark:border-b-zinc-600">
+                    <div className="flex justify-between gap-2 border-b border-b-zinc-400 p-4 dark:border-b-zinc-600">
                         <Button variant="icon" onClick={handleClose}>
                             {orientedIcon}
                         </Button>
+                        <div>{aux}</div>
                     </div>
                     <div
                         className={cx(

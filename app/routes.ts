@@ -23,6 +23,7 @@ export default [
                 "routes/create-file.tsx",
             ),
         ]),
+        route(`/:assistantId`, "routes/assistant-details.tsx"),
     ]),
     ...prefix(Paths.API, [
         route(Paths.ASSISTANTS, "routes/api/assistants.ts"),

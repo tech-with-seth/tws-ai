@@ -1,6 +1,11 @@
 import { Outlet } from "react-router";
 import invariant from "tiny-invariant";
-import { FileQuestion, PlusIcon } from "lucide-react";
+import {
+    BotIcon,
+    FileQuestion,
+    MessagesSquareIcon,
+    PlusIcon,
+} from "lucide-react";
 
 import { ButtonLink } from "~/components/ButtonLink";
 import { Card } from "~/components/Card";
@@ -43,7 +48,12 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
             <div className="px-4">
                 <div className="mb-4 flex gap-4">
                     <Heading>Assistants</Heading>
-                    <ButtonLink variant="secondary" to={Paths.CREATE_ASSISTANT}>
+                    <ButtonLink
+                        className="inline-flex items-center gap-2"
+                        variant="secondary"
+                        to={Paths.CREATE_ASSISTANT}
+                    >
+                        <PlusIcon />
                         Create assistant
                     </ButtonLink>
                 </div>
@@ -53,22 +63,37 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                             ({ id, name, description, instructions }) => (
                                 <Card
                                     key={id}
-                                    className="min-w-[200px] basis-1/4"
+                                    className="flex min-w-[200px] basis-1/4 flex-col justify-between"
                                 >
-                                    <Heading as="h4">{name}</Heading>
-                                    {description && <p>{description}</p>}
-                                    <p className="mb-4">{instructions}</p>
-                                    <ButtonLink
-                                        className="inline-flex items-center gap-1"
-                                        to={`${id}/create-file`}
-                                        size="sm"
-                                        variant="secondary"
-                                    >
-                                        <PlusIcon className="h-4 w-4" />
-                                        <span className="inline-block">
-                                            Add file
-                                        </span>
-                                    </ButtonLink>
+                                    <div>
+                                        <Heading as="h4">{name}</Heading>
+                                        {description && <p>{description}</p>}
+                                        <p className="mb-4">{instructions}</p>
+                                    </div>
+                                    <div className="inline-flex gap-2 self-end">
+                                        <ButtonLink
+                                            className="inline-flex items-center gap-1"
+                                            to={`/${id}`}
+                                            size="sm"
+                                            variant="outline"
+                                        >
+                                            <BotIcon className="h-4 w-4" />
+                                            <span className="inline-block">
+                                                Details
+                                            </span>
+                                        </ButtonLink>
+                                        <ButtonLink
+                                            className="inline-flex items-center gap-1"
+                                            to={`${id}/create-file`}
+                                            size="sm"
+                                            variant="outline"
+                                        >
+                                            <PlusIcon className="h-4 w-4" />
+                                            <span className="inline-block">
+                                                Add file
+                                            </span>
+                                        </ButtonLink>
+                                    </div>
                                 </Card>
                             ),
                         )
@@ -85,7 +110,12 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                 <HorizontalRule space="lg" />
                 <div className="mb-4 flex gap-4">
                     <Heading>Threads</Heading>
-                    <ButtonLink variant="secondary" to={Paths.CREATE_THREAD}>
+                    <ButtonLink
+                        className="inline-flex items-center gap-2"
+                        variant="secondary"
+                        to={Paths.CREATE_THREAD}
+                    >
+                        <PlusIcon />
                         Create thread
                     </ButtonLink>
                 </div>
@@ -94,19 +124,22 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                         threads.map((thread) => (
                             <Card
                                 key={thread.id}
-                                className="min-w-[200px] basis-1/4"
+                                className="flex min-w-[200px] basis-1/4 flex-col justify-between"
                             >
-                                <Heading as="h4">
-                                    {thread.name ?? "Untitled"}
-                                </Heading>
-                                <p className="mb-4">
-                                    Chatting with: {thread.assistant.name}
-                                </p>
+                                <div>
+                                    <Heading as="h4">
+                                        {thread.name ?? "Untitled"}
+                                    </Heading>
+                                    <p className="mb-4">
+                                        Chatting with: {thread.assistant.name}
+                                    </p>
+                                </div>
                                 <ButtonLink
+                                    className="inline-flex items-center gap-2 self-end"
                                     to={`/dashboard/${thread.assistant.oId}/${thread.id}`}
                                     variant="outline"
                                 >
-                                    Open chat
+                                    <MessagesSquareIcon /> Open chat
                                 </ButtonLink>
                             </Card>
                         ))
