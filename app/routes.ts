@@ -18,10 +18,15 @@ export default [
             route(Paths.CREATE_ASSISTANT, "routes/create-assistant.tsx"),
             route(Paths.CREATE_THREAD, "routes/create-thread.tsx"),
             route(":assistantId/:threadId", "routes/chat.tsx"),
+            route(
+                `:assistantId/${Paths.CREATE_FILE}`,
+                "routes/create-file.tsx",
+            ),
         ]),
     ]),
     ...prefix(Paths.API, [
         route(Paths.ASSISTANTS, "routes/api/assistants.ts"),
+        route(Paths.FILES, "routes/api/files.ts"),
         route(Paths.THREADS, "routes/api/threads.ts"),
         route(`${Paths.STREAM}/:assistantId/:threadId`, "routes/api/stream.ts"),
     ]),

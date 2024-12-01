@@ -59,6 +59,9 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                     <Heading as="h4">{name}</Heading>
                                     {description && <p>{description}</p>}
                                     <p>{instructions}</p>
+                                    <ButtonLink to={`${id}/create-file`}>
+                                        Add file
+                                    </ButtonLink>
                                 </Card>
                             ),
                         )

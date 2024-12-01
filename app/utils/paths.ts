@@ -2,7 +2,6 @@ export enum Paths {
     BASE = "/",
     API = "/api",
     DASHBOARD = "/dashboard",
-    FILES = "/files",
     JOIN = "/join",
     LOGIN = "/login",
     LOGOUT = "/logout",
@@ -16,6 +15,10 @@ export enum Paths {
     API_THREADS = "/api/threads",
     // STREAM ==========
     STREAM = "/stream",
+    // FILE ==========
+    FILES = "files",
+    CREATE_FILE = "create-file",
+    API_FILES = "/api/files",
 }
 
 // ASSISTANTS ==========
