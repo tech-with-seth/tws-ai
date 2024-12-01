@@ -2,6 +2,7 @@ import { useFetcher, useNavigate } from "react-router";
 import { Button } from "~/components/Button";
 import { Drawer } from "~/components/Drawer";
 import { Heading } from "~/components/Heading";
+import { TextareaFormField } from "~/components/TextareaFormField";
 import { TextFormField } from "~/components/TextFormField";
 import useDrawer from "~/hooks/useDrawer";
 import { Paths } from "~/utils/paths";
@@ -35,7 +36,7 @@ export default function CreateAssistant() {
                     name="name"
                     helperText="What do you want to name your assistant?"
                 />
-                <TextFormField
+                <TextareaFormField
                     id="instructions"
                     label="Instructions"
                     name="instructions"

@@ -8,10 +8,20 @@ import {
 } from "react-router";
 
 import type { Route } from "./+types/root";
-import "./app.css";
 import { Heading } from "./components/Heading";
 
-export const links: Route.LinksFunction = () => [];
+import "./app.css";
+
+export function meta() {
+    return [
+        { title: "TWS AI Assistants" },
+        {
+            name: "description",
+            content:
+                "TWS AI Assistants provide intelligent solutions to enhance your productivity and streamline your workflow.",
+        },
+    ];
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
     return (
