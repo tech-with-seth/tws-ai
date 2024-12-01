@@ -13,13 +13,13 @@ export function RadioCard({
     ...rest
 }: RadioCardProps) {
     return (
-        <div>
+        <div tabIndex={1}>
             <input id={id} className="peer hidden" type="radio" {...rest} />
             <label
                 htmlFor={id}
                 className={cx(
                     cardVariants({ border }),
-                    "inline-block cursor-pointer peer-checked:border-primary-600 peer-checked:text-primary-600 dark:peer-checked:text-primary-500",
+                    "flex gap-2 peer-checked:border-primary-600 peer-checked:text-primary-600 dark:peer-checked:text-primary-500",
                     className,
                 )}
             >

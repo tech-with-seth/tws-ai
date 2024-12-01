@@ -13,6 +13,7 @@ import { Button } from "~/components/Button";
 import { getThreadByOpenId, getThreadMessages } from "~/models/thread.server";
 import { shapeMessages } from "~/utils/common";
 import { getAssistant } from "~/models/assistant.server";
+import { Message } from "~/components/Message";
 
 export async function loader({ params }: Route.LoaderArgs) {
     const { assistantId, threadId } = params;
@@ -101,9 +102,17 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
                         {thread?.name}
                     </Heading>
                 </div>
-                <div className="flex-1 overflow-y-auto p-4">
-                    {JSON.stringify(messageHistory)}
-                    {JSON.stringify(messages)}
+                <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4">
+                    {messageHistory.map((m) => (
+                        <Message key={m.id} role={m.role}>
+                            {m.text}
+                        </Message>
+                    ))}
+                    {messages.map((m) => (
+                        <Message key={m.id} role={m.role}>
+                            {m.content}
+                        </Message>
+                    ))}
                     <div ref={messagesEndRef} />
                 </div>
                 <div className="border-t border-t-zinc-300 p-4 dark:border-t-zinc-600">
@@ -112,6 +121,7 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
                             className="flex-1"
                             onChange={handleInputChange}
                             value={input}
+                            placeholder="Type a message..."
                         />
                         <Button disabled={isInProgress}>Send</Button>
                     </form>
