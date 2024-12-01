@@ -14,7 +14,6 @@ export const messageVariants = cva({
             data: "bg-primary-500 dark:bg-primary-500 text-left",
         },
     },
-    defaultVariants: {},
 });
 
 interface MessageProps extends VariantProps<typeof messageVariants> {}
@@ -26,25 +25,22 @@ export function Message({ children, role }: PropsWithChildren<MessageProps>) {
     return (
         <div
             className={cx(
-                "flex items-start gap-2",
+                "prose prose-p:my-0 prose-strong:dark:text-primary-200 flex items-start gap-2",
                 isUser && "self-end text-right",
                 isAssistant && "self-start text-left",
             )}
         >
             {isAssistant && (
-                <Card className="p-2" border={false}>
-                    <BotIcon className="h-6 w-6" />
+                <Card border={false}>
+                    <BotIcon className="h-6 w-6 text-white" />
                 </Card>
             )}
-            <Card
-                className={cx("flex gap-2", messageVariants({ role }))}
-                border={false}
-            >
+            <Card className={cx(messageVariants({ role }))} border={false}>
                 {children}
             </Card>
             {isUser && (
-                <Card className="p-2" border={false}>
-                    <CircleUserIcon className="h-6 w-6" />
+                <Card border={false}>
+                    <CircleUserIcon className="h-6 w-6 text-white" />
                 </Card>
             )}
         </div>

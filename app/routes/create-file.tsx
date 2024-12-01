@@ -50,7 +50,7 @@ export default function CreateFile() {
                 <TextFormField
                     id="title"
                     label="Title"
-                    name="title"
+                    name="fileName"
                     helperText="What is the file title?"
                 />
                 <TextFormField

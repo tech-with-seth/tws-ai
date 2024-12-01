@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { data, useFetcher, useNavigate, useParams } from "react-router";
 import { useAssistant } from "ai/react";
 import invariant from "tiny-invariant";
+import Markdown from "react-markdown";
 
 import { Drawer } from "~/components/Drawer";
 import { Heading } from "~/components/Heading";
@@ -29,9 +30,9 @@ export async function loader({ params }: Route.LoaderArgs) {
 
     return data({
         assistant,
-        thread,
         hasName,
         messageHistory,
+        thread,
     });
 }
 
@@ -105,12 +106,14 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
                 <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4">
                     {messageHistory.map((m) => (
                         <Message key={m.id} role={m.role}>
-                            {m.text}
+                            <Markdown>{m.text}</Markdown>
                         </Message>
                     ))}
                     {messages.map((m) => (
                         <Message key={m.id} role={m.role}>
-                            {m.content}
+                            <Markdown className={`animate-in fade-in`}>
+                                {m.content}
+                            </Markdown>
                         </Message>
                     ))}
                     <div ref={messagesEndRef} />

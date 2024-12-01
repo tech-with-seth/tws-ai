@@ -5,7 +5,7 @@ import { Link, LinkProps } from "react-router";
 import { buttonVariants } from "./Button";
 
 export interface ButtonLinkProps
-    extends LinkProps,
+    extends Pick<LinkProps, "className" | "to">,
         VariantProps<typeof buttonVariants> {}
 
 export function ButtonLink({

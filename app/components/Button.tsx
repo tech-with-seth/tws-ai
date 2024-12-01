@@ -8,13 +8,14 @@ export const buttonVariants = cva({
         variant: {
             primary:
                 "border border-primary-700 dark:border-primary-300 bg-primary-500 dark:bg-primary-700 dark:hover:bg-primary-600 hover:bg-primary-600",
-            secondary: "bg-gray-500 hover:bg-gray-600",
+            secondary: "bg-secondary-500 hover:bg-secondary-600",
             icon: "rounded-xl border border-zinc-300 dark:border-zinc-600",
             ghost: "bg-transparent",
             outline:
-                "border border-primary-500 text-primary-500 bg-transparent dark:hover:bg-zinc-800/50",
+                "text-primary-700 hover:text-white border border-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-primary-500 dark:text-primary-500 dark:hover:text-white dark:hover:bg-primary-500 dark:focus:ring-primary-800",
         },
         size: {
+            sm: "px-2.5 py-1.5 text-sm",
             md: "px-3.5 py-2",
             lg: "px-6 py-3 text-xl",
         },

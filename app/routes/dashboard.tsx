@@ -1,5 +1,6 @@
 import { Outlet } from "react-router";
 import invariant from "tiny-invariant";
+import { FileQuestion, PlusIcon } from "lucide-react";
 
 import { ButtonLink } from "~/components/ButtonLink";
 import { Card } from "~/components/Card";
@@ -11,8 +12,6 @@ import { HorizontalRule } from "~/components/HorizontalRule";
 import { Paths } from "~/utils/paths";
 import { Route } from "./+types/dashboard";
 import { Banner } from "~/components/Banner";
-import { FileQuestion } from "lucide-react";
-import { Button } from "~/components/Button";
 
 export async function loader({ request }: Route.LoaderArgs) {
     const userId = await getUserId(request);
@@ -44,7 +43,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
             <div className="px-4">
                 <div className="mb-4 flex gap-4">
                     <Heading>Assistants</Heading>
-                    <ButtonLink variant="outline" to={Paths.CREATE_ASSISTANT}>
+                    <ButtonLink variant="secondary" to={Paths.CREATE_ASSISTANT}>
                         Create assistant
                     </ButtonLink>
                 </div>
@@ -58,9 +57,17 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                 >
                                     <Heading as="h4">{name}</Heading>
                                     {description && <p>{description}</p>}
-                                    <p>{instructions}</p>
-                                    <ButtonLink to={`${id}/create-file`}>
-                                        Add file
+                                    <p className="mb-4">{instructions}</p>
+                                    <ButtonLink
+                                        className="inline-flex items-center gap-1"
+                                        to={`${id}/create-file`}
+                                        size="sm"
+                                        variant="secondary"
+                                    >
+                                        <PlusIcon className="h-4 w-4" />
+                                        <span className="inline-block">
+                                            Add file
+                                        </span>
                                     </ButtonLink>
                                 </Card>
                             ),
@@ -78,7 +85,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                 <HorizontalRule space="lg" />
                 <div className="mb-4 flex gap-4">
                     <Heading>Threads</Heading>
-                    <ButtonLink variant="outline" to={Paths.CREATE_THREAD}>
+                    <ButtonLink variant="secondary" to={Paths.CREATE_THREAD}>
                         Create thread
                     </ButtonLink>
                 </div>
@@ -92,8 +99,12 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                 <Heading as="h4">
                                     {thread.name ?? "Untitled"}
                                 </Heading>
+                                <p className="mb-4">
+                                    Chatting with: {thread.assistant.name}
+                                </p>
                                 <ButtonLink
                                     to={`/dashboard/${thread.assistant.oId}/${thread.id}`}
+                                    variant="outline"
                                 >
                                     Open chat
                                 </ButtonLink>
