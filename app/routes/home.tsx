@@ -35,10 +35,7 @@ export default function Home() {
                             </ButtonLink>
                         </li>
                         <li>
-                            <ButtonLink
-                                variant="secondary"
-                                to={Paths.DASHBOARD}
-                            >
+                            <ButtonLink to={Paths.DASHBOARD}>
                                 Settings
                             </ButtonLink>
                         </li>

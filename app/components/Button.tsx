@@ -6,15 +6,10 @@ export const buttonVariants = cva({
     base: "rounded-xl text-white",
     variants: {
         variant: {
-            primary: [
-                "bg-primary-500 dark:bg-primary-600 dark:hover:bg-primary-600 hover:bg-primary-600",
+            solid: [
+                "bg-primary-300 dark:bg-primary-700 dark:hover:bg-primary-600 hover:bg-primary-600",
                 "border border-primary-700 dark:border-primary-800",
                 "focus:ring-4 focus:outline-none focus:ring-primary-300 dark:focus:ring-primary-800",
-            ],
-            secondary: [
-                "bg-secondary-500 dark:bg-secondary-700 dark:hover:bg-secondary-600 hover:bg-secondary-600",
-                "border border-secondary-300 dark:border-secondary-500",
-                "focus:ring-4 focus:outline-none focus:ring-secondary-300 dark:focus:ring-secondary-800",
             ],
             icon: [
                 "border border-secondary-500 dark:border-secondary-700",
@@ -25,6 +20,7 @@ export const buttonVariants = cva({
                 "hover:bg-zinc-300 dark:hover:bg-zinc-600",
             ],
             outline: [
+                "bg-transparent",
                 "text-primary-700 dark:text-primary-500 dark:hover:text-white",
                 "hover:text-white hover:bg-primary-800/20 dark:hover:bg-primary-500/20",
                 "border border-primary-700 dark:border-primary-500",
@@ -39,8 +35,8 @@ export const buttonVariants = cva({
         },
     },
     defaultVariants: {
-        variant: "primary",
         size: "md",
+        variant: "solid",
     },
     compoundVariants: [
         {
@@ -57,10 +53,11 @@ export const buttonVariants = cva({
 });
 
 export interface ButtonProps
-    extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-        VariantProps<typeof buttonVariants> {
-    className?: string;
-}
+    extends Pick<
+            React.ButtonHTMLAttributes<HTMLButtonElement>,
+            "className" | "disabled" | "name" | "type" | "value" | "onClick"
+        >,
+        VariantProps<typeof buttonVariants> {}
 
 export function Button({
     children,

@@ -46,24 +46,23 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
     return (
         <>
             <div className="px-4">
-                <div className="mb-4 flex gap-4">
+                <div className="mb-4 flex items-center gap-4">
                     <Heading>Assistants</Heading>
                     <ButtonLink
                         className="inline-flex items-center gap-2"
-                        variant="secondary"
                         to={Paths.CREATE_ASSISTANT}
                     >
                         <PlusIcon />
                         Create assistant
                     </ButtonLink>
                 </div>
-                <div className="flex flex-wrap gap-4">
+                <div className="flex gap-4">
                     {assistants && assistants.length > 0 ? (
                         assistants.map(
                             ({ id, name, description, instructions }) => (
                                 <Card
                                     key={id}
-                                    className="flex min-w-[200px] basis-1/4 flex-col justify-between"
+                                    className="flex min-w-[150px] basis-1/4 flex-col justify-between"
                                 >
                                     <div>
                                         <Heading as="h4">{name}</Heading>
@@ -108,23 +107,22 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                     )}
                 </div>
                 <HorizontalRule space="lg" />
-                <div className="mb-4 flex gap-4">
+                <div className="mb-4 flex items-center gap-4">
                     <Heading>Threads</Heading>
                     <ButtonLink
                         className="inline-flex items-center gap-2"
-                        variant="secondary"
                         to={Paths.CREATE_THREAD}
                     >
                         <PlusIcon />
                         Create thread
                     </ButtonLink>
                 </div>
-                <div className="flex flex-wrap gap-4">
+                <div className="flex gap-4">
                     {threads && threads.length > 0 ? (
                         threads.map((thread) => (
                             <Card
                                 key={thread.id}
-                                className="flex min-w-[200px] basis-1/4 flex-col justify-between"
+                                className="flex min-w-[150px] basis-1/4 flex-col justify-between"
                             >
                                 <div>
                                     <Heading as="h4">
@@ -138,6 +136,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                     className="inline-flex items-center gap-2 self-end"
                                     to={`/dashboard/${thread.assistant.oId}/${thread.id}`}
                                     variant="outline"
+                                    size="sm"
                                 >
                                     <MessagesSquareIcon /> Open chat
                                 </ButtonLink>

@@ -1,13 +1,5 @@
 import type { Config } from "tailwindcss";
-import {
-    amber,
-    emerald,
-    green,
-    purple,
-    rose,
-    sky,
-    yellow,
-} from "tailwindcss/colors";
+import { amber, emerald, gray, green, rose } from "tailwindcss/colors";
 
 export default {
     content: ["./app/**/{**,.client,.server}/**/*.{js,jsx,ts,tsx}"],
@@ -27,7 +19,7 @@ export default {
             },
             colors: {
                 primary: emerald,
-                secondary: purple,
+                secondary: gray,
                 success: green,
                 warning: amber,
                 danger: rose,
