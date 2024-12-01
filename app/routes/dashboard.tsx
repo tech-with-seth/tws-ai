@@ -1,10 +1,11 @@
-import { Outlet } from "react-router";
+import { Outlet, useFetcher } from "react-router";
 import invariant from "tiny-invariant";
 import {
     BotIcon,
     FileQuestion,
     MessagesSquareIcon,
     PlusIcon,
+    SparkleIcon,
 } from "lucide-react";
 
 import { ButtonLink } from "~/components/ButtonLink";
@@ -17,6 +18,7 @@ import { HorizontalRule } from "~/components/HorizontalRule";
 import { Paths } from "~/utils/paths";
 import { Route } from "./+types/dashboard";
 import { Banner } from "~/components/Banner";
+import { Button } from "~/components/Button";
 
 export async function loader({ request }: Route.LoaderArgs) {
     const userId = await getUserId(request);
@@ -42,6 +44,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function Dashboard({ loaderData }: Route.ComponentProps) {
     const { assistants, threads } = loaderData;
+    const threadFetcher = useFetcher();
 
     return (
         <>
@@ -92,6 +95,26 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                                 Add file
                                             </span>
                                         </ButtonLink>
+                                        <threadFetcher.Form
+                                            method="POST"
+                                            action={Paths.API_THREADS}
+                                        >
+                                            <input
+                                                type="hidden"
+                                                name="assistantId"
+                                                value={id}
+                                            />
+                                            <Button
+                                                className="inline-flex items-center gap-1"
+                                                size="sm"
+                                                type="submit"
+                                            >
+                                                <SparkleIcon className="h-4 w-4" />
+                                                <span className="inline-block">
+                                                    New thread
+                                                </span>
+                                            </Button>
+                                        </threadFetcher.Form>
                                     </div>
                                 </Card>
                             ),
@@ -109,13 +132,6 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                 <HorizontalRule space="lg" />
                 <div className="mb-4 flex items-center gap-4">
                     <Heading>Threads</Heading>
-                    <ButtonLink
-                        className="inline-flex items-center gap-2"
-                        to={Paths.CREATE_THREAD}
-                    >
-                        <PlusIcon />
-                        Create thread
-                    </ButtonLink>
                 </div>
                 <div className="flex gap-4">
                     {threads && threads.length > 0 ? (
@@ -135,7 +151,6 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                 <ButtonLink
                                     className="inline-flex items-center gap-2 self-end"
                                     to={`/dashboard/${thread.assistant.oId}/${thread.id}`}
-                                    variant="outline"
                                     size="sm"
                                 >
                                     <MessagesSquareIcon /> Open chat

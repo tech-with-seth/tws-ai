@@ -44,7 +44,7 @@ export default function CreateThread() {
                         <RadioCard
                             id={assistant.id}
                             key={assistant.id}
-                            name="assistant"
+                            name="assistantId"
                             value={assistant.id}
                         >
                             {assistant.name}
