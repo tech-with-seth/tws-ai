@@ -42,9 +42,9 @@ export default function CreateThread() {
                 <div className="flex gap-4">
                     {assistants.map((assistant: Assistant) => (
                         <RadioCard
-                            key={assistant.id}
                             id={assistant.id}
-                            name="assistantId"
+                            key={assistant.id}
+                            name="assistant"
                             value={assistant.id}
                         >
                             {assistant.name}
