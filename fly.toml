@@ -3,12 +3,12 @@
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'tws-ai-rough-surf-5096'
+app = 'tws-ai'
 primary_region = 'dfw'
 
 [build]
-  # Add a build command to run Prisma generate
   command = "npm install && npx prisma generate"
+  dockerfile = "Dockerfile"
 
 [http_service]
   internal_port = 5173
