@@ -1,9 +1,11 @@
 import { Outlet, useFetcher } from "react-router";
 import invariant from "tiny-invariant";
 import {
-    BotIcon,
+    FileIcon,
     FileQuestion,
+    ListIcon,
     MessagesSquareIcon,
+    PencilIcon,
     PlusIcon,
     SparkleIcon,
 } from "lucide-react";
@@ -55,7 +57,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                         className="inline-flex items-center gap-2"
                         to={Paths.CREATE_ASSISTANT}
                     >
-                        <PlusIcon />
+                        <PencilIcon />
                         Create assistant
                     </ButtonLink>
                 </div>
@@ -79,7 +81,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                             size="sm"
                                             variant="outline"
                                         >
-                                            <BotIcon className="h-4 w-4" />
+                                            <ListIcon className="h-4 w-4" />
                                             <span className="inline-block">
                                                 Details
                                             </span>
@@ -90,7 +92,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                             size="sm"
                                             variant="outline"
                                         >
-                                            <PlusIcon className="h-4 w-4" />
+                                            <FileIcon className="h-4 w-4" />
                                             <span className="inline-block">
                                                 Add file
                                             </span>

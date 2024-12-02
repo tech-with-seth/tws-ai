@@ -2,6 +2,16 @@
 
 A modern, production-ready template for building full-stack React applications using React Router.
 
+## Stack
+
+- [React Router](https://reactrouter.com/home)
+- [Prisma](https://www.prisma.io/)
+- [Neon DB (Postgres)](https://neon.tech/home)
+- [Open AI](https://platform.openai.com/)
+- [Vercel AI SDK](https://sdk.vercel.ai/)
+- [Zod](https://zod.dev/)
+- [Tailwind CSS](https://tailwindcss.com/), [CVA](https://beta.cva.style/), [Lucide](https://lucide.dev/)
+
 ## Features
 
 - 🚀 Server-side rendering
@@ -88,10 +98,6 @@ Make sure to deploy the output of `npm run build`
 │   ├── client/    # Static assets
 │   └── server/    # Server-side code
 ```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
 
 ---
 
