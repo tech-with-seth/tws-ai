@@ -7,6 +7,8 @@ app = 'tws-ai-rough-surf-5096'
 primary_region = 'dfw'
 
 [build]
+  # Add a build command to run Prisma generate
+  command = "npm install && npx prisma generate"
 
 [http_service]
   internal_port = 5173
