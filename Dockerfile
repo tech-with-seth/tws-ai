@@ -3,14 +3,14 @@ COPY . /app
 COPY prisma ./prisma
 WORKDIR /app
 RUN npm ci
-RUN npx prisma generate
+RUN npx prisma generate --schema=./prisma/schema.prisma
 
 FROM node:20-alpine as production-dependencies-env
 COPY ./package.json package-lock.json /app/
 COPY prisma ./prisma
 WORKDIR /app
 RUN npm ci --omit=dev
-RUN npx prisma generate
+RUN npx prisma generate --schema=./prisma/schema.prisma
 
 FROM node:20-alpine AS build-env
 COPY . /app/
