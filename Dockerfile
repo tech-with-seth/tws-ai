@@ -8,6 +8,7 @@ FROM node:20-alpine as production-dependencies-env
 COPY ./package.json package-lock.json /app/
 WORKDIR /app
 RUN npm ci --omit=dev
+RUN npx prisma generate
 
 FROM node:20-alpine AS build-env
 COPY . /app/
