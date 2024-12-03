@@ -12,6 +12,7 @@ export default [
         index("routes/home.tsx"),
         route(Paths.LOGIN, "routes/login.tsx"),
         route(Paths.JOIN, "routes/join.tsx"),
+        route(Paths.LOGOUT, "routes/logout.tsx"),
     ]),
     layout("./routes/restricted.tsx", [
         route(Paths.DASHBOARD, "routes/dashboard.tsx", [
