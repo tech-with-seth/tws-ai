@@ -5,7 +5,6 @@ app = 'tws-ai'
 primary_region = 'dfw'
 
 [build]
-  command = "npm install && npx prisma generate"
   dockerfile = "Dockerfile"
 
 [http_service]

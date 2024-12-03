@@ -1,14 +1,16 @@
 FROM node:20-alpine as development-dependencies-env
 COPY . /app
+COPY prisma ./prisma
 WORKDIR /app
 RUN npm ci
-RUN npx prisma generate --schema prisma/schema.prisma
+RUN npx prisma generate
 
 FROM node:20-alpine as production-dependencies-env
 COPY ./package.json package-lock.json /app/
+COPY prisma ./prisma
 WORKDIR /app
 RUN npm ci --omit=dev
-RUN npx prisma generate --schema prisma/schema.prisma
+RUN npx prisma generate
 
 FROM node:20-alpine AS build-env
 COPY . /app/
