@@ -72,7 +72,6 @@ export default function LoginRoute() {
                             type="email"
                             label="Email"
                             errorText={data?.errors?.email}
-                            defaultValue={`seth@mail.com`}
                         />
                         <TextFormField
                             id="password"
@@ -80,7 +79,6 @@ export default function LoginRoute() {
                             type="password"
                             label="Password"
                             errorText={data?.errors?.password}
-                            defaultValue={`asdfasdfasdf`}
                         />
                         <Button
                             type="submit"
