@@ -27,12 +27,18 @@ RUN npm ci
 # ===========================
 FROM dependencies AS build
 
+# Set working directory
+WORKDIR /app
+
 # Copy Prisma schema and generate client
 COPY prisma ./prisma/
 RUN npx prisma generate
 
 # Copy the rest of the application code
 COPY . .
+
+# Build the application (assuming a build script is defined in package.json)
+RUN npm run build
 
 # ===========================
 # Stage 4: Production
