@@ -159,7 +159,9 @@ export function Button({
                     size,
                     variant,
                 }),
-                "flex items-center gap-1.5",
+                (Boolean(IconBefore) || Boolean(IconAfter)) &&
+                    children &&
+                    "flex items-center gap-1.5",
             )}
             {...rest}
         >

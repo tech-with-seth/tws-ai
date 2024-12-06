@@ -107,7 +107,7 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
                             drawerSize === "sm" &&
                                 "border-primary-500 dark:border-primary-500",
                         )}
-                        variant="icon"
+                        variant="outline"
                         onClick={() => setDrawerSize("sm")}
                     >
                         Small
@@ -117,7 +117,7 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
                             drawerSize === "md" &&
                                 "border-primary-500 dark:border-primary-500",
                         )}
-                        variant="icon"
+                        variant="outline"
                         onClick={() => setDrawerSize("md")}
                     >
                         Medium
@@ -127,7 +127,7 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
                             drawerSize === "lg" &&
                                 "border-primary-500 dark:border-primary-500",
                         )}
-                        variant="icon"
+                        variant="outline"
                         onClick={() => setDrawerSize("lg")}
                     >
                         Large
@@ -168,9 +168,12 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
                             value={input}
                             placeholder="Type a message..."
                         />
-                        <Button className="flex gap-2" disabled={isInProgress}>
+                        <Button
+                            className="flex gap-2"
+                            iconAfter={SendHorizonalIcon}
+                            disabled={isInProgress}
+                        >
                             Send
-                            <SendHorizonalIcon />
                         </Button>
                     </form>
                 </div>

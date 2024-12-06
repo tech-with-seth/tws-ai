@@ -78,13 +78,13 @@ export function Drawer({
     size = "sm",
 }: PropsWithChildren<DrawerProps>) {
     const orientedIcon =
-        position === "bottom" ? (
-            <PanelBottomCloseIcon className="stroke-zinc-500 dark:stroke-zinc-200" />
-        ) : position === "left" ? (
-            <PanelLeftCloseIcon className="stroke-zinc-500 dark:stroke-zinc-200" />
-        ) : position === "right" ? (
-            <PanelRightCloseIcon className="stroke-zinc-500 dark:stroke-zinc-200" />
-        ) : null;
+        position === "bottom"
+            ? PanelBottomCloseIcon
+            : position === "left"
+              ? PanelLeftCloseIcon
+              : position === "right"
+                ? PanelRightCloseIcon
+                : null;
 
     return (
         <>
@@ -99,9 +99,11 @@ export function Drawer({
             >
                 <div className="flex h-full flex-col">
                     <div className="flex justify-between gap-2 border-b border-b-zinc-400 p-4 dark:border-b-zinc-600">
-                        <Button variant="icon" onClick={handleClose}>
-                            {orientedIcon}
-                        </Button>
+                        <Button
+                            variant="outline"
+                            iconBefore={orientedIcon ?? PanelLeftCloseIcon}
+                            onClick={handleClose}
+                        />
                         <div>{aux}</div>
                     </div>
                     <div

@@ -21,10 +21,10 @@ export function ButtonLink({
             className={cx(
                 "inline-block",
                 buttonVariants({
+                    className,
                     variant,
                     size,
                 }),
-                className,
             )}
         >
             {children}

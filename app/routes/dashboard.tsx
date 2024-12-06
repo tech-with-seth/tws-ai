@@ -111,11 +111,9 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                                 className="inline-flex items-center gap-1"
                                                 size="sm"
                                                 type="submit"
+                                                iconBefore={SparkleIcon}
                                             >
-                                                <SparkleIcon className="h-4 w-4" />
-                                                <span className="inline-block">
-                                                    New thread
-                                                </span>
+                                                New thread
                                             </Button>
                                         </threadFetcher.Form>
                                     </div>
@@ -149,7 +147,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                     </Heading>
                                     <p className="mb-4 mt-2">
                                         Chatting with:{" "}
-                                        <span className="inline-block rounded-xl bg-secondary-500 px-2 py-1">
+                                        <span className="inline-block rounded-xl bg-secondary-500 px-2 py-1 text-white dark:text-white">
                                             {thread.assistant.name}
                                         </span>
                                     </p>
@@ -163,8 +161,9 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                             className="inline-flex items-center gap-2 self-end"
                                             size="sm"
                                             type="submit"
+                                            iconBefore={TrashIcon}
                                         >
-                                            <TrashIcon /> Delete chat
+                                            Delete chat
                                         </Button>
                                     </deleteThreadFetcher.Form>
                                     <ButtonLink
