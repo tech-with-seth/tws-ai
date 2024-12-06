@@ -1,5 +1,6 @@
 {
     "name": "tws-ai",
+    "version": "0.0.1",
     "private": true,
     "type": "module",
     "scripts": {
@@ -21,6 +22,7 @@
         "lodash": "^4.17.21",
         "lucide-react": "^0.462.0",
         "openai": "^4.73.0",
+        "prismjs": "^1.29.0",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
         "react-markdown": "^9.0.1",
@@ -36,6 +38,7 @@
         "@types/bcryptjs": "^2.4.6",
         "@types/lodash": "^4.17.13",
         "@types/node": "^20",
+        "@types/prismjs": "^1.26.5",
         "@types/react": "^18.3.12",
         "@types/react-dom": "^18.3.1",
         "autoprefixer": "^10.4.20",

@@ -9,7 +9,10 @@ import {
 import { data, redirect } from "react-router";
 import invariant from "tiny-invariant";
 import { getChatPath } from "~/utils/paths";
-import { createCompletion } from "~/models/completion.server";
+import {
+    createCompletion,
+    ThreadTitleSchema,
+} from "~/models/completion.server";
 import { getPrismaAssistantByOpenId } from "~/models/assistant.server";
 
 export async function action({ request }: Route.ActionArgs) {
@@ -34,10 +37,13 @@ export async function action({ request }: Route.ActionArgs) {
         const threadId = String(form.get("threadId"));
         const prismaThreadId = String(form.get("prismaThreadId"));
 
-        const completion = await createCompletion(name);
+        const completion = await createCompletion(name, {
+            schema: ThreadTitleSchema,
+            schemaTitle: "ThreadTitle",
+        });
 
-        const [firstChoice] = completion.choices;
-        const titleJson = firstChoice.message.content;
+        const first = completion.choices.at(0);
+        const titleJson = first?.message.content;
         const parsed = JSON.parse(titleJson!);
 
         await updateThread(threadId, {

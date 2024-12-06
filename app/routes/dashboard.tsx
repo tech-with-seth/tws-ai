@@ -8,6 +8,7 @@ import {
     PencilIcon,
     PlusIcon,
     SparkleIcon,
+    TrashIcon,
 } from "lucide-react";
 
 import { ButtonLink } from "~/components/ButtonLink";
@@ -47,6 +48,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 export default function Dashboard({ loaderData }: Route.ComponentProps) {
     const { assistants, threads } = loaderData;
     const threadFetcher = useFetcher();
+    const deleteThreadFetcher = useFetcher();
 
     return (
         <>
@@ -61,13 +63,13 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                         Create assistant
                     </ButtonLink>
                 </div>
-                <div className="flex gap-4">
+                <div className="grid gap-3 md:grid-cols-12">
                     {assistants && assistants.length > 0 ? (
                         assistants.map(
                             ({ id, name, description, instructions }) => (
                                 <Card
                                     key={id}
-                                    className="flex min-w-[150px] basis-1/4 flex-col justify-between"
+                                    className="col-span-1 flex h-full flex-col justify-between md:col-span-6 lg:col-span-4 xl:col-span-3"
                                 >
                                     <div>
                                         <Heading as="h4">{name}</Heading>
@@ -135,28 +137,45 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                 <div className="mb-4 flex items-center gap-4">
                     <Heading>Threads</Heading>
                 </div>
-                <div className="flex gap-4">
+                <div className="grid gap-3 md:grid-cols-12">
                     {threads && threads.length > 0 ? (
                         threads.map((thread) => (
                             <Card
                                 key={thread.id}
-                                className="flex min-w-[150px] basis-1/4 flex-col justify-between"
+                                className="col-span-1 flex h-full flex-col justify-between md:col-span-6 lg:col-span-4 xl:col-span-3"
                             >
                                 <div>
                                     <Heading as="h4">
                                         {thread.name ?? "Untitled"}
                                     </Heading>
-                                    <p className="mb-4">
-                                        Chatting with: {thread.assistant.name}
+                                    <p className="mb-4 mt-2">
+                                        Chatting with:{" "}
+                                        <span className="inline-block rounded-xl bg-secondary-500 px-2 py-1">
+                                            {thread.assistant.name}
+                                        </span>
                                     </p>
                                 </div>
-                                <ButtonLink
-                                    className="inline-flex items-center gap-2 self-end"
-                                    to={`/dashboard/${thread.assistant.oId}/${thread.id}`}
-                                    size="sm"
-                                >
-                                    <MessagesSquareIcon /> Open chat
-                                </ButtonLink>
+                                <div className="flex gap-2">
+                                    <deleteThreadFetcher.Form
+                                        method="DELETE"
+                                        action={`/api/thread/${thread.oId}`}
+                                    >
+                                        <Button
+                                            className="inline-flex items-center gap-2 self-end"
+                                            size="sm"
+                                            type="submit"
+                                        >
+                                            <TrashIcon /> Delete chat
+                                        </Button>
+                                    </deleteThreadFetcher.Form>
+                                    <ButtonLink
+                                        className="inline-flex items-center gap-2 self-end"
+                                        to={`/dashboard/${thread.assistant.oId}/${thread.id}`}
+                                        size="sm"
+                                    >
+                                        <MessagesSquareIcon /> Open chat
+                                    </ButtonLink>
+                                </div>
                             </Card>
                         ))
                     ) : (

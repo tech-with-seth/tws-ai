@@ -25,11 +25,13 @@ export default [
             ),
         ]),
         route(`/:assistantId`, "routes/assistant-details.tsx"),
+        ...prefix("admin", [route("labs", "routes/admin/labs.tsx")]),
     ]),
     ...prefix(Paths.API, [
         route(Paths.ASSISTANTS, "routes/api/assistants.ts"),
         route(Paths.FILES, "routes/api/files.ts"),
         route(Paths.THREADS, "routes/api/threads.ts"),
+        route(`${Paths.THREADS}/:threadId`, "routes/api/thread.ts"),
         route(`${Paths.STREAM}/:assistantId/:threadId`, "routes/api/stream.ts"),
     ]),
 ] satisfies RouteConfig;
