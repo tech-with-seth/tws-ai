@@ -9,6 +9,7 @@ import { createCompletion, SnippetSchema } from "~/models/completion.server";
 import { Route } from "../admin/+types/labs";
 import { TextFormField } from "~/components/TextFormField";
 import { Code } from "~/components/Code";
+import { TrashIcon } from "lucide-react";
 
 export async function action({ request }: Route.ActionArgs) {
     const form = await request.formData();
@@ -81,6 +82,13 @@ export default function Labs({ actionData }: Route.ComponentProps) {
                     <Button>Delta</Button>
                     <Button size="lg">Delta</Button>
                 </div>
+                <div className="flex items-start gap-4">
+                    <Button iconBefore={TrashIcon}>Echo</Button>
+                    <Button iconBefore={TrashIcon}>Echo</Button>
+                    <Button iconBefore={TrashIcon} iconAfter={TrashIcon}>
+                        Echo
+                    </Button>
+                </div>
                 <div className="flex gap-4"></div>
             </div>
             <Form method="POST" className="mb-4 flex items-end gap-4">
@@ -93,7 +101,7 @@ export default function Labs({ actionData }: Route.ComponentProps) {
             </Form>
             <div>
                 {!isLoading && !actionData?.snippet ? (
-                    <p>Waiting for prompt.</p>
+                    <p>Enter a prompt 👆🏻</p>
                 ) : isLoading ? (
                     <p>Loading...</p>
                 ) : (

@@ -135,29 +135,37 @@ export interface ButtonProps
             React.ButtonHTMLAttributes<HTMLButtonElement>,
             "className" | "disabled" | "name" | "type" | "value" | "onClick"
         >,
-        VariantProps<typeof buttonVariants> {}
+        VariantProps<typeof buttonVariants> {
+    iconBefore?: React.ElementType;
+    iconAfter?: React.ElementType;
+}
 
 export function Button({
     children,
     className,
     color,
-    variant,
+    iconBefore: IconBefore,
+    iconAfter: IconAfter,
     size,
+    variant,
     ...rest
 }: PropsWithChildren<ButtonProps>) {
     return (
         <button
             className={cx(
                 buttonVariants({
+                    className,
                     color,
                     size,
                     variant,
                 }),
-                className,
+                "flex items-center gap-1.5",
             )}
             {...rest}
         >
-            {children}
+            {IconBefore ? <IconBefore className="h-5 w-5" /> : null}
+            <span className="inline-block">{children}</span>
+            {IconAfter ? <IconAfter className="h-5 w-5" /> : null}
         </button>
     );
 }
