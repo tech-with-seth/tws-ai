@@ -26,7 +26,7 @@ export async function action({ request }: Route.ActionArgs) {
 
 export default function Labs({ actionData }: Route.ComponentProps) {
     const navigation = useNavigation();
-    const isLoading = navigation.state === "loading";
+    const isLoading = navigation.formAction === "/admin/labs";
 
     useEffect(() => {
         Prism.highlightAll();
@@ -38,14 +38,63 @@ export default function Labs({ actionData }: Route.ComponentProps) {
 
     return (
         <div className="px-4">
-            <Form method="POST" className="mb-4">
-                <TextFormField label="Prompt" name="prompt" />
+            <div className="mb-8 flex flex-col gap-4">
+                <div className="flex gap-4">
+                    <Button>Alfa</Button>
+                    <Button color="secondary">Alfa</Button>
+                    <Button color="success">Alfa</Button>
+                    <Button color="warning">Alfa</Button>
+                    <Button color="danger">Alfa</Button>
+                </div>
+                <div className="flex gap-4">
+                    <Button variant="soft">Beta</Button>
+                    <Button color="secondary" variant="soft">
+                        Beta
+                    </Button>
+                    <Button color="success" variant="soft">
+                        Beta
+                    </Button>
+                    <Button color="warning" variant="soft">
+                        Beta
+                    </Button>
+                    <Button color="danger" variant="soft">
+                        Beta
+                    </Button>
+                </div>
+                <div className="flex gap-4">
+                    <Button variant="outline">Charlie</Button>
+                    <Button color="secondary" variant="outline">
+                        Charlie
+                    </Button>
+                    <Button color="success" variant="outline">
+                        Charlie
+                    </Button>
+                    <Button color="warning" variant="outline">
+                        Charlie
+                    </Button>
+                    <Button color="danger" variant="outline">
+                        Charlie
+                    </Button>
+                </div>
+                <div className="flex items-start gap-4">
+                    <Button size="sm">Delta</Button>
+                    <Button>Delta</Button>
+                    <Button size="lg">Delta</Button>
+                </div>
+                <div className="flex gap-4"></div>
+            </div>
+            <Form method="POST" className="mb-4 flex items-end gap-4">
+                <TextFormField
+                    label="Prompt"
+                    name="prompt"
+                    helperText="Write a prompt, get a VS Code snippet"
+                />
                 <Button type="submit">Submit</Button>
             </Form>
             <div>
-                {!actionData?.snippet ? (
+                {!isLoading && !actionData?.snippet ? (
                     <p>Waiting for prompt.</p>
-                ) : isLoading || !actionData?.snippet ? (
+                ) : isLoading ? (
                     <p>Loading...</p>
                 ) : (
                     <Code lang="js">{formattedSnippet}</Code>

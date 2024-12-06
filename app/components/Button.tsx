@@ -3,30 +3,38 @@ import { cva, cx } from "cva.config";
 import { PropsWithChildren } from "react";
 
 export const buttonVariants = cva({
-    base: "rounded-xl text-white",
+    base: "rounded-xl text-white focus:ring-2 focus:outline-none border",
     variants: {
+        color: {
+            primary: [
+                "bg-primary-500 dark:bg-primary-900 dark:hover:bg-primary-600 hover:bg-primary-600",
+                "border-primary-700 dark:border-primary-800",
+                "focus:ring-primary-300 dark:focus:ring-primary-800",
+            ],
+            secondary: [
+                "bg-secondary-500 dark:bg-secondary-900 dark:hover:bg-secondary-600 hover:bg-secondary-600",
+                "border-secondary-700 dark:border-secondary-800",
+                "focus:ring-secondary-300 dark:focus:ring-secondary-800",
+            ],
+            success: [
+                "bg-success-500 dark:bg-success-900 dark:hover:bg-success-600 hover:bg-success-600",
+                "border-success-700 dark:border-success-800",
+                "focus:ring-success-300 dark:focus:ring-success-800",
+            ],
+            warning: [
+                "bg-warning-500 dark:bg-warning-900 dark:hover:bg-warning-600 hover:bg-warning-600",
+                "border-warning-700 dark:border-warning-800",
+                "focus:ring-warning-300 dark:focus:ring-warning-800",
+            ],
+            danger: [
+                "bg-danger-500 dark:bg-danger-900 dark:hover:bg-danger-600 hover:bg-danger-600",
+                "border-danger-700 dark:border-danger-800",
+                "focus:ring-danger-300 dark:focus:ring-danger-800",
+            ],
+        },
         variant: {
-            solid: [
-                "bg-primary-300 dark:bg-primary-700 dark:hover:bg-primary-600 hover:bg-primary-600",
-                "border border-primary-700 dark:border-primary-800",
-                "focus:ring-4 focus:outline-none focus:ring-primary-300 dark:focus:ring-primary-800",
-            ],
-            icon: [
-                "border border-secondary-500 dark:border-secondary-700",
-                "focus:ring-4 focus:outline-none focus:ring-secondary-300 dark:focus:ring-secondary-800",
-            ],
-            ghost: [
-                "bg-transparent",
-                "hover:bg-zinc-300 dark:hover:bg-zinc-600",
-            ],
-            outline: [
-                "bg-transparent",
-                "text-primary-700 dark:text-primary-500 dark:hover:text-white",
-                "hover:text-white hover:bg-primary-800/20 dark:hover:bg-primary-500/20",
-                "border border-primary-700 dark:border-primary-500",
-                "focus:ring-4 focus:outline-none focus:ring-primary-300 dark:focus:ring-primary-800",
-                "font-medium rounded-xl px-5 py-2.5 text-center",
-            ],
+            soft: ["border-none"],
+            outline: ["bg-transparent dark:bg-transparent"],
         },
         size: {
             sm: "px-2.5 py-1.5 text-sm",
@@ -35,19 +43,89 @@ export const buttonVariants = cva({
         },
     },
     defaultVariants: {
+        color: "primary",
         size: "md",
-        variant: "solid",
     },
     compoundVariants: [
         {
-            variant: "icon",
-            size: "md",
-            className: "p-2",
+            color: "primary",
+            variant: ["soft"],
+            className: [
+                `bg-primary-300/25 dark:bg-primary-900/25 dark:hover:bg-primary-600/40 hover:bg-primary-600/40`,
+                `focus:ring-primary-300 dark:focus:ring-primary-800`,
+            ],
         },
         {
-            variant: "icon",
-            size: "lg",
-            className: "p-3",
+            color: "primary",
+            variant: ["soft", "outline"],
+            className: [
+                `text-primary-500 dark:text-primary-500`,
+                `hover:bg-primary-300/40 dark:hover:bg-primary-900/40`,
+            ],
+        },
+        {
+            color: "secondary",
+            variant: ["soft"],
+            className: [
+                `bg-secondary-300/25 dark:bg-secondary-900/25 dark:hover:bg-secondary-600/40 hover:bg-secondary-600/40`,
+                `focus:ring-secondary-300 dark:focus:ring-secondary-800`,
+            ],
+        },
+        {
+            color: "secondary",
+            variant: ["soft", "outline"],
+            className: [
+                `text-secondary-500 dark:text-secondary-500`,
+                `hover:bg-secondary-300/40 dark:hover:bg-secondary-900/40`,
+            ],
+        },
+        {
+            color: "success",
+            variant: ["soft"],
+            className: [
+                `bg-success-300/25 dark:bg-success-900/25 dark:hover:bg-success-600/40 hover:bg-success-600/40`,
+                `focus:ring-success-300 dark:focus:ring-success-800`,
+            ],
+        },
+        {
+            color: "success",
+            variant: ["soft", "outline"],
+            className: [
+                `text-success-500 dark:text-success-500`,
+                `hover:bg-success-300/40 dark:hover:bg-success-900/40`,
+            ],
+        },
+        {
+            color: "warning",
+            variant: ["soft"],
+            className: [
+                `bg-warning-300/25 dark:bg-warning-900/25 dark:hover:bg-warning-600/40 hover:bg-warning-600/40`,
+                `focus:ring-warning-300 dark:focus:ring-warning-800`,
+            ],
+        },
+        {
+            color: "warning",
+            variant: ["soft", "outline"],
+            className: [
+                `text-warning-500 dark:text-warning-500`,
+                `hover:bg-warning-300/40 dark:hover:bg-warning-900/40`,
+            ],
+        },
+        {
+            color: "danger",
+            variant: ["soft"],
+            className: [
+                `bg-danger-300/25 dark:bg-danger-900/25 dark:hover:bg-danger-600/40 hover:bg-danger-600/40`,
+                `focus:ring-danger-300 dark:focus:ring-danger-800`,
+            ],
+        },
+        {
+            color: "danger",
+            variant: ["soft", "outline"],
+            className: [
+                `text-danger-500 dark:text-danger-500`,
+                `hover:bg-danger-300/40 dark:hover:bg-danger-900/40`,
+            ],
         },
     ],
 });
@@ -62,6 +140,7 @@ export interface ButtonProps
 export function Button({
     children,
     className,
+    color,
     variant,
     size,
     ...rest
@@ -70,8 +149,9 @@ export function Button({
         <button
             className={cx(
                 buttonVariants({
-                    variant,
+                    color,
                     size,
+                    variant,
                 }),
                 className,
             )}
