@@ -9,9 +9,9 @@ export const messageVariants = cva({
     variants: {
         role: {
             user: "bg-primary-400 dark:bg-primary-800",
-            assistant: "bg-gray-400 dark:bg-gray-800",
-            system: "bg-primary-500 dark:bg-primary-500 text-left",
-            data: "bg-primary-500 dark:bg-primary-500 text-left",
+            assistant: "bg-secondary-400 dark:bg-secondary-800",
+            system: "bg-secondary-500 dark:bg-secondary-500 text-left",
+            data: "bg-secondary-500 dark:bg-secondary-500 text-left",
         },
     },
 });
@@ -25,7 +25,7 @@ export function Message({ children, role }: PropsWithChildren<MessageProps>) {
     return (
         <div
             className={cx(
-                "prose prose-p:my-0 prose-strong:dark:text-primary-200 flex items-start gap-2 md:max-w-[90%]",
+                "prose flex items-start gap-2 prose-p:my-0 md:max-w-[90%] prose-strong:dark:text-primary-200",
                 isUser && "self-end text-right",
                 isAssistant && "self-start text-left",
             )}

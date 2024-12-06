@@ -24,7 +24,7 @@ export function HorizontalRule({ space }: HorizontalRuleProps) {
     return (
         <hr
             className={cx(
-                `h-px border-0 bg-gray-300 dark:bg-gray-700`,
+                `h-px border-0 bg-zinc-300 dark:bg-zinc-700`,
                 hrVariants({ space }),
             )}
         />

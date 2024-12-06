@@ -6,7 +6,6 @@ import {
     ListIcon,
     MessagesSquareIcon,
     PencilIcon,
-    PlusIcon,
     SparkleIcon,
     TrashIcon,
 } from "lucide-react";
@@ -158,7 +157,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                 <div className="flex gap-2">
                                     <deleteThreadFetcher.Form
                                         method="DELETE"
-                                        action={`/api/thread/${thread.oId}`}
+                                        action={`/api/thread/${thread.id}`}
                                     >
                                         <Button
                                             className="inline-flex items-center gap-2 self-end"

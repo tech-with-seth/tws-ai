@@ -11,9 +11,9 @@ export function Code({ children, lang = "ts" }: PropsWithChildren<CodeProps>) {
     }, [children]);
 
     return (
-        <pre className="block overflow-auto whitespace-pre-wrap rounded-xl border border-zinc-700 bg-gray-100 p-6 dark:bg-black">
+        <pre className="block overflow-auto whitespace-pre-wrap rounded-xl border border-zinc-700 bg-zinc-100 p-6 dark:bg-black">
             <code
-                className={`break-words text-sm text-gray-800 dark:text-gray-200 language-${lang}`}
+                className={`break-words text-sm text-zinc-800 dark:text-zinc-200 language-${lang}`}
             >
                 {children}
             </code>
