@@ -4,7 +4,7 @@ import invariant from "tiny-invariant";
 import { Button } from "~/components/Button";
 import { Drawer } from "~/components/Drawer";
 import { Heading } from "~/components/Heading";
-import { TextFormField } from "~/components/TextFormField";
+import { TextFormField } from "~/components/form/TextFormField";
 import useDrawer from "~/hooks/useDrawer";
 import { Paths } from "~/utils/paths";
 import { Route } from "./+types/create-file";

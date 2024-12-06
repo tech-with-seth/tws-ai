@@ -1,8 +1,9 @@
 import { Outlet } from "react-router";
-import { Route } from "./+types/restricted";
+
+import { Footer } from "~/components/layout/Footer";
 import { requireUserId } from "~/utils/auth.server";
-import Header from "~/components/Header";
-import { Footer } from "~/components/Footer";
+import { Route } from "../+types/restricted";
+import Header from "~/components/layout/Header";
 
 export async function loader({ request }: Route.LoaderArgs) {
     await requireUserId(request);

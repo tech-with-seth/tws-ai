@@ -7,7 +7,7 @@ import "prismjs/themes/prism-tomorrow.css";
 import { Button } from "~/components/Button";
 import { createCompletion, SnippetSchema } from "~/models/completion.server";
 import { Route } from "../admin/+types/labs";
-import { TextFormField } from "~/components/TextFormField";
+import { TextFormField } from "~/components/form/TextFormField";
 import { Code } from "~/components/Code";
 import { TrashIcon } from "lucide-react";
 

@@ -1,23 +1,23 @@
-import { useEffect, useRef } from "react";
+import { cx } from "cva.config";
 import { data, useFetcher, useNavigate, useParams } from "react-router";
+import { SendHorizonalIcon } from "lucide-react";
 import { useAssistant } from "ai/react";
+import { useEffect, useRef } from "react";
 import invariant from "tiny-invariant";
 import Markdown from "react-markdown";
 
-import { Drawer } from "~/components/Drawer";
-import { Heading } from "~/components/Heading";
-import { getThreadStream, Paths } from "~/utils/paths";
-import useDrawer from "~/hooks/useDrawer";
-import { Route } from "./+types/chat";
-import TextField from "~/components/TextField";
 import { Button } from "~/components/Button";
-import { getThreadByOpenId, getThreadMessages } from "~/models/thread.server";
-import { shapeMessages } from "~/utils/common";
+import { Drawer } from "~/components/Drawer";
 import { getAssistant } from "~/models/assistant.server";
+import { getThreadByOpenId, getThreadMessages } from "~/models/thread.server";
+import { getThreadStream, Paths } from "~/utils/paths";
+import { Heading } from "~/components/Heading";
 import { Message } from "~/components/Message";
+import { Route } from "../+types/chat";
+import { shapeMessages } from "~/utils/common";
+import TextField from "~/components/form/TextField";
+import useDrawer from "~/hooks/useDrawer";
 import useLocalStorage from "~/hooks/useLocalStorage";
-import { cx } from "cva.config";
-import { SendHorizonalIcon } from "lucide-react";
 
 export async function loader({ params }: Route.LoaderArgs) {
     const { assistantId, threadId } = params;

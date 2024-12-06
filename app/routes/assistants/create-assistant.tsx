@@ -2,8 +2,8 @@ import { useFetcher, useNavigate } from "react-router";
 import { Button } from "~/components/Button";
 import { Drawer } from "~/components/Drawer";
 import { Heading } from "~/components/Heading";
-import { TextareaFormField } from "~/components/TextareaFormField";
-import { TextFormField } from "~/components/TextFormField";
+import { TextareaFormField } from "~/components/form/TextareaFormField";
+import { TextFormField } from "~/components/form/TextFormField";
 import useDrawer from "~/hooks/useDrawer";
 import { Paths } from "~/utils/paths";
 

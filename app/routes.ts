@@ -8,23 +8,28 @@ import {
 import { Paths } from "./utils/paths";
 
 export default [
-    layout("./routes/site.tsx", [
-        index("routes/home.tsx"),
-        route(Paths.LOGIN, "routes/login.tsx"),
-        route(Paths.JOIN, "routes/join.tsx"),
-        route(Paths.LOGOUT, "routes/logout.tsx"),
+    layout("./routes/public/site.tsx", [
+        index("routes/public/home.tsx"),
+        layout("./routes/auth/turnstile.tsx", [
+            route(Paths.LOGIN, "routes/auth/login.tsx"),
+            route(Paths.JOIN, "routes/auth/join.tsx"),
+        ]),
+        route(Paths.LOGOUT, "routes/auth/logout.tsx"),
     ]),
-    layout("./routes/restricted.tsx", [
-        route(Paths.DASHBOARD, "routes/dashboard.tsx", [
-            route(Paths.CREATE_ASSISTANT, "routes/create-assistant.tsx"),
-            route(Paths.CREATE_THREAD, "routes/create-thread.tsx"),
-            route(":assistantId/:threadId", "routes/chat.tsx"),
+    layout("./routes/protected/restricted.tsx", [
+        route(Paths.DASHBOARD, "routes/protected/dashboard.tsx", [
+            route(
+                Paths.CREATE_ASSISTANT,
+                "routes/assistants/create-assistant.tsx",
+            ),
+            route(Paths.CREATE_THREAD, "routes/threads/create-thread.tsx"),
+            route(":assistantId/:threadId", "routes/threads/chat.tsx"),
             route(
                 `:assistantId/${Paths.CREATE_FILE}`,
-                "routes/create-file.tsx",
+                "routes/files/create-file.tsx",
             ),
         ]),
-        route(`/:assistantId`, "routes/assistant-details.tsx"),
+        route(`/:assistantId`, "routes/assistants/assistant-details.tsx"),
         ...prefix("admin", [route("labs", "routes/admin/labs.tsx")]),
     ]),
     ...prefix(Paths.API, [

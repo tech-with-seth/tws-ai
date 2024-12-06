@@ -5,11 +5,11 @@ import { Button } from "~/components/Button";
 import { Drawer } from "~/components/Drawer";
 import { Heading } from "~/components/Heading";
 import { Paths } from "~/utils/paths";
-import { RadioCard } from "~/components/RadioCard";
-import { TextFormField } from "~/components/TextFormField";
+import { RadioCard } from "~/components/form/RadioCard";
+import { TextFormField } from "~/components/form/TextFormField";
 import useDrawer from "~/hooks/useDrawer";
 import { HorizontalRule } from "~/components/HorizontalRule";
-import { Label } from "~/components/Label";
+import { Label } from "~/components/form/Label";
 
 export default function CreateThread() {
     const { assistants } = useRouteLoaderData("routes/dashboard");

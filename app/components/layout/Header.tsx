@@ -1,6 +1,6 @@
 import { Link, NavLink, NavLinkRenderProps } from "react-router";
 import { Paths } from "~/utils/paths";
-import { ButtonNavLink } from "./ButtonNavLink";
+import { ButtonNavLink } from "~/components/ButtonNavLink";
 
 export default function Header() {
     return (
