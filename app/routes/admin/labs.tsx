@@ -5,7 +5,11 @@ import Prism from "prismjs";
 import "prismjs/themes/prism-tomorrow.css";
 
 import { Button } from "~/components/Button";
-import { createCompletion, SnippetSchema } from "~/models/completion.server";
+import {
+    CompanySchema,
+    createCompletion,
+    SnippetSchema,
+} from "~/models/completion.server";
 import { Route } from "../admin/+types/labs";
 import { TextFormField } from "~/components/form/TextFormField";
 import { Code } from "~/components/Code";
@@ -17,6 +21,8 @@ import { getThreadCount } from "~/models/thread.server";
 import { getUserCount } from "~/models/user.server";
 import { getAssistantCount } from "~/models/assistant.server";
 import { getFileCount } from "~/models/file.server";
+import { createCompany } from "~/models/company.server";
+import invariant from "tiny-invariant";
 
 export async function loader() {
     return data({
@@ -41,6 +47,28 @@ export async function action({ request }: Route.ActionArgs) {
         return {
             snippet: handleCompletionResponse(snippetResponse),
         };
+    }
+
+    if (intent === "createCompany") {
+        const companyCompletionResponse = await createCompletion(
+            `Create a company name and description. Make it professional. Keep the description to no more than 50 words: ${prompt}`,
+            {
+                schema: CompanySchema,
+                schemaTitle: "Company",
+            },
+        );
+
+        const company = handleCompletionResponse(companyCompletionResponse);
+        invariant(company, "Company not found");
+
+        const parsedCompany = JSON.parse(company);
+
+        await createCompany({
+            name: parsedCompany?.name,
+            description: parsedCompany?.description ?? "No description",
+        });
+
+        return { company };
     }
 
     if (intent === "secondaryAction") {
@@ -74,7 +102,7 @@ export default function Labs({ actionData, loaderData }: Route.ComponentProps) {
             <Heading as="h1" className="mb-8 text-6xl font-bold">
                 Labs
             </Heading>
-            <div className="grid grid-cols-12 gap-4">
+            <div className="grid gap-4 lg:grid-cols-12">
                 <div className="col-span-4">
                     <div className="mb-8 flex flex-col gap-4">
                         <div className="flex gap-4">
@@ -135,7 +163,7 @@ export default function Labs({ actionData, loaderData }: Route.ComponentProps) {
                 <div className="col-span-4">
                     <Form method="POST" className="mb-4 flex items-end gap-4">
                         <TextFormField
-                            label="Prompt"
+                            label="Snippet Prompt"
                             name="prompt"
                             helperText="Write a prompt, get a VS Code snippet"
                         />
@@ -159,7 +187,7 @@ export default function Labs({ actionData, loaderData }: Route.ComponentProps) {
                     <HorizontalRule />
                     <Form method="POST" className="mb-4 flex items-end gap-4">
                         <TextFormField
-                            label="Prompt"
+                            label="Funny Prompt"
                             name="prompt"
                             helperText="Say Hooo Boy! after every response"
                         />
@@ -180,6 +208,31 @@ export default function Labs({ actionData, loaderData }: Route.ComponentProps) {
                             <div>{actionData?.secondaryActionText}</div>
                         )}
                     </div>
+                    <HorizontalRule />
+                    <Form method="POST" className="mb-4 flex items-end gap-4">
+                        <TextFormField
+                            label="Company Prompt"
+                            name="prompt"
+                            helperText="Have ChatGPT add a company to the database"
+                        />
+                        <Button
+                            type="submit"
+                            name="intent"
+                            value="createCompany"
+                        >
+                            Submit
+                        </Button>
+                    </Form>
+                    <div>
+                        {!isLoading && !actionData?.company ? (
+                            <p>Enter a prompt 👆🏻</p>
+                        ) : isLoading ? (
+                            <p>Loading...</p>
+                        ) : (
+                            <Code lang="js">{actionData?.company}</Code>
+                        )}
+                    </div>
+                    <HorizontalRule />
                 </div>
                 <div className="col-span-4 flex flex-col gap-4">
                     <Heading as="h2">Stats</Heading>

@@ -17,6 +17,11 @@ export const SnippetSchema = z.object({
     scope: z.string().optional(), // Optional scope where the snippet applies (e.g., "javascript" or "typescript")
 });
 
+export const CompanySchema = z.object({
+    name: z.string(),
+    description: z.string(),
+});
+
 export function createCompletion(
     content: string,
     responseConfig?: {
