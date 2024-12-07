@@ -99,9 +99,6 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
             id="createChat"
             aux={
                 <div className="flex items-center gap-2">
-                    <div>
-                        <p>Window size:</p>
-                    </div>
                     <Button
                         className={cx(
                             drawerSize === "sm" &&
@@ -109,6 +106,7 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
                         )}
                         variant="outline"
                         onClick={() => setDrawerSize("sm")}
+                        size="sm"
                     >
                         Small
                     </Button>
@@ -119,6 +117,7 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
                         )}
                         variant="outline"
                         onClick={() => setDrawerSize("md")}
+                        size="sm"
                     >
                         Medium
                     </Button>
@@ -129,6 +128,7 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
                         )}
                         variant="outline"
                         onClick={() => setDrawerSize("lg")}
+                        size="sm"
                     >
                         Large
                     </Button>

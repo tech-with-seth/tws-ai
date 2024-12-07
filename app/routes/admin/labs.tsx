@@ -10,19 +10,31 @@ import { Route } from "../admin/+types/labs";
 import { TextFormField } from "~/components/form/TextFormField";
 import { Code } from "~/components/Code";
 import { TrashIcon } from "lucide-react";
+import { HorizontalRule } from "~/components/HorizontalRule";
 
 export async function action({ request }: Route.ActionArgs) {
     const form = await request.formData();
     const prompt = String(form.get("prompt"));
+    const intent = String(form.get("intent"));
 
-    const snippetResponse = await createCompletion(prompt, {
-        schema: SnippetSchema,
-        schemaTitle: "Snippet",
-    });
+    if (intent === "createSnippet") {
+        const snippetResponse = await createCompletion(prompt, {
+            schema: SnippetSchema,
+            schemaTitle: "Snippet",
+        });
 
-    return {
-        snippet: snippetResponse.choices[0].message.content,
-    };
+        return {
+            snippet: snippetResponse.choices[0].message.content,
+        };
+    }
+
+    if (intent === "otherAction") {
+        console.log("Other action");
+
+        return null;
+    }
+
+    return null;
 }
 
 export default function Labs({ actionData }: Route.ComponentProps) {
@@ -97,7 +109,29 @@ export default function Labs({ actionData }: Route.ComponentProps) {
                     name="prompt"
                     helperText="Write a prompt, get a VS Code snippet"
                 />
-                <Button type="submit">Submit</Button>
+                <Button type="submit" name="intent" value="createSnippet">
+                    Submit
+                </Button>
+            </Form>
+            <div>
+                {!isLoading && !actionData?.snippet ? (
+                    <p>Enter a prompt 👆🏻</p>
+                ) : isLoading ? (
+                    <p>Loading...</p>
+                ) : (
+                    <Code lang="js">{formattedSnippet}</Code>
+                )}
+            </div>
+            <HorizontalRule />
+            <Form method="POST" className="mb-4 flex items-end gap-4">
+                <TextFormField
+                    label="Prompt"
+                    name="prompt"
+                    helperText="Write a prompt, get a VS Code snippet"
+                />
+                <Button type="submit" name="intent" value="">
+                    Submit
+                </Button>
             </Form>
             <div>
                 {!isLoading && !actionData?.snippet ? (
