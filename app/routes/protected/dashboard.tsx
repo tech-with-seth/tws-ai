@@ -1,4 +1,4 @@
-import { Outlet, useFetcher } from "react-router";
+import { Outlet, useFetcher, useNavigate, useNavigation } from "react-router";
 import invariant from "tiny-invariant";
 import {
     FileIcon,
@@ -47,9 +47,27 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function Dashboard({ loaderData }: Route.ComponentProps) {
     const { assistants, threads } = loaderData;
-    const threadFetcher = useFetcher();
-    const deleteThreadFetcher = useFetcher();
+    const navigation = useNavigation();
 
+    const threadFetcher = useFetcher();
+    const getCreateThreadChatIcon = (assistantId: string) =>
+        threadFetcher.state !== "idle" &&
+        threadFetcher.formAction?.includes(assistantId) ? (
+            <LoaderPinwheelIcon className="animate-spin" />
+        ) : (
+            <SparkleIcon />
+        );
+
+    const useWrappedFetcher = ({ key }: { key?: string } = {}) => {
+        const fetcher = useFetcher({ key });
+        const loading = fetcher.state !== "idle";
+
+        return [fetcher, loading];
+    };
+
+    const [] = useWrappedFetcher();
+
+    const deleteThreadFetcher = useFetcher();
     const getDeleteChatIcon = (threadId: string) =>
         deleteThreadFetcher.state !== "idle" &&
         deleteThreadFetcher.formAction?.includes(threadId) ? (
@@ -112,7 +130,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                         </ButtonLink>
                                         <threadFetcher.Form
                                             method="POST"
-                                            action={Paths.API_THREADS}
+                                            action={`${Paths.API_THREADS}?assistantId=${id}`}
                                         >
                                             <input
                                                 type="hidden"
@@ -124,7 +142,9 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                                 size="sm"
                                                 type="submit"
                                                 color="secondary"
-                                                iconBefore={<SparkleIcon />}
+                                                iconBefore={getCreateThreadChatIcon(
+                                                    id,
+                                                )}
                                             >
                                                 New thread
                                             </Button>
@@ -192,7 +212,12 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                         size="sm"
                                         color="secondary"
                                     >
-                                        <MessagesSquareIcon /> Open chat
+                                        {navigation.state !== "idle" ? (
+                                            <LoaderPinwheelIcon className="animate-spin" />
+                                        ) : (
+                                            <MessagesSquareIcon />
+                                        )}{" "}
+                                        Open chat
                                     </ButtonLink>
                                 </div>
                             </Card>
