@@ -11,17 +11,17 @@ const drawerVariants = cva({
     base: `fixed z-50 transition-transform bg-white dark:bg-zinc-900`,
     variants: {
         position: {
-            left: `border-r border-r-zinc-300 dark:border-r-zinc-600 top-0 left-0 h-screen -translate-x-full rounded-tr-xl rounded-br-xl`,
-            right: `border-l border-l-zinc-300 dark:border-l-zinc-600 top-0 right-0 h-screen translate-x-full rounded-tl-xl rounded-bl-xl`,
-            bottom: `w-full bottom-0 translate-y-full rounded-tl-xl rounded-tr-xl`,
+            left: "border-r border-r-zinc-300 dark:border-r-zinc-600 top-0 left-0 h-screen -translate-x-full sm:rounded-tr-xl sm:rounded-br-xl",
+            right: "top-0 right-0 h-screen translate-x-full sm:rounded-tl-xl sm:rounded-bl-xl border-l border-l-zinc-300 dark:border-l-zinc-600",
+            bottom: "w-full bottom-0 translate-y-full sm:rounded-tl-xl sm:rounded-tr-xl",
         },
         isOpen: {
             true: "transform-none",
         },
         size: {
-            sm: "w-96",
-            md: "w-1/2",
-            lg: "w-3/4",
+            sm: "w-full sm:w-1/2 md:w-1/4",
+            md: "w-full sm:w-1/2",
+            lg: "w-full sm:w-3/4 md:w-4/5",
             full: "w-[calc(100vw_-_75px)]",
         },
     },
@@ -86,14 +86,19 @@ export function Drawer({
                 ? PanelRightCloseIcon
                 : null;
 
+    const drawerClassName = cx(
+        drawerVariants({ className, position, size, isOpen }),
+    );
+
+    const overlayClassName = `fixed inset-0 z-40 bg-zinc-300 transition-opacity dark:bg-zinc-900 ${
+        isOpen ? "opacity-85" : "opacity-0"
+    }`;
+
     return (
         <>
             <div
                 id={id}
-                className={cx(
-                    drawerVariants({ position, size, isOpen }),
-                    className,
-                )}
+                className={drawerClassName}
                 tabIndex={-1}
                 aria-labelledby={`${id}-label`}
             >
@@ -117,12 +122,7 @@ export function Drawer({
                 </div>
             </div>
             {backdrop && (
-                <div
-                    onClick={handleClose}
-                    className={`fixed inset-0 z-40 bg-zinc-300 transition-opacity dark:bg-zinc-900 ${
-                        isOpen ? "opacity-85" : "opacity-0"
-                    }`}
-                />
+                <div onClick={handleClose} className={overlayClassName} />
             )}
         </>
     );
