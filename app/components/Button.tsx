@@ -136,8 +136,8 @@ export interface ButtonProps
             "className" | "disabled" | "name" | "type" | "value" | "onClick"
         >,
         VariantProps<typeof buttonVariants> {
-    iconBefore?: React.ElementType;
-    iconAfter?: React.ElementType;
+    iconBefore?: JSX.Element;
+    iconAfter?: JSX.Element;
 }
 
 export function Button({
@@ -165,9 +165,9 @@ export function Button({
             )}
             {...rest}
         >
-            {IconBefore ? <IconBefore className="h-5 w-5" /> : null}
+            {IconBefore ?? null}
             {children && <span className="inline-block">{children}</span>}
-            {IconAfter ? <IconAfter className="h-5 w-5" /> : null}
+            {IconAfter ?? null}
         </button>
     );
 }

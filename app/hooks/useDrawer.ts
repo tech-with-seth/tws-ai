@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function useDrawer({
+export function useDrawer({
     openOnRender,
     onClose,
     delay = 150,

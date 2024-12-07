@@ -12,7 +12,7 @@ export const textFieldVariants = cva({
     },
 });
 
-export default function TextField({
+export function TextareaField({
     className,
     rows = 10,
     ...rest

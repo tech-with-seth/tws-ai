@@ -1,9 +1,9 @@
 import { cx } from "cva.config";
+import { useState } from "react";
 import { Outlet, useNavigate } from "react-router";
 import { Button } from "~/components/Button";
 import { Drawer } from "~/components/Drawer";
-import useDrawer from "~/hooks/useDrawer";
-import useLocalStorage from "~/hooks/useLocalStorage";
+import { useDrawer } from "~/hooks/useDrawer";
 import { Paths } from "~/utils/paths";
 
 export default function DrawerLayout() {
@@ -14,10 +14,7 @@ export default function DrawerLayout() {
         onClose: () => navigate(Paths.DASHBOARD),
     });
 
-    const [drawerSize, setDrawerSize] = useLocalStorage<"sm" | "md" | "lg">(
-        "CHAT_DRAWER_SIZE",
-        "md",
-    );
+    const [drawerSize, setDrawerSize] = useState<"sm" | "md" | "lg">("md");
 
     return (
         <Drawer

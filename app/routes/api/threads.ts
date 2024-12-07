@@ -51,6 +51,8 @@ export async function action({ request }: Route.ActionArgs) {
         });
 
         await updatePrismaThread(prismaThreadId, parsed.title);
+
+        return data({ message: "Success" }, 200);
     }
 
     return data({ message: "Invalid" }, 405);

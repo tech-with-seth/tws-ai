@@ -13,15 +13,15 @@ import { Heading } from "~/components/Heading";
 import { Message } from "~/components/Message";
 import { Route } from "../+types/chat";
 import { shapeMessages } from "~/utils/common";
-import TextField from "~/components/form/TextField";
+import { TextField } from "~/components/form/TextField";
 
 export async function loader({ params }: Route.LoaderArgs) {
     const { assistantId, threadId } = params;
     invariant(threadId, "Thread ID does not exist");
 
     const assistant = await getAssistant(assistantId);
-
     const thread = await getThreadByOpenId(threadId);
+
     const hasName = Boolean(thread?.name);
 
     const messagesResponse = await getThreadMessages(threadId);
@@ -50,6 +50,8 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
         });
 
     const handleFormSubmit = (formEvent: React.FormEvent<HTMLFormElement>) => {
+        formEvent.preventDefault();
+
         if (!hasName) {
             const form = formEvent.currentTarget;
             const messageInput = form.elements.namedItem(
@@ -79,6 +81,14 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
 
     const isInProgress = status === "in_progress";
 
+    const combinedMessage = [...messageHistory, ...messages];
+
+    const messageFieldRef = useRef<HTMLInputElement | null>(null);
+
+    useEffect(() => {
+        messageFieldRef.current?.focus();
+    }, []);
+
     return (
         <>
             <div className="flex h-full flex-col">
@@ -91,12 +101,7 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
                     </Heading>
                 </div>
                 <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4">
-                    {messageHistory.map((m) => (
-                        <Message key={m.id} role={m.role}>
-                            <Markdown>{m.text}</Markdown>
-                        </Message>
-                    ))}
-                    {messages.map((m) => (
+                    {combinedMessage.map((m) => (
                         <Message key={m.id} role={m.role}>
                             <Markdown>{m.content}</Markdown>
                         </Message>
@@ -106,14 +111,17 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
                 <div className="border-t border-t-zinc-300 p-4 dark:border-t-zinc-600">
                     <form className="flex gap-2" onSubmit={handleFormSubmit}>
                         <TextField
+                            autoComplete="off"
                             className="flex-1"
+                            name="message"
                             onChange={handleInputChange}
-                            value={input}
                             placeholder="Type a message..."
+                            ref={messageFieldRef}
+                            value={input}
                         />
                         <Button
                             className="flex gap-2"
-                            iconAfter={SendHorizonalIcon}
+                            iconAfter={<SendHorizonalIcon />}
                             disabled={isInProgress}
                         >
                             Send

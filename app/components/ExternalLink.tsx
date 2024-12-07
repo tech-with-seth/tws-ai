@@ -18,7 +18,7 @@ interface ExternalLinkProps
     extends React.AnchorHTMLAttributes<HTMLAnchorElement>,
         VariantProps<typeof linkVariants> {}
 
-export default function ExternalLink({
+export function ExternalLink({
     children,
     className,
     href,

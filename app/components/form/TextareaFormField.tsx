@@ -1,4 +1,4 @@
-import TextareaField, { TextareaFieldProps } from "./TextareaField";
+import { TextareaField, TextareaFieldProps } from "./TextareaField";
 
 interface TextareaFormFieldProps extends TextareaFieldProps {
     label: string;

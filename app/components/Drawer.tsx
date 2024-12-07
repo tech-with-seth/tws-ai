@@ -78,13 +78,13 @@ export function Drawer({
     size = "sm",
 }: PropsWithChildren<DrawerProps>) {
     const orientedIcon =
-        position === "bottom"
-            ? PanelBottomCloseIcon
-            : position === "left"
-              ? PanelLeftCloseIcon
-              : position === "right"
-                ? PanelRightCloseIcon
-                : null;
+        position === "bottom" ? (
+            <PanelBottomCloseIcon />
+        ) : position === "left" ? (
+            <PanelLeftCloseIcon />
+        ) : position === "right" ? (
+            <PanelRightCloseIcon />
+        ) : null;
 
     const drawerClassName = cx(
         drawerVariants({ className, position, size, isOpen }),
@@ -106,7 +106,7 @@ export function Drawer({
                     <div className="flex justify-between gap-2 border-b border-b-zinc-400 p-4 dark:border-b-zinc-600">
                         <Button
                             variant="outline"
-                            iconBefore={orientedIcon ?? PanelLeftCloseIcon}
+                            iconBefore={orientedIcon ?? <PanelLeftCloseIcon />}
                             onClick={handleClose}
                         />
                         <div>{aux}</div>

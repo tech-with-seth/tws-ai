@@ -15,5 +15,5 @@ export type LoginForm = {
 export interface AppMessage {
     id: string;
     role: Message["role"];
-    text: string;
+    content: string;
 }

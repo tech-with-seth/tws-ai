@@ -13,6 +13,8 @@ export async function action({ request, params }: Route.ActionArgs) {
 
         await deleteThreadPath(retrieved.oId);
         await deletePrismaThread(retrieved.id);
+
+        return data({ message: "Deleted" }, 200);
     }
 
     return data({ message: "Invalid" }, 405);

@@ -4,12 +4,15 @@ import {
     FileIcon,
     FileQuestion,
     ListIcon,
+    LoaderPinwheelIcon,
     MessagesSquareIcon,
     PencilIcon,
     SparkleIcon,
     TrashIcon,
 } from "lucide-react";
 
+import { Banner } from "~/components/Banner";
+import { Button } from "~/components/Button";
 import { ButtonLink } from "~/components/ButtonLink";
 import { Card } from "~/components/Card";
 import { getThreadsByUserId } from "~/models/thread.server";
@@ -19,8 +22,6 @@ import { Heading } from "~/components/Heading";
 import { HorizontalRule } from "~/components/HorizontalRule";
 import { Paths } from "~/utils/paths";
 import { Route } from "../+types/dashboard";
-import { Banner } from "~/components/Banner";
-import { Button } from "~/components/Button";
 
 export async function loader({ request }: Route.LoaderArgs) {
     const userId = await getUserId(request);
@@ -49,6 +50,14 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
     const threadFetcher = useFetcher();
     const deleteThreadFetcher = useFetcher();
 
+    const getDeleteChatIcon = (threadId: string) =>
+        deleteThreadFetcher.state !== "idle" &&
+        deleteThreadFetcher.formAction?.includes(threadId) ? (
+            <LoaderPinwheelIcon className="animate-spin" />
+        ) : (
+            <TrashIcon />
+        );
+
     return (
         <>
             <div className="px-4">
@@ -58,7 +67,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                         className="inline-flex items-center gap-2"
                         to={Paths.CREATE_ASSISTANT}
                     >
-                        <PencilIcon />
+                        <PencilIcon className="h-5 w-5" />
                         Create assistant
                     </ButtonLink>
                 </div>
@@ -111,7 +120,8 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                                 className="inline-flex items-center gap-1"
                                                 size="sm"
                                                 type="submit"
-                                                iconBefore={SparkleIcon}
+                                                color="secondary"
+                                                iconBefore={<SparkleIcon />}
                                             >
                                                 New thread
                                             </Button>
@@ -147,7 +157,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                     </Heading>
                                     <p className="mb-4 mt-2">
                                         Chatting with:{" "}
-                                        <span className="inline-block rounded-xl bg-secondary-500 px-2 py-1 text-white dark:text-white">
+                                        <span className="inline-block rounded-xl bg-secondary-500 px-2 py-1 text-white dark:bg-secondary-800 dark:text-white">
                                             {thread.assistant.name}
                                         </span>
                                     </p>
@@ -155,13 +165,20 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                 <div className="flex gap-2">
                                     <deleteThreadFetcher.Form
                                         method="DELETE"
-                                        action={`/api/thread/${thread.id}`}
+                                        action={`${Paths.API_THREADS}/${thread.id}`}
                                     >
                                         <Button
                                             className="inline-flex items-center gap-2 self-end"
                                             size="sm"
+                                            color="danger"
                                             type="submit"
-                                            iconBefore={TrashIcon}
+                                            iconBefore={getDeleteChatIcon(
+                                                thread.id,
+                                            )}
+                                            disabled={
+                                                deleteThreadFetcher.state !==
+                                                "idle"
+                                            }
                                         >
                                             Delete chat
                                         </Button>

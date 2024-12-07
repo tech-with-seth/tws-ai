@@ -2,7 +2,7 @@ import { Link, NavLink, NavLinkRenderProps } from "react-router";
 import { Paths } from "~/utils/paths";
 import { ButtonNavLink } from "~/components/ButtonNavLink";
 
-export default function Header() {
+export function Header() {
     return (
         <header className="mb-4 p-4">
             <nav className="flex items-center justify-between rounded-xl bg-zinc-300 p-4 dark:bg-zinc-800">

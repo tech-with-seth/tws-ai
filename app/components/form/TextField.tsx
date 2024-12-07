@@ -1,3 +1,4 @@
+import React, { forwardRef } from "react";
 import { cva, cx } from "cva.config";
 
 export interface TextFieldProps
@@ -12,16 +13,18 @@ export const textFieldVariants = cva({
     },
 });
 
-export default function TextField({
-    className,
-    type,
-    ...rest
-}: TextFieldProps) {
+function _TextField(props: TextFieldProps, ref: React.Ref<HTMLInputElement>) {
+    const { className, type, ...rest } = props;
+
     return (
         <input
             className={cx(textFieldVariants({ className }))}
+            ref={ref}
             type={type}
             {...rest}
         />
     );
 }
+
+// I hate this syntax...fix later...
+export const TextField = forwardRef(_TextField);

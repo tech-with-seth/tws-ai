@@ -1,5 +1,5 @@
-import { cx, VariantProps } from "cva";
-import { cardVariants } from "./Card";
+import { VariantProps } from "cva";
+import { cardVariants } from "~/components/Card";
 
 interface RadioCardProps
     extends React.InputHTMLAttributes<HTMLInputElement>,

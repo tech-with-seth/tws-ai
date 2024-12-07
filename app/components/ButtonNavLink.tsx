@@ -5,11 +5,12 @@ import { LinkProps, NavLink } from "react-router";
 import { buttonVariants } from "./Button";
 
 export interface ButtonNavLinkProps
-    extends LinkProps,
+    extends Omit<LinkProps, "color">,
         VariantProps<typeof buttonVariants> {}
 
 export function ButtonNavLink({
     children,
+    color,
     className,
     variant,
     size,
@@ -21,6 +22,7 @@ export function ButtonNavLink({
             className={cx(
                 "inline-block",
                 buttonVariants({
+                    color,
                     variant,
                     size,
                 }),

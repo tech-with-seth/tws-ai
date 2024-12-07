@@ -95,9 +95,12 @@ export default function Labs({ actionData }: Route.ComponentProps) {
                     <Button size="lg">Delta</Button>
                 </div>
                 <div className="flex items-start gap-4">
-                    <Button iconBefore={TrashIcon}>Echo</Button>
-                    <Button iconBefore={TrashIcon}>Echo</Button>
-                    <Button iconBefore={TrashIcon} iconAfter={TrashIcon}>
+                    <Button iconBefore={<TrashIcon />}>Echo</Button>
+                    <Button iconBefore={<TrashIcon />}>Echo</Button>
+                    <Button
+                        iconBefore={<TrashIcon />}
+                        iconAfter={<TrashIcon />}
+                    >
                         Echo
                     </Button>
                 </div>

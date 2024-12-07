@@ -61,6 +61,8 @@ export async function action({ request }: Route.ActionArgs) {
                     await addFileToVectorStore(vectorStoreId, createdFile.id);
                 }
             });
+
+            return redirect(Paths.DASHBOARD);
         }
 
         return data({ message: "Invalid" }, 405);

@@ -1,4 +1,4 @@
-import TextField, { TextFieldProps } from "./TextField";
+import { TextField, TextFieldProps } from "./TextField";
 
 interface TextFormFieldProps extends TextFieldProps {
     label: string;

@@ -32,6 +32,8 @@ export async function action({ request }: Route.ActionArgs) {
             if (error instanceof Error) {
                 throw Error(error.message);
             }
+
+            return data({ message: "Error occurred" }, 500);
         }
     }
 
