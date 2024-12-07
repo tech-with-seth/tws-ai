@@ -64,6 +64,17 @@ export function getThreadByOpenId(
     });
 }
 
+export function getThreadBySlug(slug: string) {
+    return prisma.thread.findUnique({
+        where: {
+            slug,
+        },
+        include: {
+            assistant: true,
+        },
+    });
+}
+
 export function getThreadMessages(
     threadId: string,
     query?: MessageListParams,
@@ -123,6 +134,20 @@ export function createThread(
             },
         ],
         metadata,
+    });
+}
+
+export function createThreadAndRun(assistant_id: string, content: string) {
+    return ai.beta.threads.createAndRun({
+        assistant_id,
+        thread: {
+            messages: [
+                {
+                    role: "user",
+                    content,
+                },
+            ],
+        },
     });
 }
 

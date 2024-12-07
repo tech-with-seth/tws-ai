@@ -6,29 +6,31 @@ import invariant from "tiny-invariant";
 import Markdown from "react-markdown";
 
 import { Button } from "~/components/Button";
-import { getAssistant } from "~/models/assistant.server";
-import { getThreadByOpenId, getThreadMessages } from "~/models/thread.server";
+import { getThreadBySlug, getThreadMessages } from "~/models/thread.server";
 import { getThreadStream, Paths } from "~/utils/paths";
 import { Heading } from "~/components/Heading";
 import { Message } from "~/components/Message";
 import { shapeMessages } from "~/utils/common";
 import { TextField } from "~/components/form/TextField";
 import { Route } from "./+types/chat";
+import { createRun } from "~/models/runs.server";
 
 export async function loader({ params }: Route.LoaderArgs) {
-    const { assistantId, threadId } = params;
-    invariant(threadId, "Thread ID does not exist");
+    const { chatSlug } = params;
+    invariant(chatSlug, "Chat slug does not exist");
 
-    const assistant = await getAssistant(assistantId);
-    const thread = await getThreadByOpenId(threadId);
+    const thread = await getThreadBySlug(chatSlug);
+    invariant(thread, "Thread does not exist");
+
+    await createRun(thread.oId, thread.assistant.oId);
 
     const hasName = Boolean(thread?.name);
 
-    const messagesResponse = await getThreadMessages(threadId);
+    const messagesResponse = await getThreadMessages(thread.oId);
     const messageHistory = shapeMessages(messagesResponse.data);
 
     return data({
-        assistant,
+        assistant: thread.assistant,
         hasName,
         messageHistory,
         thread,
@@ -37,42 +39,26 @@ export async function loader({ params }: Route.LoaderArgs) {
 
 export default function Chat({ loaderData }: Route.ComponentProps) {
     const { assistant, thread, hasName, messageHistory } = loaderData;
-    const { assistantId, threadId } = useParams();
-    invariant(assistantId, "Assistant ID is undefined");
-    invariant(threadId, "Thread ID is undefined");
-
     const threadNameFetcher = useFetcher();
 
-    const { status, messages, input, submitMessage, handleInputChange, error } =
-        useAssistant({
-            api: getThreadStream(assistantId, threadId),
-            threadId,
-        });
+    const messageFieldRef = useRef<HTMLInputElement | null>(null);
 
-    const handleFormSubmit = (formEvent: React.FormEvent<HTMLFormElement>) => {
-        formEvent.preventDefault();
+    useEffect(() => {
+        messageFieldRef.current?.focus();
+    }, []);
 
-        if (!hasName) {
-            const form = formEvent.currentTarget;
-            const messageInput = form.elements.namedItem(
-                "message",
-            ) as HTMLInputElement;
-
-            threadNameFetcher.submit(
-                {
-                    threadId: String(threadId),
-                    prismaThreadId: String(thread?.id),
-                    name: messageInput
-                        ? String(messageInput.value)
-                        : "A new thread",
-                },
-                { action: Paths.API_THREADS, method: "PUT" },
-            );
-        }
-
-        submitMessage(formEvent);
-    };
-
+    const {
+        // append,
+        // error,
+        handleInputChange,
+        input,
+        messages,
+        status,
+        submitMessage,
+    } = useAssistant({
+        api: getThreadStream(thread.assistant.oId, thread.oId),
+        threadId: thread.oId,
+    });
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
@@ -81,13 +67,31 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
 
     const isInProgress = status === "in_progress";
 
+    const handleFormSubmit = (formEvent: React.FormEvent<HTMLFormElement>) => {
+        formEvent.preventDefault();
+
+        // if (!hasName) {
+        //     const form = formEvent.currentTarget;
+        //     const messageInput = form.elements.namedItem(
+        //         "message",
+        //     ) as HTMLInputElement;
+
+        //     threadNameFetcher.submit(
+        //         {
+        //             threadId: String(thread.oId),
+        //             prismaThreadId: String(thread?.id),
+        //             name: messageInput
+        //                 ? String(messageInput.value)
+        //                 : "A new thread",
+        //         },
+        //         { action: Paths.API_THREADS, method: "PUT" },
+        //     );
+        // }
+
+        submitMessage(formEvent);
+    };
+
     const combinedMessage = [...messageHistory, ...messages];
-
-    const messageFieldRef = useRef<HTMLInputElement | null>(null);
-
-    useEffect(() => {
-        messageFieldRef.current?.focus();
-    }, []);
 
     return (
         <>

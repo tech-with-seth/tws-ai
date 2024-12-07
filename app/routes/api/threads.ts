@@ -2,7 +2,9 @@ import { getUserId } from "~/utils/auth.server";
 import { Route } from "./+types/threads";
 import {
     createBareThread,
-    createPrismaBareThread,
+    createPrismaThread,
+    createThread,
+    createThreadAndRun,
     updatePrismaThread,
     updateThread,
 } from "~/models/thread.server";
@@ -14,6 +16,15 @@ import {
     ThreadTitleSchema,
 } from "~/models/completion.server";
 import { getPrismaAssistantByOpenId } from "~/models/assistant.server";
+import { ChatCompletion } from "openai/resources/index.mjs";
+
+const extractTitle = (completion: ChatCompletion) => {
+    const first = completion.choices.at(0);
+    const titleJson = first?.message.content;
+    const parsed = JSON.parse(titleJson!);
+
+    return parsed.title;
+};
 
 export async function action({ request }: Route.ActionArgs) {
     const userId = await getUserId(request);
@@ -22,17 +33,35 @@ export async function action({ request }: Route.ActionArgs) {
     if (request.method === "POST") {
         const form = await request.formData();
         const assistantId = String(form.get("assistantId"));
+
+        const prompt = String(form.get("prompt"));
+        invariant(prompt, "Prompt not found");
+
         const prismaAssistant = await getPrismaAssistantByOpenId(assistantId);
         invariant(prismaAssistant, "Prisma Assistant not found");
 
-        const thread = await createBareThread();
-        await createPrismaBareThread(userId, thread.id, prismaAssistant.id);
+        const completion = await createCompletion(prompt, {
+            schema: ThreadTitleSchema,
+            schemaTitle: "ThreadTitle",
+        });
 
-        return redirect(getChatPath(assistantId, thread.id));
+        const title = extractTitle(completion);
+
+        const thread = await createThread(prompt);
+
+        const prismaThread = await createPrismaThread(
+            userId,
+            thread.id,
+            title,
+            prismaAssistant.id,
+        );
+
+        return redirect(`${getChatPath(prismaThread.slug!)}?static=true`);
     }
 
     if (request.method === "PUT") {
         const form = await request.formData();
+        // TODO: Update variable naming, call site uses name, I want it to be "prompt"
         const name = String(form.get("name"));
         const threadId = String(form.get("threadId"));
         const prismaThreadId = String(form.get("prismaThreadId"));
@@ -42,15 +71,13 @@ export async function action({ request }: Route.ActionArgs) {
             schemaTitle: "ThreadTitle",
         });
 
-        const first = completion.choices.at(0);
-        const titleJson = first?.message.content;
-        const parsed = JSON.parse(titleJson!);
+        const title = extractTitle(completion);
 
         await updateThread(threadId, {
-            name: parsed.title,
+            name: title,
         });
 
-        await updatePrismaThread(prismaThreadId, parsed.title);
+        await updatePrismaThread(prismaThreadId, title);
 
         return data({ message: "Success" }, 200);
     }

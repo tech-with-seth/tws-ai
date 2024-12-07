@@ -10,19 +10,19 @@ import { HorizontalRule } from "~/components/HorizontalRule";
 import { Label } from "~/components/form/Label";
 
 export default function CreateThread() {
-    const { assistants } = useRouteLoaderData("routes/dashboard");
+    const { assistants } = useRouteLoaderData("routes/protected/dashboard");
     const threadFetcher = useFetcher();
 
     return (
-        <>
+        <div className="p-4">
             <Heading className="mb-4">Create thread</Heading>
             <threadFetcher.Form method="POST" action={Paths.API_THREADS}>
                 <TextFormField
                     id="name"
                     className="mb-4"
-                    label="Name"
-                    name="name"
-                    helperText="What do you want to name your thread?"
+                    label="Prompt"
+                    name="prompt"
+                    helperText="What do you want to chat about?"
                 />
                 <Label className="mb-4">Who do you want to chat with?</Label>
                 <div className="flex gap-4">
@@ -38,8 +38,8 @@ export default function CreateThread() {
                     ))}
                 </div>
                 <HorizontalRule space="lg" />
-                <Button type="submit">Create</Button>
+                <Button type="submit">Start chat</Button>
             </threadFetcher.Form>
-        </>
+        </div>
     );
 }

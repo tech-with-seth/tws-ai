@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
 
-export function useDrawer({
-    openOnRender,
-    onClose,
-    delay = 150,
-}: {
+interface UseDrawerConfig {
+    initialState?: boolean;
     openOnRender?: boolean;
     onClose?: () => void;
     delay?: number;
-}) {
-    const [isDrawerOpen, setDrawerOpen] = useState(false);
+}
+
+export function useDrawer({
+    initialState = false,
+    openOnRender,
+    onClose,
+    delay = 150,
+}: UseDrawerConfig = {}) {
+    const [isDrawerOpen, setDrawerOpen] = useState(initialState);
 
     useEffect(() => {
         if (openOnRender) {

@@ -1,12 +1,21 @@
-import { Outlet, useFetcher, useNavigation } from "react-router";
+import { useEffect, useRef, useState } from "react";
+import {
+    Outlet,
+    useFetcher,
+    useLocation,
+    useNavigate,
+    useNavigation,
+} from "react-router";
 import invariant from "tiny-invariant";
 import {
+    BotIcon,
     FileIcon,
     FileQuestion,
     ListIcon,
     LoaderPinwheelIcon,
     MessagesSquareIcon,
     PencilIcon,
+    SendHorizonalIcon,
     SparkleIcon,
     TrashIcon,
 } from "lucide-react";
@@ -22,6 +31,9 @@ import { Heading } from "~/components/Heading";
 import { HorizontalRule } from "~/components/HorizontalRule";
 import { Paths } from "~/utils/paths";
 import { Route } from "./+types/dashboard";
+import { useDrawer } from "~/hooks/useDrawer";
+import { Drawer } from "~/components/Drawer";
+import { TextField } from "~/components/form/TextField";
 
 export async function loader({ request }: Route.LoaderArgs) {
     const userId = await getUserId(request);
@@ -49,14 +61,8 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
     const { assistants, threads } = loaderData;
     const navigation = useNavigation();
 
-    const threadFetcher = useFetcher();
-    const getCreateThreadChatIcon = (assistantId: string) =>
-        threadFetcher.state !== "idle" &&
-        threadFetcher.formAction?.includes(assistantId) ? (
-            <LoaderPinwheelIcon className="animate-spin" />
-        ) : (
-            <SparkleIcon />
-        );
+    const newThreadFetcher = useFetcher();
+    const promptRef = useRef<HTMLInputElement>(null);
 
     const deleteThreadFetcher = useFetcher();
     const getDeleteChatIcon = (threadId: string) =>
@@ -66,6 +72,26 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
         ) : (
             <TrashIcon />
         );
+
+    const location = useLocation();
+    const [targetAssistantId, setTargetAssistantId] = useState<string>("");
+    const isNotOnChatRoute = !location.pathname.includes("chat");
+
+    const { isDrawerOpen, openDrawer, closeDrawer } = useDrawer({
+        openOnRender: false,
+    });
+
+    useEffect(() => {
+        if (isDrawerOpen) {
+            promptRef.current?.focus();
+        }
+    }, [isDrawerOpen]);
+
+    useEffect(() => {
+        return () => {
+            setTargetAssistantId("");
+        };
+    }, []);
 
     return (
         <>
@@ -119,27 +145,20 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                                 Add file
                                             </span>
                                         </ButtonLink>
-                                        <threadFetcher.Form
-                                            method="POST"
-                                            action={`${Paths.API_THREADS}?assistantId=${id}`}
+                                        <Button
+                                            className="inline-flex items-center gap-1"
+                                            size="sm"
+                                            color="secondary"
+                                            onClick={() => {
+                                                setTargetAssistantId(id);
+                                                openDrawer();
+                                            }}
+                                            iconBefore={
+                                                <SparkleIcon className="h-5 w-5" />
+                                            }
                                         >
-                                            <input
-                                                type="hidden"
-                                                name="assistantId"
-                                                value={id}
-                                            />
-                                            <Button
-                                                className="inline-flex items-center gap-1"
-                                                size="sm"
-                                                type="submit"
-                                                color="secondary"
-                                                iconBefore={getCreateThreadChatIcon(
-                                                    id,
-                                                )}
-                                            >
-                                                New thread
-                                            </Button>
-                                        </threadFetcher.Form>
+                                            New thread
+                                        </Button>
                                     </div>
                                 </Card>
                             ),
@@ -199,13 +218,13 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                     </deleteThreadFetcher.Form>
                                     <ButtonLink
                                         className="inline-flex items-center gap-2 self-end"
-                                        to={`/dashboard/${thread.assistant.oId}/${thread.id}`}
+                                        to={`/dashboard/chat/${thread.slug}`}
                                         size="sm"
                                         color="secondary"
                                     >
                                         {navigation.state !== "idle" &&
                                         navigation.location.pathname.includes(
-                                            thread.id,
+                                            thread.slug,
                                         ) ? (
                                             <LoaderPinwheelIcon className="animate-spin" />
                                         ) : (
@@ -228,6 +247,61 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                 </div>
             </div>
             <Outlet />
+            {isNotOnChatRoute && (
+                <Drawer
+                    handleClose={() => {
+                        setTargetAssistantId("");
+                        closeDrawer();
+                    }}
+                    id="newThreadDrawer"
+                    isOpen={isDrawerOpen}
+                    position="right"
+                    size="md"
+                >
+                    <div className="flex h-full flex-col">
+                        <div className="flex flex-1 flex-col items-center justify-center gap-4 overflow-y-auto p-4">
+                            <div className="text-center">
+                                <BotIcon className="h-24 w-24 text-zinc-300 dark:text-zinc-600" />
+                                <p className="text-zinc-300 dark:text-zinc-600">
+                                    Let's chat!
+                                </p>
+                            </div>
+                        </div>
+                        <div className="border-t border-t-zinc-300 p-4 dark:border-t-zinc-600">
+                            <newThreadFetcher.Form
+                                className="flex gap-2"
+                                method="POST"
+                                action="/api/threads"
+                            >
+                                <input
+                                    type="hidden"
+                                    name="assistantId"
+                                    value={targetAssistantId}
+                                />
+                                <TextField
+                                    autoComplete="off"
+                                    className="flex-1"
+                                    name="prompt"
+                                    placeholder={
+                                        targetAssistantId
+                                            ? `What do you want to say to ${assistants.find((assistant) => assistant.id === targetAssistantId)?.name}?`
+                                            : "What would you like to say?"
+                                    }
+                                    ref={promptRef}
+                                />
+                                <Button
+                                    className="flex gap-2"
+                                    iconAfter={<SendHorizonalIcon />}
+                                    name="intent"
+                                    value="newThread"
+                                >
+                                    Send
+                                </Button>
+                            </newThreadFetcher.Form>
+                        </div>
+                    </div>
+                </Drawer>
+            )}
         </>
     );
 }

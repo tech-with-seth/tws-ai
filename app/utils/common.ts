@@ -10,10 +10,7 @@ export function shapeMessages(messages: Message[]): AppMessage[] {
     return messages.map((msg) => ({
         id: getUniqueId("msg"),
         role: msg.role,
-        content: (msg.content.at(0) as TextContentBlock).text.value.replace(
-            /【\d+:\d+†[^\]]+】/g,
-            "",
-        ),
+        content: (msg.content.at(0) as TextContentBlock).text.value, // .text.value.replace(/【\d+:\d+†[^\]]+】/g, "")
     }));
 }
 

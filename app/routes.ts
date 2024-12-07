@@ -23,8 +23,11 @@ export default [
                     Paths.CREATE_ASSISTANT,
                     "routes/assistants/create-assistant.tsx",
                 ),
-                route(Paths.CREATE_THREAD, "routes/threads/create-thread.tsx"),
-                route(":assistantId/:threadId", "routes/threads/chat.tsx"),
+                ...prefix("chat", [
+                    route("create-thread", "routes/threads/create-thread.tsx"),
+                    route("new-thread", "routes/threads/new-thread.tsx"),
+                    route(":chatSlug", "routes/threads/chat.tsx"),
+                ]),
                 route(
                     `:assistantId/${Paths.CREATE_FILE}`,
                     "routes/files/create-file.tsx",

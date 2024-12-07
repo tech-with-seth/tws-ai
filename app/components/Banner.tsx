@@ -6,6 +6,8 @@ export const bannerVariants = cva({
     base: "flex items-center gap-4 p-4 border rounded-xl",
     variants: {
         variant: {
+            default:
+                "bg-zinc-300 border-zinc-500 dark:bg-zinc-800 dark:border-zinc-600",
             primary:
                 "border-primary-500 dark:border-primary-500 dark:bg-primary-900",
             warning:
@@ -13,7 +15,7 @@ export const bannerVariants = cva({
         },
     },
     defaultVariants: {
-        variant: "primary",
+        variant: "default",
     },
     compoundVariants: [],
 });

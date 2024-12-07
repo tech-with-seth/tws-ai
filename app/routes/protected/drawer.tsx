@@ -1,6 +1,6 @@
 import { cx } from "cva.config";
 import { useState } from "react";
-import { Outlet, useNavigate } from "react-router";
+import { Outlet, useNavigate, useSearchParams } from "react-router";
 import { Button } from "~/components/Button";
 import { Drawer } from "~/components/Drawer";
 import { useDrawer } from "~/hooks/useDrawer";
@@ -8,9 +8,12 @@ import { Paths } from "~/utils/paths";
 
 export default function DrawerLayout() {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const noDrawerSlide = !searchParams.has("static", "true");
 
     const { isDrawerOpen, closeDrawer } = useDrawer({
-        openOnRender: true,
+        initialState: true,
+        openOnRender: noDrawerSlide ?? true,
         onClose: () => navigate(Paths.DASHBOARD),
     });
 

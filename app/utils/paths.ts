@@ -42,8 +42,8 @@ export function getLoginPath(searchParams: string) {
 }
 
 // CHAT ==========
-export function getChatPath(assistantId: string, threadId: string) {
-    return `${Paths.DASHBOARD}/${assistantId}/${threadId}`;
+export function getChatPath(chatSlug: string) {
+    return `${Paths.DASHBOARD}/chat/${chatSlug}`;
 }
 
 export function getThreadStream(assistantId: string, threadId: string) {

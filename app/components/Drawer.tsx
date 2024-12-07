@@ -121,7 +121,7 @@ export function Drawer({
                     </div>
                 </div>
             </div>
-            {backdrop && (
+            {backdrop && isOpen && (
                 <div onClick={handleClose} className={overlayClassName} />
             )}
         </>
