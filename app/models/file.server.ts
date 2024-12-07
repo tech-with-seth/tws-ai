@@ -5,6 +5,10 @@ import { prisma } from "~/db.server";
 
 import { ai } from "~/open-ai";
 
+export function getFileCount() {
+    return prisma.file.count();
+}
+
 export function getFiles() {
     return ai.files.list();
 }

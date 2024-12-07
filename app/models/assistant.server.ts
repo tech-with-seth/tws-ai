@@ -4,6 +4,10 @@ import { prisma } from "~/db.server";
 import { ai } from "~/open-ai";
 import { kebab } from "~/utils/string";
 
+export function getAssistantCount() {
+    return prisma.assistant.count();
+}
+
 export function createAssistant(
     name: string,
     instructions: string,

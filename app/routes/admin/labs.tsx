@@ -1,4 +1,4 @@
-import { Form, useNavigation } from "react-router";
+import { data, Form, useNavigation } from "react-router";
 import { useEffect } from "react";
 
 import Prism from "prismjs";
@@ -13,6 +13,19 @@ import { TrashIcon } from "lucide-react";
 import { HorizontalRule } from "~/components/HorizontalRule";
 import { handleCompletionResponse } from "~/utils/common";
 import { Heading } from "~/components/Heading";
+import { getThreadCount } from "~/models/thread.server";
+import { getUserCount } from "~/models/user.server";
+import { getAssistantCount } from "~/models/assistant.server";
+import { getFileCount } from "~/models/file.server";
+
+export async function loader() {
+    return data({
+        assistantCount: await getAssistantCount(),
+        fileCount: await getFileCount(),
+        threadCount: await getThreadCount(),
+        userCount: await getUserCount(),
+    });
+}
 
 export async function action({ request }: Route.ActionArgs) {
     const form = await request.formData();
@@ -44,7 +57,7 @@ export async function action({ request }: Route.ActionArgs) {
     return null;
 }
 
-export default function Labs({ actionData }: Route.ComponentProps) {
+export default function Labs({ actionData, loaderData }: Route.ComponentProps) {
     const navigation = useNavigation();
     const isLoading = navigation.formAction === "/admin/labs";
 
@@ -61,8 +74,8 @@ export default function Labs({ actionData }: Route.ComponentProps) {
             <Heading as="h1" className="mb-8 text-6xl font-bold">
                 Labs
             </Heading>
-            <div className="grid grid-cols-12">
-                <div className="col-span-6">
+            <div className="grid grid-cols-12 gap-4">
+                <div className="col-span-4">
                     <div className="mb-8 flex flex-col gap-4">
                         <div className="flex gap-4">
                             <Button>Alfa</Button>
@@ -119,7 +132,7 @@ export default function Labs({ actionData }: Route.ComponentProps) {
                         <div className="flex gap-4"></div>
                     </div>
                 </div>
-                <div className="col-span-6">
+                <div className="col-span-4">
                     <Form method="POST" className="mb-4 flex items-end gap-4">
                         <TextFormField
                             label="Prompt"
@@ -167,6 +180,33 @@ export default function Labs({ actionData }: Route.ComponentProps) {
                             <div>{actionData?.secondaryActionText}</div>
                         )}
                     </div>
+                </div>
+                <div className="col-span-4 flex flex-col gap-4">
+                    <Heading as="h2">Stats</Heading>
+                    <Heading as="h3" className="font-thin">
+                        Assistants:{" "}
+                        <span className="font-bold">
+                            {loaderData.assistantCount}
+                        </span>
+                    </Heading>
+                    <Heading as="h3" className="font-thin">
+                        Files:{" "}
+                        <span className="font-bold">
+                            {loaderData.fileCount}
+                        </span>
+                    </Heading>
+                    <Heading as="h3" className="font-thin">
+                        Threads:{" "}
+                        <span className="font-bold">
+                            {loaderData.threadCount}
+                        </span>
+                    </Heading>
+                    <Heading as="h3" className="font-thin">
+                        Users:{" "}
+                        <span className="font-bold">
+                            {loaderData.userCount}
+                        </span>
+                    </Heading>
                 </div>
             </div>
         </div>

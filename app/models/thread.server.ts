@@ -9,6 +9,10 @@ import { prisma } from "~/db.server";
 import { ai } from "~/open-ai";
 import { kebab } from "~/utils/string";
 
+export function getThreadCount() {
+    return prisma.thread.count();
+}
+
 export async function getThreadsByUserId(userId: string): Promise<any[]> {
     const threads = await prisma.thread.findMany({
         where: {

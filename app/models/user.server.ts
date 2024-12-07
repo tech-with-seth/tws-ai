@@ -3,6 +3,10 @@ import type { RegisterForm } from "~/utils/types.server";
 import { prisma } from "../db.server";
 import { Password, User } from "@prisma/client";
 
+export function getUserCount() {
+    return prisma.user.count();
+}
+
 export const createUser = async (user: RegisterForm) => {
     const passwordHash = await bcrypt.hash(user.password, 10);
 
