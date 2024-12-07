@@ -5,8 +5,8 @@ import { Button } from "~/components/Button";
 import { getAssistant } from "~/models/assistant.server";
 import { Heading } from "~/components/Heading";
 import { Paths } from "~/utils/paths";
-import { Route } from "../+types/create-file";
 import { TextFormField } from "~/components/form/TextFormField";
+import { Route } from "./+types/create-file";
 
 export async function loader({ params }: Route.LoaderArgs) {
     const { assistantId } = params;

@@ -19,11 +19,20 @@ export const SnippetSchema = z.object({
 
 export function createCompletion(
     content: string,
-    responseConfig: {
+    responseConfig?: {
         schema: Schema;
         schemaTitle: string;
     },
 ) {
+    const format = responseConfig
+        ? {
+              response_format: zodResponseFormat(
+                  responseConfig.schema,
+                  responseConfig.schemaTitle,
+              ),
+          }
+        : {};
+
     return ai.chat.completions.create({
         messages: [
             {
@@ -32,9 +41,6 @@ export function createCompletion(
             },
         ],
         model: "gpt-4o",
-        response_format: zodResponseFormat(
-            responseConfig.schema,
-            responseConfig.schemaTitle,
-        ),
+        ...format,
     });
 }

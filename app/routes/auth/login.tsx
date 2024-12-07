@@ -12,11 +12,12 @@ import {
     useSearchParams,
 } from "react-router";
 import { Paths } from "~/utils/paths";
-import { Route } from "../+types/login";
 import { safeRedirect } from "~/utils/routing";
 import { TextFormField } from "~/components/form/TextFormField";
 import { verifyLogin } from "~/models/user.server";
 import { HorizontalRule } from "~/components/HorizontalRule";
+import { Heading } from "~/components/Heading";
+import { Route } from "./+types/login";
 
 export async function loader({ request }: Route.LoaderArgs) {
     return (await getUser(request)) ? redirect(Paths.DASHBOARD) : null;
@@ -59,7 +60,9 @@ export default function LoginRoute() {
 
     return (
         <>
-            <h1 className="mb-4 text-6xl font-bold">Login</h1>
+            <Heading as="h1" className="mb-4 text-6xl font-bold">
+                Login
+            </Heading>
             <Card>
                 <Form method="POST" className="flex flex-col gap-4">
                     <input type="hidden" name="redirectTo" value={redirectTo} />

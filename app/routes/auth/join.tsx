@@ -11,10 +11,11 @@ import { Button } from "~/components/Button";
 import { Card } from "~/components/Card";
 import { createUser } from "~/models/user.server";
 import { Paths } from "~/utils/paths";
-import { Route } from "../+types/join";
 import { safeRedirect } from "~/utils/routing";
 import { TextFormField } from "~/components/form/TextFormField";
 import { HorizontalRule } from "~/components/HorizontalRule";
+import { Route } from "./+types/join";
+import { Heading } from "~/components/Heading";
 
 export async function action({ request }: Route.ActionArgs) {
     const formData = await request.formData();
@@ -61,7 +62,9 @@ export default function JoinRoute() {
 
     return (
         <>
-            <h1 className="mb-4 text-6xl font-bold">Join</h1>
+            <Heading as="h1" className="mb-4 text-6xl font-bold">
+                Join
+            </Heading>
             <Card>
                 <Form method="POST" className="flex flex-col gap-4">
                     <input type="hidden" name="redirectTo" value={redirectTo} />

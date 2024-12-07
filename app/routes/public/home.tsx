@@ -1,10 +1,9 @@
 import { Link } from "react-router";
-import type { Route } from "../+types/home";
 
-import { ButtonLink } from "~/components/ButtonLink";
-import ExternalLink from "~/components/ExternalLink";
+import { ExternalLink } from "~/components/ExternalLink";
 import { Paths } from "~/utils/paths";
 import { ArrowRightCircle } from "lucide-react";
+import { Route } from "./+types/home";
 
 export function meta({}: Route.MetaArgs) {
     return [

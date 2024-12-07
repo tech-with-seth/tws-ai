@@ -2,7 +2,11 @@ import { Link, NavLink, NavLinkRenderProps } from "react-router";
 import { Paths } from "~/utils/paths";
 import { ButtonNavLink } from "~/components/ButtonNavLink";
 
-export function Header() {
+interface HeaderProps {
+    isAdmin: boolean;
+}
+
+export function Header({ isAdmin }: HeaderProps) {
     return (
         <header className="mb-4 p-4">
             <nav className="flex items-center justify-between rounded-xl bg-zinc-300 p-4 dark:bg-zinc-800">
@@ -17,6 +21,11 @@ export function Header() {
                             Dashboard
                         </ButtonNavLink>
                     </li>
+                    {isAdmin && (
+                        <li>
+                            <ButtonNavLink to={Paths.LABS}>Labs</ButtonNavLink>
+                        </li>
+                    )}
                 </ul>
                 <ul className="flex items-center gap-2">
                     <li>

@@ -99,6 +99,17 @@ function getUserSession(request: Request) {
     return storage.getSession(request.headers.get("Cookie"));
 }
 
+export async function getUserRole(request: Request) {
+    const session = await getUserSession(request);
+    const userId = session.get("userId");
+
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+    });
+
+    return user?.role;
+}
+
 export async function getUserId(request: Request) {
     const session = await getUserSession(request);
     const userId = session.get("userId");

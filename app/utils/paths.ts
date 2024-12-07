@@ -5,6 +5,7 @@ export enum Paths {
     JOIN = "/join",
     LOGIN = "/login",
     LOGOUT = "/logout",
+    LABS = "/admin/labs",
     // ASSISTANT ==========
     ASSISTANTS = "assistants",
     CREATE_ASSISTANT = "create-assistant",

@@ -11,9 +11,9 @@ import { getThreadByOpenId, getThreadMessages } from "~/models/thread.server";
 import { getThreadStream, Paths } from "~/utils/paths";
 import { Heading } from "~/components/Heading";
 import { Message } from "~/components/Message";
-import { Route } from "../+types/chat";
 import { shapeMessages } from "~/utils/common";
 import { TextField } from "~/components/form/TextField";
+import { Route } from "./+types/chat";
 
 export async function loader({ params }: Route.LoaderArgs) {
     const { assistantId, threadId } = params;

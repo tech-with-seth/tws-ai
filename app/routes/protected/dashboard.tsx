@@ -21,7 +21,7 @@ import { getUsersAssistants } from "~/models/assistant.server";
 import { Heading } from "~/components/Heading";
 import { HorizontalRule } from "~/components/HorizontalRule";
 import { Paths } from "~/utils/paths";
-import { Route } from "../+types/dashboard";
+import { Route } from "./+types/dashboard";
 
 export async function loader({ request }: Route.LoaderArgs) {
     const userId = await getUserId(request);
