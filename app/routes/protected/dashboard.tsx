@@ -1,4 +1,4 @@
-import { Outlet, useFetcher, useNavigate, useNavigation } from "react-router";
+import { Outlet, useFetcher, useNavigation } from "react-router";
 import invariant from "tiny-invariant";
 import {
     FileIcon,
@@ -57,15 +57,6 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
         ) : (
             <SparkleIcon />
         );
-
-    const useWrappedFetcher = ({ key }: { key?: string } = {}) => {
-        const fetcher = useFetcher({ key });
-        const loading = fetcher.state !== "idle";
-
-        return [fetcher, loading];
-    };
-
-    const [] = useWrappedFetcher();
 
     const deleteThreadFetcher = useFetcher();
     const getDeleteChatIcon = (threadId: string) =>
