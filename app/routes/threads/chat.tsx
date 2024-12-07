@@ -1,5 +1,4 @@
-import { cx } from "cva.config";
-import { data, useFetcher, useNavigate, useParams } from "react-router";
+import { data, useFetcher, useParams } from "react-router";
 import { SendHorizonalIcon } from "lucide-react";
 import { useAssistant } from "ai/react";
 import { useEffect, useRef } from "react";
@@ -7,7 +6,6 @@ import invariant from "tiny-invariant";
 import Markdown from "react-markdown";
 
 import { Button } from "~/components/Button";
-import { Drawer } from "~/components/Drawer";
 import { getAssistant } from "~/models/assistant.server";
 import { getThreadByOpenId, getThreadMessages } from "~/models/thread.server";
 import { getThreadStream, Paths } from "~/utils/paths";
@@ -16,8 +14,6 @@ import { Message } from "~/components/Message";
 import { Route } from "../+types/chat";
 import { shapeMessages } from "~/utils/common";
 import TextField from "~/components/form/TextField";
-import useDrawer from "~/hooks/useDrawer";
-import useLocalStorage from "~/hooks/useLocalStorage";
 
 export async function loader({ params }: Route.LoaderArgs) {
     const { assistantId, threadId } = params;
@@ -44,12 +40,6 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
     const { assistantId, threadId } = useParams();
     invariant(assistantId, "Assistant ID is undefined");
     invariant(threadId, "Thread ID is undefined");
-
-    const navigate = useNavigate();
-    const { isDrawerOpen, closeDrawer } = useDrawer({
-        openOnRender: true,
-        onClose: () => navigate(Paths.DASHBOARD),
-    });
 
     const threadNameFetcher = useFetcher();
 
@@ -88,56 +78,9 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
     }, [messages]);
 
     const isInProgress = status === "in_progress";
-    const [drawerSize, setDrawerSize] = useLocalStorage<"sm" | "md" | "lg">(
-        "CHAT_DRAWER_SIZE",
-        "md",
-    );
 
     return (
-        <Drawer
-            handleClose={closeDrawer}
-            id="createChat"
-            aux={
-                <div className="flex items-center gap-2">
-                    <Button
-                        className={cx(
-                            drawerSize === "sm" &&
-                                "border-primary-500 dark:border-primary-500",
-                        )}
-                        variant="outline"
-                        onClick={() => setDrawerSize("sm")}
-                        size="sm"
-                    >
-                        Small
-                    </Button>
-                    <Button
-                        className={cx(
-                            drawerSize === "md" &&
-                                "border-primary-500 dark:border-primary-500",
-                        )}
-                        variant="outline"
-                        onClick={() => setDrawerSize("md")}
-                        size="sm"
-                    >
-                        Medium
-                    </Button>
-                    <Button
-                        className={cx(
-                            drawerSize === "lg" &&
-                                "border-primary-500 dark:border-primary-500",
-                        )}
-                        variant="outline"
-                        onClick={() => setDrawerSize("lg")}
-                        size="sm"
-                    >
-                        Large
-                    </Button>
-                </div>
-            }
-            isOpen={isDrawerOpen}
-            position="right"
-            size={drawerSize}
-        >
+        <>
             <div className="flex h-full flex-col">
                 <div className="border-b border-b-zinc-300 p-4 dark:border-b-zinc-600">
                     <Heading as="h3">
@@ -178,6 +121,6 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
                     </form>
                 </div>
             </div>
-        </Drawer>
+        </>
     );
 }

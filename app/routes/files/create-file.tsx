@@ -1,14 +1,12 @@
-import { data, useFetcher, useNavigate, useParams } from "react-router";
+import { data, useFetcher, useParams } from "react-router";
 import invariant from "tiny-invariant";
 
 import { Button } from "~/components/Button";
-import { Drawer } from "~/components/Drawer";
-import { Heading } from "~/components/Heading";
-import { TextFormField } from "~/components/form/TextFormField";
-import useDrawer from "~/hooks/useDrawer";
-import { Paths } from "~/utils/paths";
-import { Route } from "./+types/create-file";
 import { getAssistant } from "~/models/assistant.server";
+import { Heading } from "~/components/Heading";
+import { Paths } from "~/utils/paths";
+import { Route } from "../+types/create-file";
+import { TextFormField } from "~/components/form/TextFormField";
 
 export async function loader({ params }: Route.LoaderArgs) {
     const { assistantId } = params;
@@ -24,22 +22,10 @@ export async function loader({ params }: Route.LoaderArgs) {
 
 export default function CreateFile() {
     const { assistantId } = useParams();
-    const navigate = useNavigate();
-    const { isDrawerOpen, closeDrawer } = useDrawer({
-        openOnRender: true,
-        onClose: () => navigate(Paths.DASHBOARD),
-    });
     const fileFetcher = useFetcher();
 
     return (
-        <Drawer
-            containerClassName="p-4"
-            handleClose={closeDrawer}
-            id="createFile"
-            isOpen={isDrawerOpen}
-            position="right"
-            size="md"
-        >
+        <div className="p-4">
             <Heading className="mb-4">Create file</Heading>
             <fileFetcher.Form
                 className="space-y-4"
@@ -63,6 +49,6 @@ export default function CreateFile() {
                     Create
                 </Button>
             </fileFetcher.Form>
-        </Drawer>
+        </div>
     );
 }

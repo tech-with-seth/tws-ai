@@ -1,34 +1,20 @@
 import { Assistant } from "openai/src/resources/beta/assistants.js";
-import { useFetcher, useNavigate, useRouteLoaderData } from "react-router";
+import { useFetcher, useRouteLoaderData } from "react-router";
 
 import { Button } from "~/components/Button";
-import { Drawer } from "~/components/Drawer";
 import { Heading } from "~/components/Heading";
 import { Paths } from "~/utils/paths";
 import { RadioCard } from "~/components/form/RadioCard";
 import { TextFormField } from "~/components/form/TextFormField";
-import useDrawer from "~/hooks/useDrawer";
 import { HorizontalRule } from "~/components/HorizontalRule";
 import { Label } from "~/components/form/Label";
 
 export default function CreateThread() {
     const { assistants } = useRouteLoaderData("routes/dashboard");
-    const navigate = useNavigate();
-    const { isDrawerOpen, closeDrawer } = useDrawer({
-        openOnRender: true,
-        onClose: () => navigate(Paths.DASHBOARD),
-    });
     const threadFetcher = useFetcher();
 
     return (
-        <Drawer
-            containerClassName="p-4"
-            handleClose={closeDrawer}
-            id="createThread"
-            isOpen={isDrawerOpen}
-            position="right"
-            size="md"
-        >
+        <>
             <Heading className="mb-4">Create thread</Heading>
             <threadFetcher.Form method="POST" action={Paths.API_THREADS}>
                 <TextFormField
@@ -54,6 +40,6 @@ export default function CreateThread() {
                 <HorizontalRule space="lg" />
                 <Button type="submit">Create</Button>
             </threadFetcher.Form>
-        </Drawer>
+        </>
     );
 }

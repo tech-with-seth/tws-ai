@@ -1,29 +1,15 @@
-import { useFetcher, useNavigate } from "react-router";
+import { useFetcher } from "react-router";
 import { Button } from "~/components/Button";
-import { Drawer } from "~/components/Drawer";
 import { Heading } from "~/components/Heading";
 import { TextareaFormField } from "~/components/form/TextareaFormField";
 import { TextFormField } from "~/components/form/TextFormField";
-import useDrawer from "~/hooks/useDrawer";
 import { Paths } from "~/utils/paths";
 
 export default function CreateAssistant() {
-    const navigate = useNavigate();
-    const { isDrawerOpen, closeDrawer } = useDrawer({
-        openOnRender: true,
-        onClose: () => navigate(Paths.DASHBOARD),
-    });
     const assistantFetcher = useFetcher();
 
     return (
-        <Drawer
-            containerClassName="p-4"
-            handleClose={closeDrawer}
-            id="createAssistant"
-            isOpen={isDrawerOpen}
-            position="right"
-            size="md"
-        >
+        <div className="p-4">
             <Heading className="mb-4">Create assistant</Heading>
             <assistantFetcher.Form
                 className="space-y-4"
@@ -44,6 +30,6 @@ export default function CreateAssistant() {
                 />
                 <Button type="submit">Create</Button>
             </assistantFetcher.Form>
-        </Drawer>
+        </div>
     );
 }

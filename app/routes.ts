@@ -18,16 +18,18 @@ export default [
     ]),
     layout("./routes/protected/restricted.tsx", [
         route(Paths.DASHBOARD, "routes/protected/dashboard.tsx", [
-            route(
-                Paths.CREATE_ASSISTANT,
-                "routes/assistants/create-assistant.tsx",
-            ),
-            route(Paths.CREATE_THREAD, "routes/threads/create-thread.tsx"),
-            route(":assistantId/:threadId", "routes/threads/chat.tsx"),
-            route(
-                `:assistantId/${Paths.CREATE_FILE}`,
-                "routes/files/create-file.tsx",
-            ),
+            layout("./routes/protected/drawer.tsx", [
+                route(
+                    Paths.CREATE_ASSISTANT,
+                    "routes/assistants/create-assistant.tsx",
+                ),
+                route(Paths.CREATE_THREAD, "routes/threads/create-thread.tsx"),
+                route(":assistantId/:threadId", "routes/threads/chat.tsx"),
+                route(
+                    `:assistantId/${Paths.CREATE_FILE}`,
+                    "routes/files/create-file.tsx",
+                ),
+            ]),
         ]),
         route(`/:assistantId`, "routes/assistants/assistant-details.tsx"),
         ...prefix("admin", [route("labs", "routes/admin/labs.tsx")]),
