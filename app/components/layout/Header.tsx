@@ -1,13 +1,15 @@
-import { Link, NavLink, NavLinkRenderProps } from "react-router";
+import { Link } from "react-router";
 import { Paths } from "~/utils/paths";
 import { ButtonNavLink } from "~/components/ButtonNavLink";
-import { BeakerIcon, FlaskConicalIcon } from "lucide-react";
+import { FlaskConicalIcon } from "lucide-react";
+import { User } from "@prisma/client";
 
 interface HeaderProps {
     isAdmin: boolean;
+    user?: User;
 }
 
-export function Header({ isAdmin }: HeaderProps) {
+export function Header({ isAdmin, user }: HeaderProps) {
     return (
         <header className="mb-4 p-4">
             <nav className="flex items-center justify-between rounded-xl bg-zinc-300 p-4 dark:bg-zinc-800">
@@ -23,7 +25,8 @@ export function Header({ isAdmin }: HeaderProps) {
                         </ButtonNavLink>
                     </li>
                 </ul>
-                <ul className="flex items-center gap-2">
+                <ul className="flex items-center gap-4">
+                    <li>{user?.email}</li>
                     {isAdmin && (
                         <li>
                             <ButtonNavLink
