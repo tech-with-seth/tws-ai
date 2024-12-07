@@ -203,7 +203,10 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                         size="sm"
                                         color="secondary"
                                     >
-                                        {navigation.state !== "idle" ? (
+                                        {navigation.state !== "idle" &&
+                                        navigation.location.pathname.includes(
+                                            thread.id,
+                                        ) ? (
                                             <LoaderPinwheelIcon className="animate-spin" />
                                         ) : (
                                             <MessagesSquareIcon />
