@@ -19,15 +19,17 @@ export function ButtonNavLink({
     return (
         <NavLink
             to={to}
-            className={cx(
-                "inline-block",
-                buttonVariants({
-                    color,
-                    variant,
-                    size,
-                }),
-                className,
-            )}
+            className={({ isActive }) =>
+                cx(
+                    "inline-block",
+                    buttonVariants({
+                        className,
+                        color: isActive ? "secondary" : color,
+                        size,
+                        variant,
+                    }),
+                )
+            }
         >
             {children}
         </NavLink>
