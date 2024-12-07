@@ -2,7 +2,7 @@ import { VariantProps } from "cva";
 import { cva, cx } from "cva.config";
 import { PropsWithChildren } from "react";
 import { Card } from "./Card";
-import { BotIcon, CircleUserIcon, PersonStanding } from "lucide-react";
+import { BotIcon, CircleUserIcon } from "lucide-react";
 
 export const messageVariants = cva({
     base: "text-white",
@@ -21,15 +21,14 @@ interface MessageProps extends VariantProps<typeof messageVariants> {}
 export function Message({ children, role }: PropsWithChildren<MessageProps>) {
     const isUser = role === "user";
     const isAssistant = role === "assistant";
+    const containerClassName = cx(
+        "prose flex items-start gap-2 prose-p:my-0 md:max-w-[90%] prose-strong:dark:text-primary-200",
+        isUser && "self-end text-right",
+        isAssistant && "self-start text-left",
+    );
 
     return (
-        <div
-            className={cx(
-                "prose flex items-start gap-2 prose-p:my-0 md:max-w-[90%] prose-strong:dark:text-primary-200",
-                isUser && "self-end text-right",
-                isAssistant && "self-start text-left",
-            )}
-        >
+        <div className={containerClassName}>
             {isAssistant && (
                 <Card border={false}>
                     <BotIcon className="h-6 w-6 text-white" />

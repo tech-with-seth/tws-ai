@@ -12,7 +12,6 @@ export const linkVariants = cva({
     defaultVariants: {
         variant: "primary",
     },
-    compoundVariants: [],
 });
 
 interface ExternalLinkProps
@@ -21,11 +20,12 @@ interface ExternalLinkProps
 
 export default function ExternalLink({
     children,
+    className,
     href,
     variant,
 }: PropsWithChildren<ExternalLinkProps>) {
     return (
-        <a href={href} className={cx(linkVariants({ variant }))}>
+        <a href={href} className={cx(linkVariants({ className, variant }))}>
             {children}
         </a>
     );

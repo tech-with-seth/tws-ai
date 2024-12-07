@@ -31,7 +31,7 @@ export function Banner({
     variant,
 }: PropsWithChildren<BannerProps>) {
     return (
-        <div className={cx(bannerVariants({ variant }), className)}>
+        <div className={cx(bannerVariants({ className, variant }))}>
             {icon && <div>{icon}</div>}
             <div>{children}</div>
         </div>

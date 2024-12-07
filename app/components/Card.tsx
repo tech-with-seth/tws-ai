@@ -33,7 +33,7 @@ export function Card({
     className,
 }: PropsWithChildren<CardProps>) {
     return (
-        <div className={cx(cardVariants({ border }), className)}>
+        <div className={cx(cardVariants({ border, className }))}>
             {children}
         </div>
     );

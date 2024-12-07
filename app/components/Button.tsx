@@ -166,7 +166,7 @@ export function Button({
             {...rest}
         >
             {IconBefore ? <IconBefore className="h-5 w-5" /> : null}
-            <span className="inline-block">{children}</span>
+            {children && <span className="inline-block">{children}</span>}
             {IconAfter ? <IconAfter className="h-5 w-5" /> : null}
         </button>
     );

@@ -18,7 +18,6 @@ export const headingVariants = cva({
     defaultVariants: {
         as: "h2",
     },
-    compoundVariants: [],
 });
 
 export interface HeadingProps
@@ -32,7 +31,7 @@ export function Heading({ as, children, className }: HeadingProps) {
     const Component = as || "h2";
 
     return (
-        <Component className={cx(headingVariants({ as }), className)}>
+        <Component className={cx(headingVariants({ as, className }))}>
             {children}
         </Component>
     );

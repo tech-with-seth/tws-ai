@@ -10,8 +10,6 @@ export const textFieldVariants = cva({
             true: "border-red-500 dark:border-red-600",
         },
     },
-    defaultVariants: {},
-    compoundVariants: [],
 });
 
 export default function TextField({
@@ -21,7 +19,7 @@ export default function TextField({
 }: TextFieldProps) {
     return (
         <input
-            className={cx(textFieldVariants({}), className)}
+            className={cx(textFieldVariants({ className }))}
             type={type}
             {...rest}
         />
