@@ -24,11 +24,16 @@ export const buttonNavLinkVariants = cva({
 
 export interface ButtonNavLinkProps
     extends LinkProps,
-        VariantProps<typeof buttonNavLinkVariants> {}
+        VariantProps<typeof buttonNavLinkVariants> {
+    iconBefore?: JSX.Element;
+    iconAfter?: JSX.Element;
+}
 
 export function ButtonNavLink({
     children,
     className,
+    iconBefore,
+    iconAfter,
     to,
 }: PropsWithChildren<ButtonNavLinkProps>) {
     return (
@@ -36,15 +41,17 @@ export function ButtonNavLink({
             to={to}
             className={({ isActive }) =>
                 cx(
-                    "inline-block",
+                    "inline-flex items-center gap-2",
                     buttonNavLinkVariants({
-                        className,
                         active: isActive,
+                        className,
                     }),
                 )
             }
         >
+            {iconBefore}
             {children}
+            {iconAfter}
         </NavLink>
     );
 }

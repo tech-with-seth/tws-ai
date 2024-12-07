@@ -1,6 +1,7 @@
 import { Link, NavLink, NavLinkRenderProps } from "react-router";
 import { Paths } from "~/utils/paths";
 import { ButtonNavLink } from "~/components/ButtonNavLink";
+import { BeakerIcon, FlaskConicalIcon } from "lucide-react";
 
 interface HeaderProps {
     isAdmin: boolean;
@@ -21,13 +22,20 @@ export function Header({ isAdmin }: HeaderProps) {
                             Dashboard
                         </ButtonNavLink>
                     </li>
-                    {isAdmin && (
-                        <li>
-                            <ButtonNavLink to={Paths.LABS}>Labs</ButtonNavLink>
-                        </li>
-                    )}
                 </ul>
                 <ul className="flex items-center gap-2">
+                    {isAdmin && (
+                        <li>
+                            <ButtonNavLink
+                                iconBefore={
+                                    <FlaskConicalIcon className="h-5 w-5" />
+                                }
+                                to={Paths.LABS}
+                            >
+                                Labs
+                            </ButtonNavLink>
+                        </li>
+                    )}
                     <li>
                         <ButtonNavLink to={Paths.LOGOUT}>Logout</ButtonNavLink>
                     </li>

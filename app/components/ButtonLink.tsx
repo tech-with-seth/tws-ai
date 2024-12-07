@@ -10,6 +10,7 @@ export interface ButtonLinkProps
 
 export function ButtonLink({
     children,
+    color,
     className,
     variant,
     size,
@@ -21,6 +22,7 @@ export function ButtonLink({
             className={cx(
                 "inline-block",
                 buttonVariants({
+                    color,
                     className,
                     variant,
                     size,

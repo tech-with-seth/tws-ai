@@ -66,6 +66,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                     <ButtonLink
                         className="inline-flex items-center gap-2"
                         to={Paths.CREATE_ASSISTANT}
+                        color="secondary"
                     >
                         <PencilIcon className="h-5 w-5" />
                         Create assistant
@@ -90,6 +91,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                             to={`/${id}`}
                                             size="sm"
                                             variant="outline"
+                                            color="secondary"
                                         >
                                             <ListIcon className="h-4 w-4" />
                                             <span className="inline-block">
@@ -101,6 +103,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                             to={`${id}/create-file`}
                                             size="sm"
                                             variant="outline"
+                                            color="secondary"
                                         >
                                             <FileIcon className="h-4 w-4" />
                                             <span className="inline-block">
@@ -157,12 +160,12 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                     </Heading>
                                     <p className="mb-4 mt-2">
                                         Chatting with:{" "}
-                                        <span className="inline-block rounded-xl bg-secondary-500 px-2 py-1 text-white dark:bg-secondary-800 dark:text-white">
+                                        <span className="inline-block rounded-xl bg-black px-2 py-1 text-white dark:bg-black dark:text-white">
                                             {thread.assistant.name}
                                         </span>
                                     </p>
                                 </div>
-                                <div className="flex gap-2">
+                                <div className="flex justify-end gap-2">
                                     <deleteThreadFetcher.Form
                                         method="DELETE"
                                         action={`${Paths.API_THREADS}/${thread.id}`}
@@ -187,6 +190,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                         className="inline-flex items-center gap-2 self-end"
                                         to={`/dashboard/${thread.assistant.oId}/${thread.id}`}
                                         size="sm"
+                                        color="secondary"
                                     >
                                         <MessagesSquareIcon /> Open chat
                                     </ButtonLink>
