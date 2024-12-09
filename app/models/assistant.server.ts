@@ -31,6 +31,7 @@ export function createPrismaAssistant(
     name: string,
     oId: string,
     userId: string,
+    vectorStoreId?: string,
 ) {
     return prisma.assistant.create({
         data: {
@@ -38,6 +39,7 @@ export function createPrismaAssistant(
             slug: kebab(name),
             oId,
             userId,
+            vectorStoreId,
         },
     });
 }

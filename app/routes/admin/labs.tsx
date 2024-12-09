@@ -24,6 +24,7 @@ import {
     createAssistant,
     createPrismaAssistant,
     getAssistantCount,
+    updateAssistantVectorStore,
 } from "~/models/assistant.server";
 import { getFileCount } from "~/models/file.server";
 import { createCompany, getCompanyCount } from "~/models/company.server";
@@ -97,6 +98,9 @@ export async function action({ request }: Route.ActionArgs) {
         invariant(assistant, "Assistant completion not found");
 
         const parsedAssistant = JSON.parse(assistant);
+        const vectorStore = await createVectorStore(
+            kebab(`${parsedAssistant.name} store`),
+        );
 
         const createdAssistant = await createAssistant(
             parsedAssistant.name,
@@ -107,8 +111,9 @@ export async function action({ request }: Route.ActionArgs) {
             parsedAssistant.name,
             createdAssistant.id,
             userId,
+            vectorStore.id,
         );
-        await createVectorStore(kebab(`${parsedAssistant.name} store`));
+        await updateAssistantVectorStore(createdAssistant.id, vectorStore.id);
 
         return { assistant };
     }

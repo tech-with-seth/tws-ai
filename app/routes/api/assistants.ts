@@ -3,6 +3,9 @@ import { createVectorStore } from "~/models/vectorStore.server";
 import {
     createAssistant,
     createPrismaAssistant,
+    deleteAssistant,
+    deletePrismaAssistant,
+    getPrismaAssistantByOpenId,
     updateAssistantVectorStore,
 } from "~/models/assistant.server";
 import { kebab } from "~/utils/string";
@@ -11,7 +14,7 @@ import { getUserId } from "~/utils/auth.server";
 import { Paths } from "~/utils/paths";
 import { Route } from "./+types/assistants";
 
-export async function action({ request }: Route.ActionArgs) {
+export async function action({ request, params }: Route.ActionArgs) {
     const userId = await getUserId(request);
     invariant(userId, "User ID is undefined");
 
@@ -25,15 +28,42 @@ export async function action({ request }: Route.ActionArgs) {
             invariant(instructions, "Instructions is undefined");
 
             const assistant = await createAssistant(name, instructions);
-            await createPrismaAssistant(name, assistant.id, userId);
-
             const vectorStore = await createVectorStore(
                 kebab(`${assistant.name} store`),
             );
 
+            await createPrismaAssistant(
+                name,
+                assistant.id,
+                userId,
+                vectorStore.id,
+            );
             await updateAssistantVectorStore(assistant.id, vectorStore.id);
 
             return redirect(Paths.DASHBOARD);
+        } catch (error) {
+            if (error instanceof Error) {
+                throw Error(error.message);
+            }
+
+            return data({ message: "Error occurred" }, 500);
+        }
+    }
+
+    if (request.method === "DELETE") {
+        const form = await request.formData();
+        const assistantId = String(form.get("assistantId"));
+        invariant(assistantId, "Assistant ID is undefined");
+
+        try {
+            const prismaAssistant =
+                await getPrismaAssistantByOpenId(assistantId);
+            invariant(prismaAssistant, "getPrismaAssistantByOpenId failed");
+
+            await deleteAssistant(assistantId);
+            await deletePrismaAssistant(prismaAssistant.id);
+
+            return data({ message: "Assistant deleted" }, 200);
         } catch (error) {
             if (error instanceof Error) {
                 throw Error(error.message);

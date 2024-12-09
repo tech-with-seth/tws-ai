@@ -9,6 +9,8 @@ import {
     PencilIcon,
     SparkleIcon,
     TrashIcon,
+    X,
+    XIcon,
 } from "lucide-react";
 
 import { Banner } from "~/components/Banner";
@@ -32,7 +34,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     const assistants = assistantsResponse.map(
         ({ id, name, description, instructions }) => ({
             description,
-            id,
+            id, // oId
             instructions,
             name,
         }),
@@ -57,6 +59,14 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
             <LoaderPinwheelIcon className="animate-spin" />
         ) : (
             <SparkleIcon />
+        );
+
+    const getDeleteAssistantIcon = (assistantId: string) =>
+        threadFetcher.state !== "idle" &&
+        threadFetcher.formData?.get("assistantId") === assistantId ? (
+            <LoaderPinwheelIcon className="animate-spin" />
+        ) : (
+            <XIcon />
         );
 
     const deleteThreadFetcher = useFetcher();
@@ -88,7 +98,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                             ({ id, name, description, instructions }) => (
                                 <Card
                                     key={id}
-                                    className="col-span-1 flex h-full flex-col justify-between md:col-span-6 lg:col-span-4 xl:col-span-3"
+                                    className="col-span-1 flex h-full flex-col justify-between gap-2 md:col-span-6 lg:col-span-4 xl:col-span-3"
                                 >
                                     <div>
                                         <Heading as="h4">{name}</Heading>
@@ -100,6 +110,24 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                         )}
                                     </div>
                                     <div className="inline-flex gap-2 self-end">
+                                        <threadFetcher.Form
+                                            method="DELETE"
+                                            action="/api/assistants"
+                                        >
+                                            <input
+                                                type="hidden"
+                                                name="assistantId"
+                                                value={id}
+                                            />
+                                            <Button
+                                                className="inline-flex items-center gap-1"
+                                                size="sm"
+                                                type="submit"
+                                                color="danger"
+                                            >
+                                                {getDeleteAssistantIcon(id)}
+                                            </Button>
+                                        </threadFetcher.Form>
                                         <ButtonLink
                                             className="inline-flex items-center gap-1"
                                             to={`/${id}`}
