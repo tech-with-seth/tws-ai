@@ -21,12 +21,13 @@ import { getThreadCount } from "~/models/thread.server";
 import { getUserCount } from "~/models/user.server";
 import { getAssistantCount } from "~/models/assistant.server";
 import { getFileCount } from "~/models/file.server";
-import { createCompany } from "~/models/company.server";
+import { createCompany, getCompanyCount } from "~/models/company.server";
 import invariant from "tiny-invariant";
 
 export async function loader() {
     return data({
         assistantCount: await getAssistantCount(),
+        companyCount: await getCompanyCount(),
         fileCount: await getFileCount(),
         threadCount: await getThreadCount(),
         userCount: await getUserCount(),
@@ -240,6 +241,12 @@ export default function Labs({ actionData, loaderData }: Route.ComponentProps) {
                         Assistants:{" "}
                         <span className="font-bold">
                             {loaderData.assistantCount}
+                        </span>
+                    </Heading>
+                    <Heading as="h3" className="font-thin">
+                        Companies:{" "}
+                        <span className="font-bold">
+                            {loaderData.companyCount}
                         </span>
                     </Heading>
                     <Heading as="h3" className="font-thin">
