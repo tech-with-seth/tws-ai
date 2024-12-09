@@ -22,6 +22,12 @@ export const CompanySchema = z.object({
     description: z.string(),
 });
 
+export const AssistantSchema = z.object({
+    name: z.string(),
+    instructions: z.string(),
+    model: z.string(),
+});
+
 export function createCompletion(
     content: string,
     responseConfig?: {

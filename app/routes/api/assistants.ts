@@ -3,6 +3,7 @@ import { createVectorStore } from "~/models/vectorStore.server";
 import {
     createAssistant,
     createPrismaAssistant,
+    updateAssistantVectorStore,
 } from "~/models/assistant.server";
 import { kebab } from "~/utils/string";
 import invariant from "tiny-invariant";
@@ -25,7 +26,12 @@ export async function action({ request }: Route.ActionArgs) {
 
             const assistant = await createAssistant(name, instructions);
             await createPrismaAssistant(name, assistant.id, userId);
-            await createVectorStore(kebab(`${assistant.name} store`));
+
+            const vectorStore = await createVectorStore(
+                kebab(`${assistant.name} store`),
+            );
+
+            await updateAssistantVectorStore(assistant.id, vectorStore.id);
 
             return redirect(Paths.DASHBOARD);
         } catch (error) {

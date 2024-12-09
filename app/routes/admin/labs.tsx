@@ -6,6 +6,7 @@ import "prismjs/themes/prism-tomorrow.css";
 
 import { Button } from "~/components/Button";
 import {
+    AssistantSchema,
     CompanySchema,
     createCompletion,
     SnippetSchema,
@@ -19,10 +20,18 @@ import { handleCompletionResponse } from "~/utils/common";
 import { Heading } from "~/components/Heading";
 import { getThreadCount } from "~/models/thread.server";
 import { getUserCount } from "~/models/user.server";
-import { getAssistantCount } from "~/models/assistant.server";
+import {
+    createAssistant,
+    createPrismaAssistant,
+    getAssistantCount,
+} from "~/models/assistant.server";
 import { getFileCount } from "~/models/file.server";
 import { createCompany, getCompanyCount } from "~/models/company.server";
 import invariant from "tiny-invariant";
+import { Skeleton } from "~/components/Skeleton";
+import { createVectorStore } from "~/models/vectorStore.server";
+import { kebab } from "~/utils/string";
+import { getUserId } from "~/utils/auth.server";
 
 export async function loader() {
     return data({
@@ -35,6 +44,9 @@ export async function loader() {
 }
 
 export async function action({ request }: Route.ActionArgs) {
+    const userId = await getUserId(request);
+    invariant(userId, "User ID not found");
+
     const form = await request.formData();
     const prompt = String(form.get("prompt"));
     const intent = String(form.get("intent"));
@@ -70,6 +82,35 @@ export async function action({ request }: Route.ActionArgs) {
         });
 
         return { company };
+    }
+
+    if (intent === "createAssistant") {
+        const assistantCompletionResponse = await createCompletion(
+            `Create an Open AI assistant. Follow the provide Zod schema. In the instructions be descriptive. Add examples to the instructions so that the assistant can relay information in a way that is useful. Here's what the assistant should be like: ${prompt}`,
+            {
+                schema: AssistantSchema,
+                schemaTitle: "Assistant",
+            },
+        );
+
+        const assistant = handleCompletionResponse(assistantCompletionResponse);
+        invariant(assistant, "Assistant completion not found");
+
+        const parsedAssistant = JSON.parse(assistant);
+
+        const createdAssistant = await createAssistant(
+            parsedAssistant.name,
+            parsedAssistant.instructions,
+            parsedAssistant.description,
+        );
+        await createPrismaAssistant(
+            parsedAssistant.name,
+            createdAssistant.id,
+            userId,
+        );
+        await createVectorStore(kebab(`${parsedAssistant.name} store`));
+
+        return { assistant };
     }
 
     if (intent === "secondaryAction") {
@@ -158,7 +199,24 @@ export default function Labs({ actionData, loaderData }: Route.ComponentProps) {
                                 Echo
                             </Button>
                         </div>
-                        <div className="flex gap-4"></div>
+                        <HorizontalRule />
+                        <div className="flex flex-wrap items-start gap-4">
+                            <div className="flex flex-col gap-2">
+                                <Skeleton variant="text" />
+                                <Skeleton variant="text" />
+                                <Skeleton variant="text" />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <Skeleton variant="square" />
+                                <Skeleton variant="square" />
+                                <Skeleton variant="square" />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <Skeleton variant="block" />
+                                <Skeleton variant="block" />
+                                <Skeleton variant="block" />
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div className="col-span-4">
@@ -231,6 +289,30 @@ export default function Labs({ actionData, loaderData }: Route.ComponentProps) {
                             <p>Loading...</p>
                         ) : (
                             <Code lang="js">{actionData?.company}</Code>
+                        )}
+                    </div>
+                    <HorizontalRule />
+                    <Form method="POST" className="mb-4 flex items-end gap-4">
+                        <TextFormField
+                            label="Assistant Prompt"
+                            name="prompt"
+                            helperText="Have ChatGPT add an assitant to the database 🤯"
+                        />
+                        <Button
+                            type="submit"
+                            name="intent"
+                            value="createAssistant"
+                        >
+                            Submit
+                        </Button>
+                    </Form>
+                    <div>
+                        {!isLoading && !actionData?.assistant ? (
+                            <p>Enter a prompt 👆🏻</p>
+                        ) : isLoading ? (
+                            <p>Loading...</p>
+                        ) : (
+                            <Code lang="js">{actionData?.assistant}</Code>
                         )}
                     </div>
                     <HorizontalRule />
