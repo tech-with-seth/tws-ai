@@ -92,7 +92,15 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                     <div>
                                         <Heading as="h4">{name}</Heading>
                                         {description && <p>{description}</p>}
-                                        <p className="mb-4">{instructions}</p>
+                                        <p className="mb-4">
+                                            {instructions &&
+                                            instructions?.length > 150
+                                                ? `${instructions?.substring(
+                                                      0,
+                                                      149,
+                                                  )}...`
+                                                : instructions}
+                                        </p>
                                     </div>
                                     <div className="inline-flex gap-2 self-end">
                                         <ButtonLink
