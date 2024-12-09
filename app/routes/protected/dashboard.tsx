@@ -63,6 +63,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
 
     const getDeleteAssistantIcon = (assistantId: string) =>
         threadFetcher.state !== "idle" &&
+        threadFetcher.formMethod === "DELETE" &&
         threadFetcher.formData?.get("assistantId") === assistantId ? (
             <LoaderPinwheelIcon className="animate-spin" />
         ) : (
