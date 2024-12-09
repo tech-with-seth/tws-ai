@@ -34,3 +34,7 @@ export function getEnvVariable(key: string): string {
 export function kebab(str: string) {
     return kebabCase(str);
 }
+
+export function ellipsisify(s: string, n: number = 150) {
+    return s.length > n ? `${s.substring(0, n - 1)}...` : s;
+}

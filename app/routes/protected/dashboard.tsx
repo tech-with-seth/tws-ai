@@ -22,6 +22,7 @@ import { Heading } from "~/components/Heading";
 import { HorizontalRule } from "~/components/HorizontalRule";
 import { Paths } from "~/utils/paths";
 import { Route } from "./+types/dashboard";
+import { ellipsisify } from "~/utils/string";
 
 export async function loader({ request }: Route.LoaderArgs) {
     const userId = await getUserId(request);
@@ -92,15 +93,11 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                     <div>
                                         <Heading as="h4">{name}</Heading>
                                         {description && <p>{description}</p>}
-                                        <p className="mb-4">
-                                            {instructions &&
-                                            instructions?.length > 150
-                                                ? `${instructions?.substring(
-                                                      0,
-                                                      149,
-                                                  )}...`
-                                                : instructions}
-                                        </p>
+                                        {instructions && (
+                                            <p className="mb-4">
+                                                {ellipsisify(instructions)}
+                                            </p>
+                                        )}
                                     </div>
                                     <div className="inline-flex gap-2 self-end">
                                         <ButtonLink
