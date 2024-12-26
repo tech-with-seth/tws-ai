@@ -8,14 +8,19 @@
         "url": "https://github.com/sethdavis512/tws-ai.git"
     },
     "beachball": {
-        "publish": false
+        "publish": false,
+        "verbose": true
     },
     "scripts": {
         "build": "react-router build",
         "dev": "react-router dev",
         "format": "prettier --write .",
         "start": "react-router-serve ./build/server/index.js",
-        "typecheck": "react-router typegen && tsc --build --noEmit"
+        "typecheck": "react-router typegen && tsc --build --noEmit",
+        "change": "beachball change",
+        "change:check": "beachball check",
+        "bump": "beachball bump",
+        "publish": "beachball publish"
     },
     "dependencies": {
         "@ai-sdk/openai": "^1.0.5",

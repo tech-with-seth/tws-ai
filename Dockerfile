@@ -8,8 +8,12 @@ FROM node:20-alpine AS base
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies required for building native modules
-RUN apk add --no-cache build-base python3
+# Install system dependencies required for building native modules and Prisma compatibility
+RUN apk add --no-cache \
+    build-base \
+    python3 \
+    openssl \
+    libc6-compat
 
 # ===========================
 # Stage 2: Dependencies
@@ -32,7 +36,7 @@ WORKDIR /app
 
 # Copy Prisma schema and generate client
 COPY prisma ./prisma/
-RUN npx prisma generate
+RUN npx prisma generate --schema=./prisma/schema.prisma
 
 # Copy the rest of the application code
 COPY . .
@@ -47,6 +51,11 @@ FROM node:20-alpine AS production
 
 # Set working directory
 WORKDIR /app
+
+# Install runtime dependencies for Prisma
+RUN apk add --no-cache \
+    openssl \
+    libc6-compat
 
 # Copy only the necessary files from the build stage
 COPY --from=build /app /app
