@@ -90,9 +90,11 @@ export function Drawer({
         drawerVariants({ className, position, size, isOpen }),
     );
 
-    const overlayClassName = `fixed inset-0 z-40 bg-zinc-300 transition-opacity dark:bg-zinc-900 ${
-        isOpen ? "opacity-85" : "opacity-0"
-    }`;
+    const overlayClassName = cx(
+        `fixed inset-0 z-40 bg-zinc-300 transition-opacity dark:bg-black`,
+        isOpen && "opacity-85",
+        !isOpen && "opacity-0",
+    );
 
     return (
         <>

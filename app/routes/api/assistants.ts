@@ -13,6 +13,7 @@ import invariant from "tiny-invariant";
 import { getUserId } from "~/utils/auth.server";
 import { Paths } from "~/utils/paths";
 import { Route } from "./+types/assistants";
+import { createLog } from "~/models/activity.server";
 
 export async function action({ request, params }: Route.ActionArgs) {
     const userId = await getUserId(request);
@@ -40,6 +41,17 @@ export async function action({ request, params }: Route.ActionArgs) {
             );
             await updateAssistantVectorStore(assistant.id, vectorStore.id);
 
+            await createLog({
+                userId,
+                action: "CREATE_ASSISTANT",
+                meta: {
+                    api: true,
+                    name,
+                    assistantId: assistant.id,
+                    vectorStoreId: vectorStore.id,
+                },
+            });
+
             return redirect(Paths.DASHBOARD);
         } catch (error) {
             if (error instanceof Error) {
@@ -62,6 +74,15 @@ export async function action({ request, params }: Route.ActionArgs) {
 
             await deleteAssistant(assistantId);
             await deletePrismaAssistant(prismaAssistant.id);
+
+            await createLog({
+                userId,
+                action: "DELETE_ASSISTANT",
+                meta: {
+                    assistantId,
+                    name: prismaAssistant.name,
+                },
+            });
 
             return data({ message: "Assistant deleted" }, 200);
         } catch (error) {

@@ -13,17 +13,18 @@ enum Role {
 }
 
 model User {
-    id         String      @id @default(cuid())
-    createdAt  DateTime    @default(now())
-    updatedAt  DateTime    @updatedAt
+    id         String        @id @default(cuid())
+    createdAt  DateTime      @default(now())
+    updatedAt  DateTime      @updatedAt
     profile    Profile?
     password   Password?
-    email      String      @unique
+    email      String        @unique
     threads    Thread[]
     assistants Assistant[]
     files      File[]
-    role       Role        @default(USER)
+    role       Role          @default(USER)
     companies  Company[]
+    activity   ActivityLog[]
 }
 
 model Company {
@@ -89,4 +90,27 @@ model File {
     userId    String
     name      String   @unique
     slug      String   @unique
+}
+
+enum ActionType {
+    CREATE_THREAD
+    UPDATE_THREAD
+    DELETE_THREAD
+    UPLOAD_FILE
+    DELETE_FILE
+    CREATE_ASSISTANT
+    UPDATE_ASSISTANT
+    DELETE_ASSISTANT
+    LOGIN
+    LOGOUT
+}
+
+model ActivityLog {
+    id        String     @id @default(cuid())
+    createdAt DateTime   @default(now())
+    updatedAt DateTime   @updatedAt
+    user      User       @relation(fields: [userId], references: [id])
+    userId    String
+    action    ActionType // Enforce enum for consistency
+    meta      Json? // Flexible field for additional information
 }

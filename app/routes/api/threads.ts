@@ -14,6 +14,7 @@ import {
     ThreadTitleSchema,
 } from "~/models/completion.server";
 import { getPrismaAssistantByOpenId } from "~/models/assistant.server";
+import { createLog } from "~/models/activity.server";
 
 export async function action({ request }: Route.ActionArgs) {
     const userId = await getUserId(request);
@@ -27,6 +28,16 @@ export async function action({ request }: Route.ActionArgs) {
 
         const thread = await createBareThread();
         await createPrismaBareThread(userId, thread.id, prismaAssistant.id);
+
+        await createLog({
+            userId,
+            action: "CREATE_THREAD",
+            meta: {
+                api: true,
+                threadId: thread.id,
+                assistantId: prismaAssistant.id,
+            },
+        });
 
         return redirect(getChatPath(assistantId, thread.id));
     }
@@ -51,6 +62,16 @@ export async function action({ request }: Route.ActionArgs) {
         });
 
         await updatePrismaThread(prismaThreadId, parsed.title);
+
+        await createLog({
+            userId,
+            action: "UPDATE_THREAD",
+            meta: {
+                api: true,
+                threadId: prismaThreadId,
+                title: parsed.title,
+            },
+        });
 
         return data({ message: "Success" }, 200);
     }
