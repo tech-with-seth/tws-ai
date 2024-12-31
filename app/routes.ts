@@ -16,23 +16,34 @@ export default [
         ]),
         route(Paths.LOGOUT, "routes/auth/logout.tsx"),
     ]),
-    layout("./routes/protected/restricted.tsx", [
-        route(Paths.DASHBOARD, "routes/protected/dashboard.tsx", [
-            layout("./routes/protected/drawer.tsx", [
-                route(
-                    Paths.CREATE_ASSISTANT,
-                    "routes/assistants/create-assistant.tsx",
-                ),
-                route(Paths.CREATE_THREAD, "routes/threads/create-thread.tsx"),
-                route(":assistantId/:threadId", "routes/threads/chat.tsx"),
-                route(
-                    `:assistantId/${Paths.CREATE_FILE}`,
-                    "routes/files/create-file.tsx",
-                ),
+    layout("./routes/auth/restricted.tsx", [
+        layout("./routes/app.tsx", [
+            route(Paths.DASHBOARD, "routes/dashboard/index.tsx", [
+                layout("./routes/dashboard/drawer.tsx", [
+                    route(
+                        Paths.CREATE_ASSISTANT,
+                        "routes/dashboard/create-assistant.tsx",
+                    ),
+                    route(
+                        Paths.CREATE_THREAD,
+                        "routes/dashboard/create-thread.tsx",
+                    ),
+                    route(
+                        ":assistantId/:threadId",
+                        "routes/dashboard/chat.tsx",
+                    ),
+                    route(
+                        `:assistantId/${Paths.CREATE_FILE}`,
+                        "routes/dashboard/create-file.tsx",
+                    ),
+                ]),
             ]),
+            route(`:assistantId`, "routes/assistants/assistant-details.tsx"),
         ]),
-        route(`/:assistantId`, "routes/assistants/assistant-details.tsx"),
-        ...prefix("admin", [route("labs", "routes/admin/labs.tsx")]),
+        layout("./routes/admin.tsx", [
+            route(`/labs`, "routes/labs.tsx"),
+            route(`/studio/*`, "routes/studio/index.tsx"),
+        ]),
     ]),
     ...prefix(Paths.API, [
         route(Paths.ASSISTANTS, "routes/api/assistants.ts"),

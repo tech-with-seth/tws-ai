@@ -1,19 +1,18 @@
 import type { Config } from "tailwindcss";
-import { amber, blue, emerald, green, rose } from "tailwindcss/colors";
-import Color from "color";
+import { amber, blue, green, rose, sky } from "tailwindcss/colors";
 
-type ShadeKey =
-    | "50"
-    | "100"
-    | "200"
-    | "300"
-    | "400"
-    | "500"
-    | "600"
-    | "700"
-    | "800"
-    | "900"
-    | "950";
+// type ShadeKey =
+//     | "50"
+//     | "100"
+//     | "200"
+//     | "300"
+//     | "400"
+//     | "500"
+//     | "600"
+//     | "700"
+//     | "800"
+//     | "900"
+//     | "950";
 
 // const desaturated = (colorObj: Record<ShadeKey, string>) =>
 //     Object.keys(colorObj).reduce(
@@ -43,11 +42,14 @@ export default {
                 ],
             },
             colors: {
-                primary: emerald,
-                secondary: blue,
+                primary: blue,
+                secondary: sky,
                 success: green,
                 warning: amber,
                 danger: rose,
+            },
+            borderRadius: {
+                st: "3px",
             },
         },
     },

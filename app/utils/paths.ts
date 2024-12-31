@@ -5,7 +5,7 @@ export enum Paths {
     JOIN = "/join",
     LOGIN = "/login",
     LOGOUT = "/logout",
-    LABS = "/admin/labs",
+    LABS = "/labs",
     // ASSISTANT ==========
     ASSISTANTS = "assistants",
     CREATE_ASSISTANT = "create-assistant",
@@ -21,6 +21,7 @@ export enum Paths {
     FILES = "files",
     CREATE_FILE = "create-file",
     API_FILES = "/api/files",
+    STUDIO = "/studio",
 }
 
 // ASSISTANTS ==========
