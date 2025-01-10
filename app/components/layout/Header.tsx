@@ -1,12 +1,12 @@
 import { Link } from "react-router";
 import { Paths } from "~/utils/paths";
 import { ButtonNavLink } from "~/components/ButtonNavLink";
-import { FlaskConicalIcon } from "lucide-react";
+import { FlaskConicalIcon, LampDeskIcon } from "lucide-react";
 import { User } from "@prisma/client";
 
 interface HeaderProps {
     isAdmin: boolean;
-    user?: User;
+    user?: Pick<User, "email">;
 }
 
 export function Header({ isAdmin, user }: HeaderProps) {
@@ -24,21 +24,33 @@ export function Header({ isAdmin, user }: HeaderProps) {
                             Dashboard
                         </ButtonNavLink>
                     </li>
+                    {isAdmin && (
+                        <>
+                            <li>
+                                <ButtonNavLink
+                                    iconBefore={
+                                        <LampDeskIcon className="h-4 w-4" />
+                                    }
+                                    to={Paths.STUDIO}
+                                >
+                                    Studio
+                                </ButtonNavLink>
+                            </li>
+                            <li>
+                                <ButtonNavLink
+                                    iconBefore={
+                                        <FlaskConicalIcon className="h-4 w-4" />
+                                    }
+                                    to={Paths.LABS}
+                                >
+                                    Labs
+                                </ButtonNavLink>
+                            </li>
+                        </>
+                    )}
                 </ul>
                 <ul className="flex items-center gap-4">
                     <li>{user?.email}</li>
-                    {isAdmin && (
-                        <li>
-                            <ButtonNavLink
-                                iconBefore={
-                                    <FlaskConicalIcon className="h-5 w-5" />
-                                }
-                                to={Paths.LABS}
-                            >
-                                Labs
-                            </ButtonNavLink>
-                        </li>
-                    )}
                     <li>
                         <ButtonNavLink to={Paths.LOGOUT}>Logout</ButtonNavLink>
                     </li>

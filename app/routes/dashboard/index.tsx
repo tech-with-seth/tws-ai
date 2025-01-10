@@ -9,25 +9,26 @@ import {
     PencilIcon,
     SparkleIcon,
     TrashIcon,
-    X,
-    XIcon,
 } from "lucide-react";
+import { PortableText } from "@portabletext/react";
 
 import { Banner } from "~/components/Banner";
 import { Button } from "~/components/Button";
 import { ButtonLink } from "~/components/ButtonLink";
 import { Card } from "~/components/Card";
 import { getThreadsByUserId } from "~/models/thread.server";
-import { getUserId } from "~/utils/auth.server";
+import { getUser } from "~/utils/auth.server";
 import { getUsersAssistants } from "~/models/assistant.server";
 import { Heading } from "~/components/Heading";
 import { HorizontalRule } from "~/components/HorizontalRule";
 import { Paths } from "~/utils/paths";
-import { Route } from "./+types/dashboard";
 import { ellipsisify } from "~/utils/string";
+import { Route } from "../dashboard/+types";
+import { p } from "node_modules/@react-router/dev/dist/routes-DHIOx0R9";
 
 export async function loader({ request }: Route.LoaderArgs) {
-    const userId = await getUserId(request);
+    const user = await getUser(request);
+    const userId = user?.id;
     invariant(userId, "User ID is not defined");
 
     const assistantsResponse = await getUsersAssistants(userId);
@@ -44,7 +45,9 @@ export async function loader({ request }: Route.LoaderArgs) {
 
     return {
         assistants,
+        isAdmin: user?.role === "ADMIN",
         threads,
+        user,
     };
 }
 
@@ -56,28 +59,30 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
     const getCreateThreadChatIcon = (assistantId: string) =>
         threadFetcher.state !== "idle" &&
         threadFetcher.formAction?.includes(assistantId) ? (
-            <LoaderPinwheelIcon className="animate-spin" />
+            <LoaderPinwheelIcon className="h-4 w-4 animate-spin" />
         ) : (
-            <SparkleIcon />
+            <SparkleIcon className="h-4 w-4" />
         );
 
     const getDeleteAssistantIcon = (assistantId: string) =>
         threadFetcher.state !== "idle" &&
         threadFetcher.formMethod === "DELETE" &&
         threadFetcher.formData?.get("assistantId") === assistantId ? (
-            <LoaderPinwheelIcon className="animate-spin" />
+            <LoaderPinwheelIcon className="h-4 w-4 animate-spin" />
         ) : (
-            <XIcon />
+            <TrashIcon className="h-4 w-4" />
         );
 
     const deleteThreadFetcher = useFetcher();
     const getDeleteChatIcon = (threadId: string) =>
         deleteThreadFetcher.state !== "idle" &&
         deleteThreadFetcher.formAction?.includes(threadId) ? (
-            <LoaderPinwheelIcon className="animate-spin" />
+            <LoaderPinwheelIcon className="h-4 w-4 animate-spin" />
         ) : (
-            <TrashIcon />
+            <TrashIcon className="h-4 w-4" />
         );
+
+    const agents = [] as any;
 
     return (
         <>
@@ -88,18 +93,18 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                         className="inline-flex items-center gap-2"
                         to={Paths.CREATE_ASSISTANT}
                         color="secondary"
+                        iconBefore={<PencilIcon className="h-4 w-4" />}
                     >
-                        <PencilIcon className="h-5 w-5" />
                         Create assistant
                     </ButtonLink>
                 </div>
-                <div className="grid gap-3 md:grid-cols-12">
+                <div className="grid grid-cols-12 gap-3">
                     {assistants && assistants.length > 0 ? (
                         assistants.map(
                             ({ id, name, description, instructions }) => (
                                 <Card
                                     key={id}
-                                    className="col-span-1 flex h-full flex-col justify-between gap-2 md:col-span-6 lg:col-span-4 xl:col-span-3"
+                                    className="col-span-full flex h-full flex-col flex-wrap justify-between gap-2 sm:col-span-6 lg:col-span-4 xl:col-span-3"
                                 >
                                     <div>
                                         <Heading as="h4">{name}</Heading>
@@ -110,7 +115,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                             </p>
                                         )}
                                     </div>
-                                    <div className="inline-flex gap-2 self-end">
+                                    <div className="flex gap-2 md:flex-wrap">
                                         <threadFetcher.Form
                                             method="DELETE"
                                             action="/api/assistants"
@@ -121,37 +126,38 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                                 value={id}
                                             />
                                             <Button
-                                                className="inline-flex items-center gap-1"
+                                                className="h-full"
                                                 size="sm"
                                                 type="submit"
                                                 color="danger"
+                                                iconBefore={getDeleteAssistantIcon(
+                                                    id,
+                                                )}
                                             >
-                                                {getDeleteAssistantIcon(id)}
+                                                Delete
                                             </Button>
                                         </threadFetcher.Form>
                                         <ButtonLink
-                                            className="inline-flex items-center gap-1"
                                             to={`/${id}`}
                                             size="sm"
                                             variant="outline"
                                             color="secondary"
+                                            iconBefore={
+                                                <ListIcon className="h-4 w-4" />
+                                            }
                                         >
-                                            <ListIcon className="h-4 w-4" />
-                                            <span className="inline-block">
-                                                Details
-                                            </span>
+                                            Details
                                         </ButtonLink>
                                         <ButtonLink
-                                            className="inline-flex items-center gap-1"
                                             to={`${id}/create-file`}
                                             size="sm"
                                             variant="outline"
                                             color="secondary"
+                                            iconBefore={
+                                                <FileIcon className="h-4 w-4" />
+                                            }
                                         >
-                                            <FileIcon className="h-4 w-4" />
-                                            <span className="inline-block">
-                                                Add file
-                                            </span>
+                                            Add file
                                         </ButtonLink>
                                         <threadFetcher.Form
                                             method="POST"
@@ -163,7 +169,6 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                                 value={id}
                                             />
                                             <Button
-                                                className="inline-flex items-center gap-1"
                                                 size="sm"
                                                 type="submit"
                                                 color="secondary"
@@ -180,11 +185,38 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                         )
                     ) : (
                         <Banner
-                            icon={<FileQuestion className="h-6 w-6" />}
+                            icon={<FileQuestion className="h-4 w-4" />}
                             className="min-w-[200px] basis-1/4"
                             variant="warning"
                         >
                             No assistants available
+                        </Banner>
+                    )}
+                </div>
+                <HorizontalRule space="lg" />
+                <div className="mb-4 flex items-center gap-4">
+                    <Heading>Agents</Heading>
+                    <ButtonLink
+                        className="inline-flex items-center gap-2"
+                        to={Paths.CREATE_ASSISTANT}
+                        color="secondary"
+                        iconBefore={<PencilIcon className="h-4 w-4" />}
+                    >
+                        Create agent
+                    </ButtonLink>
+                </div>
+                <div className="grid grid-cols-12 gap-3">
+                    {agents && agents.length > 0 ? (
+                        <div className="col-span-full flex h-full flex-col flex-wrap justify-between gap-2 sm:col-span-6 lg:col-span-4 xl:col-span-3">
+                            <p>Placeholder...</p>
+                        </div>
+                    ) : (
+                        <Banner
+                            className="col-span-full sm:col-span-6 lg:col-span-4 xl:col-span-3"
+                            icon={<FileQuestion className="h-4 w-4" />}
+                            variant="warning"
+                        >
+                            No agents available
                         </Banner>
                     )}
                 </div>
@@ -236,15 +268,17 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                         to={`/dashboard/${thread.assistant.oId}/${thread.id}`}
                                         size="sm"
                                         color="secondary"
+                                        iconBefore={
+                                            navigation.state !== "idle" &&
+                                            navigation.location.pathname.includes(
+                                                thread.id,
+                                            ) ? (
+                                                <LoaderPinwheelIcon className="h-4 w-4 animate-spin" />
+                                            ) : (
+                                                <MessagesSquareIcon className="h-4 w-4" />
+                                            )
+                                        }
                                     >
-                                        {navigation.state !== "idle" &&
-                                        navigation.location.pathname.includes(
-                                            thread.id,
-                                        ) ? (
-                                            <LoaderPinwheelIcon className="animate-spin" />
-                                        ) : (
-                                            <MessagesSquareIcon />
-                                        )}{" "}
                                         Open chat
                                     </ButtonLink>
                                 </div>

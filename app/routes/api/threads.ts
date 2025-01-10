@@ -9,12 +9,10 @@ import {
 import { data, redirect } from "react-router";
 import invariant from "tiny-invariant";
 import { getChatPath } from "~/utils/paths";
-import {
-    createCompletion,
-    ThreadTitleSchema,
-} from "~/models/completion.server";
+import { createCompletion } from "~/models/completion.server";
 import { getPrismaAssistantByOpenId } from "~/models/assistant.server";
 import { createLog } from "~/models/activity.server";
+import { ThreadTitleSchema } from "~/utils/schemas";
 
 export async function action({ request }: Route.ActionArgs) {
     const userId = await getUserId(request);
