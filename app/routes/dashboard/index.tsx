@@ -10,6 +10,7 @@ import {
     SparkleIcon,
     TrashIcon,
 } from "lucide-react";
+import { PortableText } from "@portabletext/react";
 
 import { Banner } from "~/components/Banner";
 import { Button } from "~/components/Button";
@@ -22,8 +23,8 @@ import { Heading } from "~/components/Heading";
 import { HorizontalRule } from "~/components/HorizontalRule";
 import { Paths } from "~/utils/paths";
 import { ellipsisify } from "~/utils/string";
-import { client } from "~/sanity-client";
 import { Route } from "../dashboard/+types";
+import { p } from "node_modules/@react-router/dev/dist/routes-DHIOx0R9";
 
 export async function loader({ request }: Route.LoaderArgs) {
     const user = await getUser(request);
@@ -42,10 +43,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
     const threads = await getThreadsByUserId(userId);
 
-    const articles = await client.fetch('*[_type == "article"]');
-
     return {
-        articles,
         assistants,
         isAdmin: user?.role === "ADMIN",
         threads,
@@ -61,7 +59,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
     const getCreateThreadChatIcon = (assistantId: string) =>
         threadFetcher.state !== "idle" &&
         threadFetcher.formAction?.includes(assistantId) ? (
-            <LoaderPinwheelIcon className="animate-spin" />
+            <LoaderPinwheelIcon className="h-4 w-4 animate-spin" />
         ) : (
             <SparkleIcon className="h-4 w-4" />
         );
@@ -83,6 +81,8 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
         ) : (
             <TrashIcon className="h-4 w-4" />
         );
+
+    const agents = [] as any;
 
     return (
         <>
@@ -190,6 +190,33 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                             variant="warning"
                         >
                             No assistants available
+                        </Banner>
+                    )}
+                </div>
+                <HorizontalRule space="lg" />
+                <div className="mb-4 flex items-center gap-4">
+                    <Heading>Agents</Heading>
+                    <ButtonLink
+                        className="inline-flex items-center gap-2"
+                        to={Paths.CREATE_ASSISTANT}
+                        color="secondary"
+                        iconBefore={<PencilIcon className="h-4 w-4" />}
+                    >
+                        Create agent
+                    </ButtonLink>
+                </div>
+                <div className="grid grid-cols-12 gap-3">
+                    {agents && agents.length > 0 ? (
+                        <div className="col-span-full flex h-full flex-col flex-wrap justify-between gap-2 sm:col-span-6 lg:col-span-4 xl:col-span-3">
+                            <p>Placeholder...</p>
+                        </div>
+                    ) : (
+                        <Banner
+                            className="col-span-full sm:col-span-6 lg:col-span-4 xl:col-span-3"
+                            icon={<FileQuestion className="h-4 w-4" />}
+                            variant="warning"
+                        >
+                            No agents available
                         </Banner>
                     )}
                 </div>

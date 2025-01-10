@@ -2,31 +2,7 @@ import { Schema, z } from "zod";
 import { zodResponseFormat } from "openai/helpers/zod.mjs";
 
 import { ai } from "~/open-ai";
-
-export const ThreadTitleSchema = z.object({
-    title: z.string(),
-});
-
-export const SnippetSchema = z.object({
-    prefix: z.string(), // The trigger text for the snippet
-    body: z.union([
-        z.array(z.string()), // Multi-line snippet body
-        z.string(), // Single-line snippet body
-    ]),
-    description: z.string().optional(), // Optional description of the snippet
-    scope: z.string().optional(), // Optional scope where the snippet applies (e.g., "javascript" or "typescript")
-});
-
-export const CompanySchema = z.object({
-    name: z.string(),
-    description: z.string(),
-});
-
-export const AssistantSchema = z.object({
-    name: z.string(),
-    instructions: z.string(),
-    model: z.string(),
-});
+import { ChatCompletionTool } from "openai/src/resources/chat/completions.js";
 
 export function createCompletion(
     content: string,
@@ -46,6 +22,7 @@ export function createCompletion(
 
     return ai.chat.completions.create({
         messages: [
+            { role: "developer", content: "You are a helpful assistant." },
             {
                 role: "user",
                 content,
@@ -53,5 +30,22 @@ export function createCompletion(
         ],
         model: "gpt-4o",
         ...format,
+    });
+}
+
+export function createToolCompletion(
+    prompt: string,
+    tools: ChatCompletionTool[],
+) {
+    return ai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+            { role: "developer", content: "You are a helpful assistant." },
+            {
+                role: "user",
+                content: prompt,
+            },
+        ],
+        tools,
     });
 }

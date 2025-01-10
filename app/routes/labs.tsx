@@ -6,10 +6,8 @@ import "prismjs/themes/prism-tomorrow.css";
 
 import { Button } from "~/components/Button";
 import {
-    AssistantSchema,
-    CompanySchema,
     createCompletion,
-    SnippetSchema,
+    createToolCompletion,
 } from "~/models/completion.server";
 import { TextFormField } from "~/components/form/TextFormField";
 import { Code } from "~/components/Code";
@@ -33,9 +31,71 @@ import { createVectorStore } from "~/models/vectorStore.server";
 import { kebab } from "~/utils/string";
 import { getUserId } from "~/utils/auth.server";
 import { Route } from "./+types/labs";
+import { client } from "~/sanity-client";
+import { AssistantSchema, CompanySchema, SnippetSchema } from "~/utils/schemas";
+import { ChatCompletion } from "openai/resources/index.mjs";
+import { ac } from "node_modules/react-router/dist/development/route-data-DuV3tXo2.mjs";
+// import { PortableText } from "@portabletext/react";
+
+function blocksToText(blocks: any, opts = {}) {
+    const options = Object.assign({}, { nonTextBehavior: "remove" }, opts);
+    return blocks
+        .map((block: any) => {
+            if (block._type !== "block" || !block.children) {
+                return options.nonTextBehavior === "remove"
+                    ? ""
+                    : `[${block._type} block]`;
+            }
+
+            return block.children.map((child: any) => child.text).join("");
+        })
+        .join("\n\n");
+}
+
+function extractFunctionsData(response: ChatCompletion) {
+    const toolCalls = response.choices[0]?.message?.tool_calls || [];
+
+    return toolCalls.map((toolCall) => {
+        const { name, arguments: args } = toolCall.function;
+
+        let parsedArgs: Record<string, any> = {};
+        try {
+            parsedArgs = JSON.parse(args); // Parse JSON arguments
+        } catch (error) {
+            console.error(
+                `Failed to parse arguments for function ${name}:`,
+                error,
+            );
+        }
+
+        return {
+            name,
+            parameters: parsedArgs,
+        };
+    });
+}
 
 export async function loader() {
+    const articles = await client.fetch('*[_type == "article"]');
+
+    const combined = articles.reduce(
+        (
+            combinedString: string,
+            currentArticle: { title: string; details: string },
+        ) => {
+            return `${combinedString}
+
+## ${currentArticle.title}
+${blocksToText(currentArticle.details)}
+
+`;
+        },
+        "",
+    );
+
     return data({
+        articles,
+        combined,
         assistantCount: await getAssistantCount(),
         companyCount: await getCompanyCount(),
         fileCount: await getFileCount(),
@@ -126,6 +186,64 @@ export async function action({ request }: Route.ActionArgs) {
 
         return {
             secondaryActionText,
+        };
+    }
+
+    if (intent === "tertiaryAction") {
+        const stories = String(form.get("stories"));
+
+        const tertiaryResponse = await createCompletion(
+            `Take the following stories and use them to answer questions based upon those stories: ${stories}
+
+Question: ${prompt}
+`,
+        );
+        const tertiaryActionText = handleCompletionResponse(tertiaryResponse);
+
+        return {
+            tertiaryActionText,
+        };
+    }
+
+    if (intent === "toolsAction") {
+        const toolsCompletionResponse = await createToolCompletion(prompt, [
+            {
+                type: "function",
+                function: {
+                    name: "getFavoriteColor",
+                    description:
+                        "Get the favorite color of the user based on their location",
+                    parameters: {
+                        type: "object",
+                        properties: {
+                            color: {
+                                type: "string",
+                                description: "The user's favorite color",
+                            },
+                        },
+                    },
+                },
+            },
+            {
+                type: "function",
+                function: {
+                    name: "getFavoriteShape",
+                    description: "Get the favorite shape of the user",
+                    parameters: {
+                        type: "object",
+                        properties: {
+                            shape: {
+                                type: "string",
+                                description: "The user's favorite shape",
+                            },
+                        },
+                    },
+                },
+            },
+        ]);
+
+        return {
+            extracted: extractFunctionsData(toolsCompletionResponse),
         };
     }
 
@@ -284,6 +402,38 @@ export default function Labs({ actionData, loaderData }: Route.ComponentProps) {
                             method="POST"
                             className="mb-4 flex items-end gap-4"
                         >
+                            <input
+                                type="hidden"
+                                name="stories"
+                                value={loaderData.combined}
+                            />
+                            <TextFormField
+                                label="Question the stories"
+                                name="prompt"
+                                helperText="Ask about stories"
+                            />
+                            <Button
+                                type="submit"
+                                name="intent"
+                                value="tertiaryAction"
+                            >
+                                Submit
+                            </Button>
+                        </Form>
+                        <div>
+                            {!isLoading && !actionData?.tertiaryActionText ? (
+                                <p>Enter a prompt 👆🏻</p>
+                            ) : isLoading ? (
+                                <p>Loading...</p>
+                            ) : (
+                                <div>{actionData?.tertiaryActionText}</div>
+                            )}
+                        </div>
+                        <HorizontalRule />
+                        <Form
+                            method="POST"
+                            className="mb-4 flex items-end gap-4"
+                        >
                             <TextFormField
                                 label="Company Prompt"
                                 name="prompt"
@@ -334,6 +484,32 @@ export default function Labs({ actionData, loaderData }: Route.ComponentProps) {
                             )}
                         </div>
                         <HorizontalRule />
+                        <Form
+                            method="POST"
+                            className="mb-4 flex items-end gap-4"
+                        >
+                            <TextFormField
+                                label="Functions"
+                                name="prompt"
+                                helperText="Tell us your favorite color or shape"
+                            />
+                            <Button
+                                type="submit"
+                                name="intent"
+                                value="toolsAction"
+                            >
+                                Submit
+                            </Button>
+                        </Form>
+                        <div>
+                            <pre>
+                                <code className="block overflow-x-auto rounded bg-gray-800 p-2 text-white">
+                                    {actionData?.extracted &&
+                                        JSON.stringify(actionData?.extracted)}
+                                </code>
+                            </pre>
+                        </div>
+                        <HorizontalRule />
                     </div>
                     <div className="col-span-4 flex flex-col gap-4">
                         <Heading as="h2">Stats</Heading>
@@ -367,6 +543,7 @@ export default function Labs({ actionData, loaderData }: Route.ComponentProps) {
                                 {loaderData.userCount}
                             </span>
                         </Heading>
+                        {loaderData.combined}
                     </div>
                 </div>
             </div>

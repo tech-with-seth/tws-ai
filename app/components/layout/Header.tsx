@@ -29,7 +29,7 @@ export function Header({ isAdmin, user }: HeaderProps) {
                             <li>
                                 <ButtonNavLink
                                     iconBefore={
-                                        <LampDeskIcon className="h-5 w-5" />
+                                        <LampDeskIcon className="h-4 w-4" />
                                     }
                                     to={Paths.STUDIO}
                                 >
@@ -39,7 +39,7 @@ export function Header({ isAdmin, user }: HeaderProps) {
                             <li>
                                 <ButtonNavLink
                                     iconBefore={
-                                        <FlaskConicalIcon className="h-5 w-5" />
+                                        <FlaskConicalIcon className="h-4 w-4" />
                                     }
                                     to={Paths.LABS}
                                 >
