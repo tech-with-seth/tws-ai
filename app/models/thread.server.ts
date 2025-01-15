@@ -8,6 +8,8 @@ import {
 import { prisma } from "~/db.server";
 import { ai } from "~/open-ai";
 import { kebab } from "~/utils/string";
+import { createCompletion } from "./completion.server";
+import { ThreadTitleSchema } from "~/utils/schemas";
 
 export function getThreadCount() {
     return prisma.thread.count();
@@ -156,6 +158,28 @@ export function updateThread(id: string, metadata?: Record<string, unknown>) {
     return ai.beta.threads.update(id, {
         metadata,
     });
+}
+
+export async function updateThreadTitle(
+    title: string,
+    threadId: string,
+    prismaThreadId: string,
+) {
+    const completion = await createCompletion(title, {
+        schema: ThreadTitleSchema,
+        schemaTitle: "ThreadTitle",
+    });
+
+    const content = completion.choices.at(0)?.message.content;
+    const parsed = JSON.parse(content!);
+
+    await updateThread(threadId, {
+        name: parsed.title,
+    });
+
+    await updatePrismaThread(prismaThreadId, parsed.title);
+
+    return parsed.title;
 }
 
 export function deletePrismaThread(id: string) {

@@ -104,7 +104,7 @@ export function Drawer({
                 tabIndex={-1}
                 aria-labelledby={`${id}-label`}
             >
-                <div className="flex h-full flex-col">
+                <div className="flex h-screen flex-col">
                     <div className="flex justify-between gap-2 border-b border-b-zinc-400 p-4 dark:border-b-zinc-600">
                         <Button
                             variant="outline"
