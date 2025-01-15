@@ -43,11 +43,27 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
 
     const threadNameFetcher = useFetcher();
 
-    const { status, messages, input, submitMessage, handleInputChange, error } =
-        useAssistant({
-            api: getThreadStream(assistantId, threadId),
-            threadId,
-        });
+    const {
+        append,
+        status,
+        messages,
+        input,
+        submitMessage,
+        handleInputChange,
+        error,
+    } = useAssistant({
+        api: getThreadStream(assistantId, threadId),
+        threadId,
+    });
+
+    const countRef = useRef(0);
+
+    useEffect(() => {
+        if (messageHistory.length === 1 && countRef.current === 0) {
+            append(messageHistory[0]);
+            countRef.current += 1;
+        }
+    }, []);
 
     const handleFormSubmit = (formEvent: React.FormEvent<HTMLFormElement>) => {
         formEvent.preventDefault();

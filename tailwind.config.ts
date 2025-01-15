@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss";
-import { amber, blue, green, rose, sky } from "tailwindcss/colors";
+import { amber, blue, emerald, green, rose, sky } from "tailwindcss/colors";
 
 // type ShadeKey =
 //     | "50"
@@ -43,7 +43,7 @@ export default {
             },
             colors: {
                 primary: blue,
-                secondary: sky,
+                secondary: emerald,
                 success: green,
                 warning: amber,
                 danger: rose,

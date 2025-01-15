@@ -4,7 +4,7 @@
 
 html,
 body {
-    @apply bg-white dark:bg-zinc-900;
+    @apply bg-white bg-gradient-to-b from-gray-100 to-gray-200 dark:bg-zinc-900 dark:from-zinc-800 dark:to-zinc-900;
 
     @media (prefers-color-scheme: dark) {
         color-scheme: dark;

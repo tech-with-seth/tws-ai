@@ -12,7 +12,7 @@ interface HeaderProps {
 export function Header({ isAdmin, user }: HeaderProps) {
     return (
         <header className="mb-4 p-4">
-            <nav className="flex items-center justify-between rounded-xl bg-zinc-300 p-4 dark:bg-zinc-800">
+            <nav className="flex items-center justify-between rounded-xl border border-zinc-300 bg-zinc-300 p-4 dark:border-zinc-600 dark:bg-zinc-700">
                 <ul className="mr-4 flex items-center gap-4">
                     <li>
                         <Link to={Paths.DASHBOARD} className="font-bold">

@@ -4,6 +4,8 @@ import { ExternalLink } from "~/components/ExternalLink";
 import { Paths } from "~/utils/paths";
 import { ArrowRightCircle } from "lucide-react";
 import { Route } from "./+types/home";
+import { client } from "~/sanity-client";
+import { blocksToText } from "~/utils/common";
 
 export function meta({}: Route.MetaArgs) {
     return [
@@ -12,7 +14,17 @@ export function meta({}: Route.MetaArgs) {
     ];
 }
 
-export default function Home() {
+export async function loader({ request }: Route.LoaderArgs) {
+    const article = await client.fetch(
+        '*[_type == "article" && title == "AI Agents Get Things Done"]',
+    );
+
+    return {
+        article: article[0],
+    };
+}
+
+export default function Home({ loaderData }: Route.ComponentProps) {
     return (
         <>
             <div className="flex h-full flex-col items-center justify-center gap-12">
@@ -42,6 +54,11 @@ export default function Home() {
                             </Link>
                         </li>
                     </ul>
+                </div>
+                <div>
+                    <p className="max-w-[640px]">
+                        {blocksToText(loaderData.article.details)}
+                    </p>
                 </div>
             </div>
         </>

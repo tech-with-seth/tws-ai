@@ -42,6 +42,7 @@ export function ComboBox({ id, name, options }: ComboBoxProps) {
             onClose={() => setQuery("")}
         >
             <div className="relative">
+                <input name={`${name}-id`} type="hidden" value={selected.id} />
                 <ComboboxInput
                     id={id}
                     name={name}

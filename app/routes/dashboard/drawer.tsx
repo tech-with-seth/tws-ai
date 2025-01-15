@@ -1,10 +1,12 @@
 import { cx } from "cva.config";
 import { useState } from "react";
-import { Outlet, useNavigate } from "react-router";
+import { Outlet, useLocation, useNavigate } from "react-router";
+
 import { Button } from "~/components/Button";
 import { Drawer } from "~/components/Drawer";
 import { useDrawer } from "~/hooks/useDrawer";
 import { Paths } from "~/utils/paths";
+import { getUniqueId } from "~/utils/string";
 
 export default function DrawerLayout() {
     const navigate = useNavigate();
@@ -19,7 +21,11 @@ export default function DrawerLayout() {
     return (
         <Drawer
             handleClose={closeDrawer}
-            id="createDrawer"
+            id={getUniqueId(
+                "drawer",
+                8,
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
+            )}
             isOpen={isDrawerOpen}
             position="right"
             size={drawerSize}

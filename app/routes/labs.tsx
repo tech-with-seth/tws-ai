@@ -13,7 +13,11 @@ import { TextFormField } from "~/components/form/TextFormField";
 import { Code } from "~/components/Code";
 import { TrashIcon } from "lucide-react";
 import { HorizontalRule } from "~/components/HorizontalRule";
-import { handleCompletionResponse } from "~/utils/common";
+import {
+    blocksToText,
+    extractFunctionsData,
+    handleCompletionResponse,
+} from "~/utils/common";
 import { Heading } from "~/components/Heading";
 import { getThreadCount } from "~/models/thread.server";
 import { getUserCount } from "~/models/user.server";
@@ -34,46 +38,6 @@ import { Route } from "./+types/labs";
 import { client } from "~/sanity-client";
 import { AssistantSchema, CompanySchema, SnippetSchema } from "~/utils/schemas";
 import { ChatCompletion } from "openai/resources/index.mjs";
-import { ac } from "node_modules/react-router/dist/development/route-data-DuV3tXo2.mjs";
-// import { PortableText } from "@portabletext/react";
-
-function blocksToText(blocks: any, opts = {}) {
-    const options = Object.assign({}, { nonTextBehavior: "remove" }, opts);
-    return blocks
-        .map((block: any) => {
-            if (block._type !== "block" || !block.children) {
-                return options.nonTextBehavior === "remove"
-                    ? ""
-                    : `[${block._type} block]`;
-            }
-
-            return block.children.map((child: any) => child.text).join("");
-        })
-        .join("\n\n");
-}
-
-function extractFunctionsData(response: ChatCompletion) {
-    const toolCalls = response.choices[0]?.message?.tool_calls || [];
-
-    return toolCalls.map((toolCall) => {
-        const { name, arguments: args } = toolCall.function;
-
-        let parsedArgs: Record<string, any> = {};
-        try {
-            parsedArgs = JSON.parse(args); // Parse JSON arguments
-        } catch (error) {
-            console.error(
-                `Failed to parse arguments for function ${name}:`,
-                error,
-            );
-        }
-
-        return {
-            name,
-            parameters: parsedArgs,
-        };
-    });
-}
 
 export async function loader() {
     const articles = await client.fetch('*[_type == "article"]');
