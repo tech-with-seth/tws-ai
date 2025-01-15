@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Link,
     Outlet,
@@ -8,7 +8,11 @@ import {
 } from "react-router";
 import invariant from "tiny-invariant";
 import { Field, Label } from "@headlessui/react";
-import { LoaderPinwheelIcon, MessageCirclePlusIcon } from "lucide-react";
+import {
+    LoaderPinwheelIcon,
+    MessageCirclePlusIcon,
+    TrashIcon,
+} from "lucide-react";
 
 import { Card } from "~/components/Card";
 import { ComboBox } from "~/components/form/ComboBox";
@@ -30,6 +34,7 @@ import { createCompletion } from "~/models/completion.server";
 import { Button } from "~/components/Button";
 import { createMessage } from "~/models/message.server";
 import { cache } from "~/utils/cache";
+import { ellipsisify } from "~/utils/string";
 
 export async function loader({ request }: Route.LoaderArgs) {
     const user = await getUser(request);
@@ -116,11 +121,24 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
         navigation && navigation.location?.pathname.includes(threadId);
 
     const newThreadFetcher = useFetcher();
-
     const isCreatingThread = newThreadFetcher.state !== "idle";
+
+    const deleteThreadFetcher = useFetcher();
+    const isDeletingThread = deleteThreadFetcher.state !== "idle";
+
+    useEffect(() => {
+        if (
+            deleteThreadFetcher.data &&
+            deleteThreadFetcher.data.message === "Deleted"
+        ) {
+            setShowDeleteConfirmation(null);
+        }
+    }, [deleteThreadFetcher.data]);
 
     const [chatPrompt, setChatPrompt] = useState("");
     const hasChatPrompt = chatPrompt.length > 0;
+
+    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(null);
 
     return (
         <>
@@ -179,30 +197,84 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                     <Heading as="h4" className="mb-4 text-center">
                         Recent conversations
                     </Heading>
-                    <div className="flex gap-4 overflow-x-auto">
+                    <div className="flex h-auto gap-4 overflow-x-auto">
                         {threads.map((thread) => (
-                            <Link
+                            <Card
                                 key={thread.id}
-                                to={`${thread.assistant.oId}/${thread.id}`}
+                                className="relative flex min-h-32 min-w-[320px] flex-col justify-between gap-4 overflow-hidden"
                             >
-                                <Card
-                                    key={thread.id}
-                                    className="relative flex h-full min-w-[320px] flex-col justify-between gap-4 overflow-hidden"
-                                >
-                                    <p>{thread.name}</p>
+                                <div>
+                                    <Link
+                                        className="mb-4 inline-block underline"
+                                        to={`${thread.assistant.oId}/${thread.id}`}
+                                    >
+                                        <Heading as="h3" className="text-lg">
+                                            {ellipsisify(thread.name, 30)}
+                                        </Heading>
+                                    </Link>
                                     <p>
                                         Chatting with:{" "}
                                         <span className="inline-block self-start rounded-xl border-primary-400 bg-primary-300 px-3 py-1 dark:border-primary-900 dark:bg-primary-700">
                                             {thread.assistant.name}
                                         </span>
                                     </p>
+                                </div>
+                                <div>
+                                    <div>
+                                        <Button
+                                            color="danger"
+                                            onClick={() =>
+                                                setShowDeleteConfirmation(
+                                                    thread.id,
+                                                )
+                                            }
+                                            iconBefore={
+                                                <TrashIcon className="h-4 w-4" />
+                                            }
+                                        >
+                                            Delete
+                                        </Button>
+                                    </div>
                                     {getThreadIsLoading(thread.id) && (
                                         <div className="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-zinc-300/80 dark:bg-zinc-900/80">
                                             <LoaderPinwheelIcon className="animate-spin" />
                                         </div>
                                     )}
-                                </Card>
-                            </Link>
+                                    {showDeleteConfirmation === thread.id && (
+                                        <div className="absolute bottom-0 left-0 right-0 top-0 flex flex-col items-center justify-center gap-4 bg-zinc-300/95 dark:bg-zinc-900/95">
+                                            <p>
+                                                Are you sure you want to delete?
+                                            </p>
+                                            <div className="flex gap-4">
+                                                <deleteThreadFetcher.Form
+                                                    method="DELETE"
+                                                    action={`/api/threads/${thread.id}`}
+                                                >
+                                                    <Button
+                                                        color="danger"
+                                                        className="mr-4"
+                                                    >
+                                                        {isDeletingThread ? (
+                                                            <LoaderPinwheelIcon className="h-5 w-5 animate-spin" />
+                                                        ) : (
+                                                            `Yes, delete`
+                                                        )}
+                                                    </Button>
+                                                </deleteThreadFetcher.Form>
+                                                <Button
+                                                    onClick={() =>
+                                                        setShowDeleteConfirmation(
+                                                            null,
+                                                        )
+                                                    }
+                                                >
+                                                    Cancel
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </Card>
                         ))}
                     </div>
                 </div>

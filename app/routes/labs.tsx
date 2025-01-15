@@ -37,7 +37,7 @@ import { getUserId } from "~/utils/auth.server";
 import { Route } from "./+types/labs";
 import { client } from "~/sanity-client";
 import { AssistantSchema, CompanySchema, SnippetSchema } from "~/utils/schemas";
-import { ChatCompletion } from "openai/resources/index.mjs";
+import { cache } from "~/utils/cache";
 
 export async function loader() {
     const articles = await client.fetch('*[_type == "article"]');
@@ -67,6 +67,22 @@ ${blocksToText(currentArticle.details)}
         userCount: await getUserCount(),
     });
 }
+
+export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
+    if (cache.getKey("labsData")) {
+        return cache.getKey("labsData") as Awaited<
+            ReturnType<typeof serverLoader>
+        >;
+    } else {
+        const freshLabsData = await serverLoader();
+        cache.set("labsData", freshLabsData);
+        cache.save();
+
+        return freshLabsData;
+    }
+}
+
+clientLoader.hydrate = true;
 
 export async function action({ request }: Route.ActionArgs) {
     const userId = await getUserId(request);
