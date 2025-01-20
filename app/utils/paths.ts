@@ -11,6 +11,8 @@ export enum Paths {
     CREATE_ASSISTANT = "create-assistant",
     API_ASSISTANTS = "/api/assistants",
     ASSISTANT_DETAILS = "/assistant-details",
+    // PROFILE ==========
+    PROFILE = "/profile",
     // THREAD ==========
     THREADS = "threads",
     CREATE_THREAD = "create-thread",

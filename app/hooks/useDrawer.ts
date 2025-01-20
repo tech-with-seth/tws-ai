@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export function useDrawer({
     openOnRender,
@@ -20,6 +20,16 @@ export function useDrawer({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const openDrawer = useCallback(() => {
+        if (delay) {
+            setTimeout(() => {
+                setDrawerOpen(true);
+            }, delay);
+        } else {
+            setDrawerOpen(true);
+        }
+    }, [delay]);
+
     return {
         isDrawerOpen,
         closeDrawer: () => {
@@ -28,9 +38,7 @@ export function useDrawer({
                 onClose?.();
             }, delay);
         },
-        openDrawer: () => {
-            setDrawerOpen(true);
-        },
+        openDrawer,
         toggleDrawer: () => {
             setDrawerOpen((prev) => !prev);
         },

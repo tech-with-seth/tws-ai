@@ -16,7 +16,7 @@ const drawerVariants = cva({
             bottom: "w-full bottom-0 translate-y-full sm:rounded-tl-xl sm:rounded-tr-xl",
         },
         isOpen: {
-            true: "transform-none",
+            true: "",
         },
         size: {
             sm: "w-full sm:w-1/2 md:w-1/4",
@@ -45,6 +45,11 @@ const drawerVariants = cva({
             position: "bottom",
             size: "full",
             className: "w-full h-[calc(100vh_-_25px)] mt-4",
+        },
+        {
+            isOpen: true,
+            position: "right",
+            className: "translate-x-0",
         },
     ],
     defaultVariants: {
@@ -123,7 +128,7 @@ export function Drawer({
                     </div>
                 </div>
             </div>
-            {backdrop && (
+            {backdrop && isOpen && (
                 <div onClick={handleClose} className={overlayClassName} />
             )}
         </>

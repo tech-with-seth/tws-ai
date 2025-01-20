@@ -144,11 +144,11 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
         <>
             <div className="grid h-full grid-cols-12 grid-rows-[1fr_auto] gap-4">
                 <div className="col-span-12 row-span-1 flex w-full flex-1 flex-col">
-                    <div className="flex h-full flex-col items-center justify-center gap-8">
+                    <div className="flex h-full flex-col items-center justify-center gap-8 p-4">
                         <Heading>{`${timeOfDayGreeting}, ${loaderData.user.profile?.firstName}. How can I help?`}</Heading>
                         <newThreadFetcher.Form
                             method="POST"
-                            className="flex min-w-[768px] flex-col gap-4 rounded-xl border border-zinc-300 bg-zinc-200 p-4 dark:border-zinc-600 dark:bg-zinc-800"
+                            className="flex w-full flex-col gap-4 rounded-xl border border-zinc-300 bg-zinc-200 p-4 md:max-w-[768px] dark:border-zinc-600 dark:bg-zinc-800"
                         >
                             <TextFormField
                                 className="min-h-11 w-full"
@@ -222,6 +222,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                 <div>
                                     <div>
                                         <Button
+                                            size="sm"
                                             color="danger"
                                             onClick={() =>
                                                 setShowDeleteConfirmation(
@@ -231,9 +232,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                             iconBefore={
                                                 <TrashIcon className="h-4 w-4" />
                                             }
-                                        >
-                                            Delete
-                                        </Button>
+                                        />
                                     </div>
                                     {getThreadIsLoading(thread.id) && (
                                         <div className="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-zinc-300/80 dark:bg-zinc-900/80">

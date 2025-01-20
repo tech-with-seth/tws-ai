@@ -38,6 +38,8 @@ export default [
                     ),
                 ]),
             ]),
+            route(Paths.ASSISTANTS, "routes/assistants/index.tsx"),
+            route(Paths.PROFILE, "routes/profile/index.tsx"),
             route(`:assistantId`, "routes/assistants/assistant-details.tsx"),
         ]),
         layout("./routes/admin.tsx", [
