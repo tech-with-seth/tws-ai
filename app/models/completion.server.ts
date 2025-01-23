@@ -1,8 +1,10 @@
-import { Schema, z } from "zod";
+import { ChatCompletionTool } from "openai/src/resources/chat/completions.js";
+import { generateText, tool } from "ai";
+import { openai } from "@ai-sdk/openai";
+import { Schema } from "zod";
 import { zodResponseFormat } from "openai/helpers/zod.mjs";
 
 import { ai } from "~/open-ai";
-import { ChatCompletionTool } from "openai/src/resources/chat/completions.js";
 
 export function createCompletion(
     content: string,
@@ -46,6 +48,29 @@ export function createToolCompletion(
                 content: prompt,
             },
         ],
+        tools,
+    });
+}
+
+interface MagicToolConfig {
+    maxSteps?: number;
+    prompt: string;
+    system: string;
+    tools: Record<string, ReturnType<typeof tool>>;
+}
+
+// TODO: Fix "tools" types
+export function magicToolCompletion({
+    maxSteps = 5,
+    prompt,
+    system,
+    tools,
+}: MagicToolConfig) {
+    return generateText({
+        maxSteps,
+        model: openai("gpt-4o-2024-08-06", { structuredOutputs: true }),
+        prompt,
+        system,
         tools,
     });
 }

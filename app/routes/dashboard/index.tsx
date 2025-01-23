@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
     Link,
     Outlet,
@@ -61,6 +61,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     };
 }
 
+// TODO: Improve caching - data is stale :(
 export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
     if (cache.getKey("dashboardData")) {
         return cache.getKey("dashboardData") as Awaited<
@@ -113,8 +114,18 @@ export async function action({ request }: Route.ActionArgs) {
 }
 
 export default function Dashboard({ loaderData }: Route.ComponentProps) {
-    const { assistants, threads } = loaderData;
-    const timeOfDayGreeting = `Good morning`;
+    const currentHour = new Date().getHours();
+
+    const timeOfDayGreeting = useMemo(() => {
+        if (currentHour < 12) {
+            return "Good morning";
+        } else if (currentHour < 18) {
+            return "Good afternoon";
+        } else {
+            return "Good evening";
+        }
+    }, [currentHour]);
+
     const navigation = useNavigation();
 
     const getThreadIsLoading = (threadId: string) =>
@@ -167,7 +178,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                                         <ComboBox
                                             id="assistantId"
                                             name="assistantId"
-                                            options={assistants.map(
+                                            options={loaderData.assistants.map(
                                                 (assistant) => ({
                                                     id: assistant.id,
                                                     label: assistant.name as string,
@@ -198,7 +209,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                         Recent conversations
                     </Heading>
                     <div className="flex h-auto gap-4 overflow-x-auto">
-                        {threads.map((thread) => (
+                        {loaderData.threads.map((thread) => (
                             <Card
                                 key={thread.id}
                                 className="relative flex min-h-32 min-w-[320px] flex-col justify-between gap-4 overflow-hidden"

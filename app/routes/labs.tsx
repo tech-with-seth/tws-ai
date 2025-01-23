@@ -1,5 +1,6 @@
 import { data, Form, useNavigation } from "react-router";
 import { useEffect } from "react";
+import { openai } from "@ai-sdk/openai";
 
 import Prism from "prismjs";
 import "prismjs/themes/prism-tomorrow.css";
@@ -38,6 +39,9 @@ import { Route } from "./+types/labs";
 import { client } from "~/sanity-client";
 import { AssistantSchema, CompanySchema, SnippetSchema } from "~/utils/schemas";
 import { cache } from "~/utils/cache";
+import { generateText, tool } from "ai";
+import { z } from "zod";
+import { createProfileForUser } from "~/models/profile.server";
 
 export async function loader() {
     const articles = await client.fetch('*[_type == "article"]');
@@ -224,6 +228,38 @@ Question: ${prompt}
 
         return {
             extracted: extractFunctionsData(toolsCompletionResponse),
+        };
+    }
+
+    if (intent === "toolsAction2") {
+        const { text: answer, steps } = await generateText({
+            model: openai("gpt-4o", { structuredOutputs: true }),
+            tools: {
+                createProfile: tool({
+                    description:
+                        "Manage user profiles, including creating, updating, and retrieving profile data.",
+                    parameters: z.object({
+                        userId: z.string(),
+                        firstName: z.string(),
+                        lastName: z.string(),
+                    }),
+                    execute: async ({ userId, firstName, lastName }) => {
+                        return await createProfileForUser({
+                            userId,
+                            firstName,
+                            lastName,
+                        });
+                    },
+                }),
+            },
+            maxSteps: 5,
+            system: `Your goal is to create a profile. Get all of the user's information and create a profile for them.`,
+            prompt,
+        });
+
+        return {
+            answer,
+            steps,
         };
     }
 
@@ -486,6 +522,32 @@ export default function Labs({ actionData, loaderData }: Route.ComponentProps) {
                                 <code className="block overflow-x-auto rounded bg-gray-800 p-2 text-white">
                                     {actionData?.extracted &&
                                         JSON.stringify(actionData?.extracted)}
+                                </code>
+                            </pre>
+                        </div>
+                        <HorizontalRule />
+                        <Form
+                            method="POST"
+                            className="mb-4 flex items-end gap-4"
+                        >
+                            <TextFormField
+                                label="Functions"
+                                name="prompt"
+                                defaultValue={`My name is Eric Ritchey, user ID: cm4fzzs9v0000sk9f83hx56tf`}
+                            />
+                            <Button
+                                type="submit"
+                                name="intent"
+                                value="toolsAction2"
+                            >
+                                Submit
+                            </Button>
+                        </Form>
+                        <div>
+                            <pre>
+                                <code className="block overflow-x-auto rounded bg-gray-800 p-2 text-white">
+                                    {actionData &&
+                                        JSON.stringify(actionData, null, 4)}
                                 </code>
                             </pre>
                         </div>

@@ -21,10 +21,6 @@ export default [
             route(Paths.DASHBOARD, "routes/dashboard/index.tsx", [
                 layout("./routes/dashboard/drawer.tsx", [
                     route(
-                        Paths.CREATE_ASSISTANT,
-                        "routes/dashboard/create-assistant.tsx",
-                    ),
-                    route(
                         Paths.CREATE_THREAD,
                         "routes/dashboard/create-thread.tsx",
                     ),
@@ -38,7 +34,20 @@ export default [
                     ),
                 ]),
             ]),
-            route(Paths.ASSISTANTS, "routes/assistants/index.tsx"),
+            layout("routes/assistants/layout.tsx", [
+                route(Paths.ASSISTANTS, "routes/assistants/index.tsx"),
+                route(
+                    `${Paths.ASSISTANTS}/${Paths.CREATE_ASSISTANT}`,
+                    "routes/assistants/create.tsx",
+                ),
+            ]),
+            layout("routes/agents/layout.tsx", [
+                route(Paths.AGENTS, "routes/agents/index.tsx"),
+                route(
+                    `${Paths.AGENTS}/${Paths.CREATE_AGENT}`,
+                    "routes/agents/create.tsx",
+                ),
+            ]),
             route(Paths.PROFILE, "routes/profile/index.tsx"),
             route(`:assistantId`, "routes/assistants/assistant-details.tsx"),
         ]),

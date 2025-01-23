@@ -17,14 +17,14 @@ export async function loader({ request }: Route.LoaderArgs) {
     };
 }
 
-export default function SiteLayout({ loaderData }: Route.ComponentProps) {
+export default function AppLayout({ loaderData }: Route.ComponentProps) {
     return (
         <div className="flex h-full flex-col">
             <Header
                 isAdmin={loaderData.isAdmin}
                 user={loaderData.user ?? undefined}
             />
-            <main className="flex-1">
+            <main className="flex-grow">
                 <Outlet />
             </main>
             <Footer />

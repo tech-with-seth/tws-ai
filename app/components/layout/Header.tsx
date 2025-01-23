@@ -6,6 +6,7 @@ import {
     FlaskConicalIcon,
     LampDeskIcon,
     MenuIcon,
+    ZapIcon,
 } from "lucide-react";
 import { User } from "@prisma/client";
 import { Drawer } from "../Drawer";
@@ -18,15 +19,11 @@ interface HeaderProps {
 }
 
 export function Header({ isAdmin, user }: HeaderProps) {
-    const navigate = useNavigate();
-
-    const { isDrawerOpen, closeDrawer, openDrawer } = useDrawer({
-        onClose: () => navigate(Paths.DASHBOARD),
-    });
+    const { isDrawerOpen, closeDrawer, openDrawer } = useDrawer({});
 
     return (
         <>
-            <header className="mb-4 p-4">
+            <header className="p-4">
                 <nav className="flex items-center justify-between rounded-xl border border-zinc-300 bg-zinc-300 p-4 dark:border-zinc-600 dark:bg-zinc-700">
                     <ul className="mr-4 flex items-center gap-4">
                         <li>
@@ -45,6 +42,14 @@ export function Header({ isAdmin, user }: HeaderProps) {
                                 to={Paths.ASSISTANTS}
                             >
                                 Assistants
+                            </ButtonNavLink>
+                        </li>
+                        <li className="hidden lg:block">
+                            <ButtonNavLink
+                                iconBefore={<ZapIcon className="h-4 w-4" />}
+                                to={Paths.AGENTS}
+                            >
+                                Agents
                             </ButtonNavLink>
                         </li>
                         {isAdmin && (

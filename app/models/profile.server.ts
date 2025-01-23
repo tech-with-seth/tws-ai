@@ -19,6 +19,14 @@ export async function getProfileById(id: string): Promise<Profile | null> {
     });
 }
 
+export async function getProfileByUserId(
+    userId: string,
+): Promise<Profile | null> {
+    return prisma.profile.findUnique({
+        where: { userId },
+    });
+}
+
 export async function updateProfile(
     id: string,
     data: Partial<Profile>,

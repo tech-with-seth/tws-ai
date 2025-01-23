@@ -1,10 +1,12 @@
+import { Form } from "react-router";
 import invariant from "tiny-invariant";
 
-import { createProfileForUser, getProfileById } from "~/models/profile.server";
+import {
+    createProfileForUser,
+    getProfileByUserId,
+} from "~/models/profile.server";
 import { Route } from "../profile/+types/index";
 import { getUserId } from "~/utils/auth.server";
-import { c } from "node_modules/vite/dist/node/types.d-aGj9QkWt";
-import { Form } from "react-router";
 import { Button } from "~/components/Button";
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -12,7 +14,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     invariant(userId, "User ID not found");
 
     return {
-        profile: await getProfileById(userId),
+        profile: await getProfileByUserId(userId),
     };
 }
 
@@ -34,12 +36,31 @@ export default function ProfileIndexRoute({
 }: Route.ComponentProps) {
     return (
         <div className="p-4">
-            {loaderData && loaderData.profile && (
-                <h1>{loaderData.profile.firstName}</h1>
+            {loaderData.profile && (
+                <>
+                    <p>
+                        <strong>Name:</strong> {loaderData.profile.firstName}{" "}
+                        {loaderData.profile.lastName}
+                    </p>
+                    <p>
+                        <strong>Bio:</strong> {loaderData.profile.bio ?? "None"}
+                    </p>
+                    <p>
+                        <strong>Location:</strong> {loaderData.profile.location}
+                    </p>
+                    <p>
+                        <strong>Website:</strong> {loaderData.profile.website}
+                    </p>
+                </>
             )}
-            <Form method="POST">
-                <Button type="submit">Add profile</Button>
-            </Form>
+            {!loaderData.profile && (
+                <Form method="POST">
+                    <Button type="submit">Add profile</Button>
+                </Form>
+            )}
+            <pre>
+                <code>{JSON.stringify(loaderData.profile, null, 4)}</code>
+            </pre>
         </div>
     );
 }

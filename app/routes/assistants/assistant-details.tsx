@@ -17,25 +17,24 @@ export async function loader({ params }: Route.LoaderArgs) {
 }
 
 export default function AssistantDetails({ loaderData }: Route.ComponentProps) {
-    const { assistant } = loaderData;
-
     return (
         <div className="px-4">
             <Heading as="h1" className="mb-4">
-                {assistant.name ?? "n/a"}
+                {loaderData.assistant.name ?? "n/a"}
             </Heading>
             <List
                 items={[
                     <p>
-                        <strong>Model:</strong> {assistant.model ?? "n/a"}
+                        <strong>Model:</strong>{" "}
+                        {loaderData.assistant.model ?? "n/a"}
                     </p>,
                     <p>
                         <strong>Instructions:</strong>{" "}
-                        {assistant.instructions ?? "n/a"}
+                        {loaderData.assistant.instructions ?? "n/a"}
                     </p>,
                     <p>
                         <strong>Description:</strong>{" "}
-                        {assistant.description ?? "n/a"}
+                        {loaderData.assistant.description ?? "n/a"}
                     </p>,
                 ]}
             />

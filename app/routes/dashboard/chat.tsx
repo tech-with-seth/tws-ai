@@ -36,7 +36,6 @@ export async function loader({ params }: Route.LoaderArgs) {
 }
 
 export default function Chat({ loaderData }: Route.ComponentProps) {
-    const { assistant, thread, hasName, messageHistory } = loaderData;
     const { assistantId, threadId } = useParams();
     invariant(assistantId, "Assistant ID is undefined");
     invariant(threadId, "Thread ID is undefined");
@@ -59,8 +58,8 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
     const countRef = useRef(0);
 
     useEffect(() => {
-        if (messageHistory.length === 1 && countRef.current === 0) {
-            append(messageHistory[0]);
+        if (loaderData.messageHistory.length === 1 && countRef.current === 0) {
+            append(loaderData.messageHistory[0]);
             countRef.current += 1;
         }
     }, []);
@@ -68,7 +67,7 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
     const handleFormSubmit = (formEvent: React.FormEvent<HTMLFormElement>) => {
         formEvent.preventDefault();
 
-        if (!hasName) {
+        if (!loaderData.hasName) {
             const form = formEvent.currentTarget;
             const messageInput = form.elements.namedItem(
                 "message",
@@ -77,7 +76,7 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
             threadNameFetcher.submit(
                 {
                     threadId: String(threadId),
-                    prismaThreadId: String(thread?.id),
+                    prismaThreadId: String(loaderData.thread?.id),
                     name: messageInput
                         ? String(messageInput.value)
                         : "A new thread",
@@ -97,7 +96,7 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
 
     const isInProgress = status === "in_progress";
 
-    const combinedMessage = [...messageHistory, ...messages];
+    const combinedMessage = [...loaderData.messageHistory, ...messages];
 
     const messageFieldRef = useRef<HTMLInputElement | null>(null);
 
@@ -111,9 +110,9 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
                 <div className="border-b border-b-zinc-300 p-4 dark:border-b-zinc-600">
                     <Heading as="h3">
                         <span className="block text-sm text-zinc-300 dark:text-zinc-400">
-                            Chatting with {assistant.name}
+                            Chatting with {loaderData.assistant.name}
                         </span>
-                        {thread?.name}
+                        {loaderData.thread?.name}
                     </Heading>
                 </div>
                 <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4">

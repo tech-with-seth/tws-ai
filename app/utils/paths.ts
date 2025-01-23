@@ -6,9 +6,12 @@ export enum Paths {
     LOGIN = "/login",
     LOGOUT = "/logout",
     LABS = "/labs",
+    // AGENT ==========
+    AGENTS = "agents",
+    CREATE_AGENT = "create",
     // ASSISTANT ==========
     ASSISTANTS = "assistants",
-    CREATE_ASSISTANT = "create-assistant",
+    CREATE_ASSISTANT = "create",
     API_ASSISTANTS = "/api/assistants",
     ASSISTANT_DETAILS = "/assistant-details",
     // PROFILE ==========

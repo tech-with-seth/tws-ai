@@ -1,4 +1,6 @@
 import { useFetcher } from "react-router";
+import { PlusIcon } from "lucide-react";
+
 import { Button } from "~/components/Button";
 import { Heading } from "~/components/Heading";
 import { TextareaFormField } from "~/components/form/TextareaFormField";
@@ -9,8 +11,8 @@ export default function CreateAssistant() {
     const assistantFetcher = useFetcher();
 
     return (
-        <div className="p-4">
-            <Heading className="mb-4">Create assistant</Heading>
+        <div className="max-w-[768px]">
+            <Heading className="mb-4">Create</Heading>
             <assistantFetcher.Form
                 className="space-y-4"
                 method="POST"
@@ -28,7 +30,9 @@ export default function CreateAssistant() {
                     name="instructions"
                     helperText="What do you want your assistant to do?"
                 />
-                <Button type="submit">Create</Button>
+                <Button type="submit" iconBefore={<PlusIcon />}>
+                    Create
+                </Button>
             </assistantFetcher.Form>
         </div>
     );

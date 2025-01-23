@@ -8,7 +8,7 @@ import { cva, cx } from "cva.config";
 import { Button } from "./Button";
 
 const drawerVariants = cva({
-    base: `fixed z-50 transition-transform bg-white dark:bg-zinc-900`,
+    base: `fixed z-50 transition-transform duration-300 bg-white dark:bg-zinc-900`,
     variants: {
         position: {
             left: "border-r border-r-zinc-300 dark:border-r-zinc-600 top-0 left-0 h-screen -translate-x-full sm:rounded-tr-xl sm:rounded-br-xl",
@@ -50,6 +50,11 @@ const drawerVariants = cva({
             isOpen: true,
             position: "right",
             className: "translate-x-0",
+        },
+        {
+            isOpen: true,
+            position: "left",
+            className: "-translate-x-0",
         },
     ],
     defaultVariants: {
