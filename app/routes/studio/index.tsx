@@ -12,7 +12,7 @@ const config = defineConfig({
         types: schemaTypes,
     },
     plugins: [structureTool(), visionTool()],
-    basePath: "/studio",
+    basePath: "/admin/studio",
 });
 
 export default function StudioRoute() {

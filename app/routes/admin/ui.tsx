@@ -11,7 +11,7 @@ export default function UserInterfaceRoute() {
                 User Interface
             </Heading>
             <div className="mb-8 flex gap-4">
-                <div>
+                <div className="flex flex-col gap-4">
                     <div className="flex gap-4">
                         <Button>Alfa</Button>
                         <Button color="secondary">Alfa</Button>

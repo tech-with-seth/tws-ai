@@ -51,10 +51,14 @@ export default [
             route(Paths.PROFILE, "routes/profile/index.tsx"),
             route(`:assistantId`, "routes/assistants/assistant-details.tsx"),
         ]),
-        layout("./routes/admin.tsx", [
-            route(`labs`, "routes/labs.tsx"),
-            route(`studio/*`, "routes/studio/index.tsx"),
-            route(`ui`, "routes/ui.tsx"),
+        layout("./routes/admin/layout.tsx", [
+            ...prefix("admin", [
+                index("routes/admin/index.tsx"),
+                route(`analytics`, "routes/admin/analytics.tsx"),
+                route(`labs`, "routes/admin/labs.tsx"),
+                route(`ui`, "routes/admin/ui.tsx"),
+                route(`studio/*`, "routes/studio/index.tsx"),
+            ]),
         ]),
     ]),
     ...prefix(Paths.API, [

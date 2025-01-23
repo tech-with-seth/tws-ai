@@ -16,9 +16,10 @@ export default function AdminRoute() {
                 </Link>
             </div>
             <div className="flex gap-2 border-b border-b-zinc-400 p-4 dark:border-b-zinc-700">
-                <ButtonNavLink to="/labs">Labs</ButtonNavLink>
-                <ButtonNavLink to="/studio">Studio</ButtonNavLink>
-                <ButtonNavLink to="/ui">UI</ButtonNavLink>
+                <ButtonNavLink to="admin/labs">Labs</ButtonNavLink>
+                <ButtonNavLink to="admin/analytics">Analytics</ButtonNavLink>
+                <ButtonNavLink to="admin/studio">Studio</ButtonNavLink>
+                <ButtonNavLink to="admin/ui">UI</ButtonNavLink>
             </div>
             <div className="flex-grow">
                 <Outlet />

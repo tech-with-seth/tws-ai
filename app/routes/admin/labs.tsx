@@ -1,4 +1,4 @@
-import { data, Form, useNavigation } from "react-router";
+import { Form, useNavigation } from "react-router";
 import { useEffect } from "react";
 import { openai } from "@ai-sdk/openai";
 
@@ -12,7 +12,6 @@ import {
 } from "~/models/completion.server";
 import { TextFormField } from "~/components/form/TextFormField";
 import { Code } from "~/components/Code";
-import { TrashIcon } from "lucide-react";
 import { HorizontalRule } from "~/components/HorizontalRule";
 import {
     blocksToText,
@@ -20,29 +19,24 @@ import {
     handleCompletionResponse,
 } from "~/utils/common";
 import { Heading } from "~/components/Heading";
-import { getThreadCount } from "~/models/thread.server";
-import { getUserCount } from "~/models/user.server";
+
 import {
     createAssistant,
     createPrismaAssistant,
-    getAssistantCount,
     updateAssistantVectorStore,
 } from "~/models/assistant.server";
-import { getFileCount } from "~/models/file.server";
-import { createCompany, getCompanyCount } from "~/models/company.server";
+import { createCompany } from "~/models/company.server";
 import invariant from "tiny-invariant";
-import { Skeleton } from "~/components/Skeleton";
 import { createVectorStore } from "~/models/vectorStore.server";
 import { kebab } from "~/utils/string";
 import { getUserId } from "~/utils/auth.server";
-import { Route } from "./+types/labs";
 import { client } from "~/sanity-client";
 import { AssistantSchema, CompanySchema, SnippetSchema } from "~/utils/schemas";
 import { cache } from "~/utils/cache";
 import { generateText, tool } from "ai";
 import { z } from "zod";
-import { createProfileForUser, getProfileCount } from "~/models/profile.server";
-import { getActivityLogCount } from "~/models/activity.server";
+import { createProfileForUser } from "~/models/profile.server";
+import { Route } from "../admin/+types/labs";
 
 export async function loader() {
     const articles = await client.fetch('*[_type == "article"]');
@@ -62,17 +56,10 @@ ${blocksToText(currentArticle.details)}
         "",
     );
 
-    return data({
+    return {
         articles,
         combined,
-        assistantCount: await getAssistantCount(),
-        activityLogCount: await getActivityLogCount(),
-        companyCount: await getCompanyCount(),
-        profileCount: await getProfileCount(),
-        fileCount: await getFileCount(),
-        threadCount: await getThreadCount(),
-        userCount: await getUserCount(),
-    });
+    };
 }
 
 export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
@@ -481,52 +468,6 @@ export default function Labs({ actionData, loaderData }: Route.ComponentProps) {
                             </pre>
                         </div>
                         <HorizontalRule />
-                    </div>
-                    <div className="col-span-6 flex flex-col gap-4">
-                        <Heading as="h2">Stats</Heading>
-                        <Heading as="h3" className="font-thin">
-                            Assistants:{" "}
-                            <span className="font-bold">
-                                {loaderData.assistantCount}
-                            </span>
-                        </Heading>
-                        <Heading as="h3" className="font-thin">
-                            Companies:{" "}
-                            <span className="font-bold">
-                                {loaderData.companyCount}
-                            </span>
-                        </Heading>
-                        <Heading as="h3" className="font-thin">
-                            Files:{" "}
-                            <span className="font-bold">
-                                {loaderData.fileCount}
-                            </span>
-                        </Heading>
-                        <Heading as="h3" className="font-thin">
-                            Logs:{" "}
-                            <span className="font-bold">
-                                {loaderData.activityLogCount}
-                            </span>
-                        </Heading>
-                        <Heading as="h3" className="font-thin">
-                            Profiles:{" "}
-                            <span className="font-bold">
-                                {loaderData.profileCount}
-                            </span>
-                        </Heading>
-                        <Heading as="h3" className="font-thin">
-                            Threads:{" "}
-                            <span className="font-bold">
-                                {loaderData.threadCount}
-                            </span>
-                        </Heading>
-                        <Heading as="h3" className="font-thin">
-                            Users:{" "}
-                            <span className="font-bold">
-                                {loaderData.userCount}
-                            </span>
-                        </Heading>
-                        {loaderData.combined}
                     </div>
                 </div>
             </div>
