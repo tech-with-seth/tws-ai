@@ -1,13 +1,7 @@
 import { Link, useNavigate } from "react-router";
 import { Paths } from "~/utils/paths";
 import { ButtonNavLink } from "~/components/ButtonNavLink";
-import {
-    BotIcon,
-    FlaskConicalIcon,
-    LampDeskIcon,
-    MenuIcon,
-    ZapIcon,
-} from "lucide-react";
+import { BotIcon, LockIcon, MenuIcon, ZapIcon } from "lucide-react";
 import { User } from "@prisma/client";
 import { Drawer } from "../Drawer";
 import { useDrawer } from "~/hooks/useDrawer";
@@ -52,30 +46,6 @@ export function Header({ isAdmin, user }: HeaderProps) {
                                 Agents
                             </ButtonNavLink>
                         </li>
-                        {isAdmin && (
-                            <>
-                                <li className="hidden lg:block">
-                                    <ButtonNavLink
-                                        iconBefore={
-                                            <LampDeskIcon className="h-4 w-4" />
-                                        }
-                                        to={Paths.STUDIO}
-                                    >
-                                        Studio
-                                    </ButtonNavLink>
-                                </li>
-                                <li className="hidden lg:block">
-                                    <ButtonNavLink
-                                        iconBefore={
-                                            <FlaskConicalIcon className="h-4 w-4" />
-                                        }
-                                        to={Paths.LABS}
-                                    >
-                                        Labs
-                                    </ButtonNavLink>
-                                </li>
-                            </>
-                        )}
                     </ul>
                     <ul className="lg:flex lg:items-center lg:gap-4">
                         <li className="hidden lg:block">
@@ -83,6 +53,18 @@ export function Header({ isAdmin, user }: HeaderProps) {
                                 {user?.email}
                             </ButtonNavLink>
                         </li>
+                        {isAdmin && (
+                            <li className="hidden lg:block">
+                                <ButtonNavLink
+                                    iconBefore={
+                                        <LockIcon className="h-4 w-4" />
+                                    }
+                                    to={Paths.LABS}
+                                >
+                                    Admin
+                                </ButtonNavLink>
+                            </li>
+                        )}
                         <li className="hidden lg:block">
                             <ButtonNavLink to={Paths.LOGOUT}>
                                 Logout

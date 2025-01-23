@@ -1,6 +1,10 @@
 import { ActionType, ActivityLog, User } from "@prisma/client";
 import { prisma } from "~/db.server";
 
+export function getActivityLogCount() {
+    return prisma.activityLog.count();
+}
+
 export function createLog({
     action,
     userId,

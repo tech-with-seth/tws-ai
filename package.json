@@ -20,7 +20,8 @@
         "change": "beachball change",
         "change:check": "beachball check",
         "bump": "beachball bump",
-        "publish": "beachball publish"
+        "publish": "beachball publish",
+        "deploy": "fly deploy"
     },
     "dependencies": {
         "@ai-sdk/openai": "^1.0.5",

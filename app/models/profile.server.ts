@@ -1,6 +1,10 @@
 import { Profile } from "@prisma/client";
 import { prisma } from "~/db.server";
 
+export function getProfileCount() {
+    return prisma.profile.count();
+}
+
 export async function createProfileForUser(
     data: Pick<Profile, "userId" | "firstName" | "lastName">,
 ): Promise<Profile> {

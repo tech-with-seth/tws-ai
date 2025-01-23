@@ -1,5 +1,6 @@
 import { ArrowLeftIcon } from "lucide-react";
 import { Link, Outlet } from "react-router";
+import { ButtonNavLink } from "~/components/ButtonNavLink";
 import { Paths } from "~/utils/paths";
 
 export default function AdminRoute() {
@@ -13,6 +14,11 @@ export default function AdminRoute() {
                     <ArrowLeftIcon className="block" />
                     Back to Dashboard
                 </Link>
+            </div>
+            <div className="flex gap-2 border-b border-b-zinc-400 p-4 dark:border-b-zinc-700">
+                <ButtonNavLink to="/labs">Labs</ButtonNavLink>
+                <ButtonNavLink to="/studio">Studio</ButtonNavLink>
+                <ButtonNavLink to="/ui">UI</ButtonNavLink>
             </div>
             <div className="flex-grow">
                 <Outlet />

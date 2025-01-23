@@ -41,7 +41,8 @@ import { AssistantSchema, CompanySchema, SnippetSchema } from "~/utils/schemas";
 import { cache } from "~/utils/cache";
 import { generateText, tool } from "ai";
 import { z } from "zod";
-import { createProfileForUser } from "~/models/profile.server";
+import { createProfileForUser, getProfileCount } from "~/models/profile.server";
+import { getActivityLogCount } from "~/models/activity.server";
 
 export async function loader() {
     const articles = await client.fetch('*[_type == "article"]');
@@ -65,7 +66,9 @@ ${blocksToText(currentArticle.details)}
         articles,
         combined,
         assistantCount: await getAssistantCount(),
+        activityLogCount: await getActivityLogCount(),
         companyCount: await getCompanyCount(),
+        profileCount: await getProfileCount(),
         fileCount: await getFileCount(),
         threadCount: await getThreadCount(),
         userCount: await getUserCount(),
@@ -285,81 +288,7 @@ export default function Labs({ actionData, loaderData }: Route.ComponentProps) {
                     Labs
                 </Heading>
                 <div className="grid gap-4 lg:grid-cols-12">
-                    <div className="col-span-4">
-                        <div className="mb-8 flex flex-col gap-4">
-                            <div className="flex gap-4">
-                                <Button>Alfa</Button>
-                                <Button color="secondary">Alfa</Button>
-                                <Button color="success">Alfa</Button>
-                                <Button color="warning">Alfa</Button>
-                                <Button color="danger">Alfa</Button>
-                            </div>
-                            <div className="flex gap-4">
-                                <Button variant="soft">Beta</Button>
-                                <Button color="secondary" variant="soft">
-                                    Beta
-                                </Button>
-                                <Button color="success" variant="soft">
-                                    Beta
-                                </Button>
-                                <Button color="warning" variant="soft">
-                                    Beta
-                                </Button>
-                                <Button color="danger" variant="soft">
-                                    Beta
-                                </Button>
-                            </div>
-                            <div className="flex gap-4">
-                                <Button variant="outline">Charlie</Button>
-                                <Button color="secondary" variant="outline">
-                                    Charlie
-                                </Button>
-                                <Button color="success" variant="outline">
-                                    Charlie
-                                </Button>
-                                <Button color="warning" variant="outline">
-                                    Charlie
-                                </Button>
-                                <Button color="danger" variant="outline">
-                                    Charlie
-                                </Button>
-                            </div>
-                            <div className="flex items-start gap-4">
-                                <Button size="sm">Delta</Button>
-                                <Button>Delta</Button>
-                                <Button size="lg">Delta</Button>
-                            </div>
-                            <div className="flex items-start gap-4">
-                                <Button iconBefore={<TrashIcon />}>Echo</Button>
-                                <Button iconBefore={<TrashIcon />}>Echo</Button>
-                                <Button
-                                    iconBefore={<TrashIcon />}
-                                    iconAfter={<TrashIcon />}
-                                >
-                                    Echo
-                                </Button>
-                            </div>
-                            <HorizontalRule />
-                            <div className="flex flex-wrap items-start gap-4">
-                                <div className="flex flex-col gap-2">
-                                    <Skeleton variant="text" />
-                                    <Skeleton variant="text" />
-                                    <Skeleton variant="text" />
-                                </div>
-                                <div className="flex flex-col gap-2">
-                                    <Skeleton variant="square" />
-                                    <Skeleton variant="square" />
-                                    <Skeleton variant="square" />
-                                </div>
-                                <div className="flex flex-col gap-2">
-                                    <Skeleton variant="block" />
-                                    <Skeleton variant="block" />
-                                    <Skeleton variant="block" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-span-4">
+                    <div className="col-span-6">
                         <Form
                             method="POST"
                             className="mb-4 flex items-end gap-4"
@@ -553,7 +482,7 @@ export default function Labs({ actionData, loaderData }: Route.ComponentProps) {
                         </div>
                         <HorizontalRule />
                     </div>
-                    <div className="col-span-4 flex flex-col gap-4">
+                    <div className="col-span-6 flex flex-col gap-4">
                         <Heading as="h2">Stats</Heading>
                         <Heading as="h3" className="font-thin">
                             Assistants:{" "}
@@ -571,6 +500,18 @@ export default function Labs({ actionData, loaderData }: Route.ComponentProps) {
                             Files:{" "}
                             <span className="font-bold">
                                 {loaderData.fileCount}
+                            </span>
+                        </Heading>
+                        <Heading as="h3" className="font-thin">
+                            Logs:{" "}
+                            <span className="font-bold">
+                                {loaderData.activityLogCount}
+                            </span>
+                        </Heading>
+                        <Heading as="h3" className="font-thin">
+                            Profiles:{" "}
+                            <span className="font-bold">
+                                {loaderData.profileCount}
                             </span>
                         </Heading>
                         <Heading as="h3" className="font-thin">
