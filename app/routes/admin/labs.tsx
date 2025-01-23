@@ -388,15 +388,48 @@ export default function Labs({ actionData, loaderData }: Route.ComponentProps) {
                                 <Code lang="js">{actionData?.company}</Code>
                             )}
                         </div>
+                    </div>
+                    <div className="col-span-6">
+                        <Form
+                            method="POST"
+                            className="mb-4 flex items-end gap-4"
+                        >
+                            <TextFormField
+                                label="Functions & tools 🤯🤯🤯"
+                                name="prompt"
+                                helperText="Create a profile attached to a user via prompt"
+                            />
+                            <Button
+                                type="submit"
+                                name="intent"
+                                value="toolsAction2"
+                            >
+                                Submit
+                            </Button>
+                        </Form>
+                        <div>
+                            {!isLoading && !actionData ? (
+                                <p>Enter a prompt 👆🏻</p>
+                            ) : isLoading ? (
+                                <p>Loading...</p>
+                            ) : (
+                                <pre>
+                                    <code className="block overflow-x-auto rounded bg-gray-800 p-2 text-white">
+                                        {actionData &&
+                                            JSON.stringify(actionData, null, 4)}
+                                    </code>
+                                </pre>
+                            )}
+                        </div>
                         <HorizontalRule />
                         <Form
                             method="POST"
                             className="mb-4 flex items-end gap-4"
                         >
                             <TextFormField
-                                label="Assistant Prompt"
+                                label="Assistant Prompt 🤯"
                                 name="prompt"
-                                helperText="Have ChatGPT add an assitant to the database 🤯"
+                                helperText="Have ChatGPT add an assitant to the database (structured output)"
                             />
                             <Button
                                 type="submit"
@@ -441,33 +474,6 @@ export default function Labs({ actionData, loaderData }: Route.ComponentProps) {
                                 </code>
                             </pre>
                         </div>
-                        <HorizontalRule />
-                        <Form
-                            method="POST"
-                            className="mb-4 flex items-end gap-4"
-                        >
-                            <TextFormField
-                                label="Functions"
-                                name="prompt"
-                                defaultValue={`My name is Eric Ritchey, user ID: cm4fzzs9v0000sk9f83hx56tf`}
-                            />
-                            <Button
-                                type="submit"
-                                name="intent"
-                                value="toolsAction2"
-                            >
-                                Submit
-                            </Button>
-                        </Form>
-                        <div>
-                            <pre>
-                                <code className="block overflow-x-auto rounded bg-gray-800 p-2 text-white">
-                                    {actionData &&
-                                        JSON.stringify(actionData, null, 4)}
-                                </code>
-                            </pre>
-                        </div>
-                        <HorizontalRule />
                     </div>
                 </div>
             </div>
