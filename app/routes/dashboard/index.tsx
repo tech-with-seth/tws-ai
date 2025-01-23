@@ -209,83 +209,98 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                         Recent conversations
                     </Heading>
                     <div className="flex h-auto gap-4 overflow-x-auto">
-                        {loaderData.threads.map((thread) => (
-                            <Card
-                                key={thread.id}
-                                className="relative flex min-h-32 min-w-[320px] flex-col justify-between gap-4 overflow-hidden"
-                            >
-                                <div>
-                                    <Link
-                                        className="mb-4 inline-block underline"
-                                        to={`${thread.assistant.oId}/${thread.id}`}
-                                    >
-                                        <Heading as="h3" className="text-lg">
-                                            {ellipsisify(thread.name, 30)}
-                                        </Heading>
-                                    </Link>
-                                    <p>
-                                        Chatting with:{" "}
-                                        <span className="inline-block self-start rounded-xl border-primary-400 bg-primary-300 px-3 py-1 dark:border-primary-900 dark:bg-primary-700">
-                                            {thread.assistant.name}
-                                        </span>
-                                    </p>
-                                </div>
-                                <div>
+                        {loaderData.threads && loaderData.threads.length > 0 ? (
+                            loaderData.threads.map((thread) => (
+                                <Card
+                                    key={thread.id}
+                                    className="relative flex min-h-32 min-w-[320px] flex-col justify-between gap-4 overflow-hidden"
+                                >
                                     <div>
-                                        <Button
-                                            size="sm"
-                                            color="danger"
-                                            onClick={() =>
-                                                setShowDeleteConfirmation(
-                                                    thread.id,
-                                                )
-                                            }
-                                            iconBefore={
-                                                <TrashIcon className="h-4 w-4" />
-                                            }
-                                        />
+                                        <Link
+                                            className="mb-4 inline-block underline"
+                                            to={`${thread.assistant.oId}/${thread.id}`}
+                                        >
+                                            <Heading
+                                                as="h3"
+                                                className="text-lg"
+                                            >
+                                                {ellipsisify(thread.name, 30)}
+                                            </Heading>
+                                        </Link>
+                                        <p>
+                                            Chatting with:{" "}
+                                            <span className="inline-block self-start rounded-xl border-primary-400 bg-primary-300 px-3 py-1 dark:border-primary-900 dark:bg-primary-700">
+                                                {thread.assistant.name}
+                                            </span>
+                                        </p>
                                     </div>
-                                    {getThreadIsLoading(thread.id) && (
-                                        <div className="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-zinc-300/80 dark:bg-zinc-900/80">
-                                            <LoaderPinwheelIcon className="animate-spin" />
+                                    <div>
+                                        <div>
+                                            <Button
+                                                size="sm"
+                                                color="danger"
+                                                onClick={() =>
+                                                    setShowDeleteConfirmation(
+                                                        thread.id,
+                                                    )
+                                                }
+                                                iconBefore={
+                                                    <TrashIcon className="h-4 w-4" />
+                                                }
+                                            />
                                         </div>
-                                    )}
-                                    {showDeleteConfirmation === thread.id && (
-                                        <div className="absolute bottom-0 left-0 right-0 top-0 flex flex-col items-center justify-center gap-4 bg-zinc-300/95 dark:bg-zinc-900/95">
-                                            <p>
-                                                Are you sure you want to delete?
-                                            </p>
-                                            <div className="flex gap-4">
-                                                <deleteThreadFetcher.Form
-                                                    method="DELETE"
-                                                    action={`/api/threads/${thread.id}`}
-                                                >
-                                                    <Button
-                                                        color="danger"
-                                                        className="mr-4"
-                                                    >
-                                                        {isDeletingThread ? (
-                                                            <LoaderPinwheelIcon className="h-5 w-5 animate-spin" />
-                                                        ) : (
-                                                            `Yes, delete`
-                                                        )}
-                                                    </Button>
-                                                </deleteThreadFetcher.Form>
-                                                <Button
-                                                    onClick={() =>
-                                                        setShowDeleteConfirmation(
-                                                            null,
-                                                        )
-                                                    }
-                                                >
-                                                    Cancel
-                                                </Button>
+                                        {getThreadIsLoading(thread.id) && (
+                                            <div className="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-zinc-300/80 dark:bg-zinc-900/80">
+                                                <LoaderPinwheelIcon className="animate-spin" />
                                             </div>
-                                        </div>
-                                    )}
-                                </div>
+                                        )}
+                                        {showDeleteConfirmation ===
+                                            thread.id && (
+                                            <div className="absolute bottom-0 left-0 right-0 top-0 flex flex-col items-center justify-center gap-4 bg-zinc-300/95 dark:bg-zinc-900/95">
+                                                <p>
+                                                    Are you sure you want to
+                                                    delete?
+                                                </p>
+                                                <div className="flex gap-4">
+                                                    <deleteThreadFetcher.Form
+                                                        method="DELETE"
+                                                        action={`/api/threads/${thread.id}`}
+                                                    >
+                                                        <Button
+                                                            color="danger"
+                                                            className="mr-4"
+                                                        >
+                                                            {isDeletingThread ? (
+                                                                <LoaderPinwheelIcon className="h-5 w-5 animate-spin" />
+                                                            ) : (
+                                                                `Yes, delete`
+                                                            )}
+                                                        </Button>
+                                                    </deleteThreadFetcher.Form>
+                                                    <Button
+                                                        onClick={() =>
+                                                            setShowDeleteConfirmation(
+                                                                null,
+                                                            )
+                                                        }
+                                                    >
+                                                        Cancel
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </Card>
+                            ))
+                        ) : (
+                            <Card className="p-8 text-center">
+                                <p>
+                                    <strong>No chats found.</strong>
+                                    <br />
+                                    Start a new one above ⬆️
+                                </p>
                             </Card>
-                        ))}
+                        )}
                     </div>
                 </div>
             </div>

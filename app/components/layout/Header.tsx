@@ -59,7 +59,7 @@ export function Header({ isAdmin, user }: HeaderProps) {
                                     iconBefore={
                                         <LockIcon className="h-4 w-4" />
                                     }
-                                    to={Paths.LABS}
+                                    to={`/admin`}
                                 >
                                     Admin
                                 </ButtonNavLink>
