@@ -5,6 +5,7 @@ import { getUserId } from "~/utils/auth.server";
 import { Route } from "../assistants/+types";
 import { Heading } from "~/components/Heading";
 import { cache } from "~/utils/cache";
+import { Details } from "~/components/Details";
 
 export async function loader({ request }: Route.LoaderArgs) {
     const userId = await getUserId(request);
@@ -44,13 +45,12 @@ export default function AssistantsIndexRoute({
                         <p className="mb-4 block">
                             {assistant.description || "No description provided"}
                         </p>
-                        <details className="rounded-xl border border-zinc-300 p-2 dark:border-zinc-700">
-                            <summary>See instructions</summary>
+                        <Details text="See instructions">
                             <p className="mt-2">
                                 {assistant.instructions ||
                                     "No description provided"}
                             </p>
-                        </details>
+                        </Details>
                     </li>
                 ))}
             </ul>

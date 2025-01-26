@@ -5,6 +5,10 @@ export function getProfileCount() {
     return prisma.profile.count();
 }
 
+export function getProfiles() {
+    return prisma.profile.findMany();
+}
+
 export async function createProfileForUser(
     data: Pick<Profile, "userId" | "firstName" | "lastName">,
 ): Promise<Profile> {

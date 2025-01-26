@@ -99,6 +99,10 @@ export function getAssistants() {
     });
 }
 
+export function getPrismaAssistants() {
+    return prisma.assistant.findMany();
+}
+
 export function getAssistantVectorStores() {
     return ai.beta.vectorStores;
 }

@@ -5,33 +5,48 @@ import { VariantProps } from "cva";
 import { cva, cx } from "cva.config";
 
 export const internalLinkVariants = cva({
-    base: "hover:underline",
+    base: "hover:underline block px-4 py-2 rounded-xl",
     variants: {
         variant: {
-            primary:
-                "text-primary-400 hover:text-primary-300 dark:text-primary-500 dark:hover:text-primary-400",
-            secondary:
-                "text-secondary-400 hover:text-secondary-300 dark:text-secondary-500 dark:hover:text-secondary-400",
+            primary: "",
+            secondary: "",
+        },
+        isActive: {
+            true: "font-bold bg-primary-100 dark:bg-primary-900",
         },
     },
     defaultVariants: {
         variant: "primary",
     },
-    compoundVariants: [],
+    compoundVariants: [
+        {
+            isActive: true,
+            variant: ["primary", "secondary"],
+            className: "text-white",
+        },
+    ],
 });
 
 export interface InternalLinkProps
     extends VariantProps<typeof internalLinkVariants> {
     to: string;
+    end?: boolean;
 }
 
 export function InternalLink({
     children,
+    end,
     variant,
     to,
 }: PropsWithChildren<InternalLinkProps>) {
     return (
-        <NavLink to={to} className={cx(internalLinkVariants({ variant }))}>
+        <NavLink
+            to={to}
+            className={({ isActive }) =>
+                cx(internalLinkVariants({ isActive, variant }))
+            }
+            end={end}
+        >
             {children}
         </NavLink>
     );

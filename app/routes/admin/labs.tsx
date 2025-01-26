@@ -37,6 +37,12 @@ import { generateText, tool } from "ai";
 import { z } from "zod";
 import { createProfileForUser } from "~/models/profile.server";
 import { Route } from "../admin/+types/labs";
+import { Details } from "~/components/Details";
+import { auth } from "@trigger.dev/sdk/v3";
+import { useRealtimeRun, useTaskTrigger } from "@trigger.dev/react-hooks";
+
+// const RUN_ID = "run_y8yz63qdmrztywrigonbi";
+const TASK_ID = "document-updater";
 
 export async function loader() {
     const articles = await client.fetch('*[_type == "article"]');
@@ -56,9 +62,12 @@ ${blocksToText(currentArticle.details)}
         "",
     );
 
+    const triggerToken = await auth.createTriggerPublicToken(TASK_ID);
+
     return {
         articles,
         combined,
+        triggerToken,
     };
 }
 
@@ -253,8 +262,50 @@ Question: ${prompt}
         };
     }
 
+    if (intent === "triggerAction") {
+        console.log("Trigger action");
+    }
+
     return null;
 }
+
+const TriggerControls = ({ taskId }: { taskId: string }) => {
+    const {
+        submit: triggerIt,
+        handle,
+        error,
+        isLoading: isTriggerLoading,
+    } = useTaskTrigger(taskId);
+
+    return (
+        <>
+            {JSON.stringify({ handle, isTriggerLoading, error })}
+            <Button
+                onClick={() => {
+                    triggerIt({}, {});
+                }}
+            >
+                Trigger
+            </Button>
+            {handle && handle.id && <RunContainer runId={handle.id} />}
+        </>
+    );
+};
+
+const RunContainer = ({ runId }: { runId: string }) => {
+    const { run } = useRealtimeRun(runId);
+
+    return (
+        <>
+            <pre>
+                <code>{JSON.stringify(run?.output, null, 4)}</code>
+            </pre>
+            <Details text="Full results">
+                {JSON.stringify(run, null, 4)}
+            </Details>
+        </>
+    );
+};
 
 export default function Labs({ actionData, loaderData }: Route.ComponentProps) {
     const navigation = useNavigation();
@@ -281,92 +332,6 @@ export default function Labs({ actionData, loaderData }: Route.ComponentProps) {
                             className="mb-4 flex items-end gap-4"
                         >
                             <TextFormField
-                                label="Snippet Prompt"
-                                name="prompt"
-                                helperText="Write a prompt, get a VS Code snippet"
-                            />
-                            <Button
-                                type="submit"
-                                name="intent"
-                                value="createSnippet"
-                            >
-                                Submit
-                            </Button>
-                        </Form>
-                        <div>
-                            {!isLoading && !actionData?.snippet ? (
-                                <p>Enter a prompt 👆🏻</p>
-                            ) : isLoading ? (
-                                <p>Loading...</p>
-                            ) : (
-                                <Code lang="js">{formattedSnippet}</Code>
-                            )}
-                        </div>
-                        <HorizontalRule />
-                        <Form
-                            method="POST"
-                            className="mb-4 flex items-end gap-4"
-                        >
-                            <TextFormField
-                                label="Funny Prompt"
-                                name="prompt"
-                                helperText="Say Hooo Boy! after every response"
-                            />
-                            <Button
-                                type="submit"
-                                name="intent"
-                                value="secondaryAction"
-                            >
-                                Submit
-                            </Button>
-                        </Form>
-                        <div>
-                            {!isLoading && !actionData?.secondaryActionText ? (
-                                <p>Enter a prompt 👆🏻</p>
-                            ) : isLoading ? (
-                                <p>Loading...</p>
-                            ) : (
-                                <div>{actionData?.secondaryActionText}</div>
-                            )}
-                        </div>
-                        <HorizontalRule />
-                        <Form
-                            method="POST"
-                            className="mb-4 flex items-end gap-4"
-                        >
-                            <input
-                                type="hidden"
-                                name="stories"
-                                value={loaderData.combined}
-                            />
-                            <TextFormField
-                                label="Question the stories"
-                                name="prompt"
-                                helperText="Ask about stories"
-                            />
-                            <Button
-                                type="submit"
-                                name="intent"
-                                value="tertiaryAction"
-                            >
-                                Submit
-                            </Button>
-                        </Form>
-                        <div>
-                            {!isLoading && !actionData?.tertiaryActionText ? (
-                                <p>Enter a prompt 👆🏻</p>
-                            ) : isLoading ? (
-                                <p>Loading...</p>
-                            ) : (
-                                <div>{actionData?.tertiaryActionText}</div>
-                            )}
-                        </div>
-                        <HorizontalRule />
-                        <Form
-                            method="POST"
-                            className="mb-4 flex items-end gap-4"
-                        >
-                            <TextFormField
                                 label="Company Prompt"
                                 name="prompt"
                                 helperText="Have ChatGPT add a company to the database"
@@ -388,8 +353,7 @@ export default function Labs({ actionData, loaderData }: Route.ComponentProps) {
                                 <Code lang="js">{actionData?.company}</Code>
                             )}
                         </div>
-                    </div>
-                    <div className="col-span-6">
+                        <HorizontalRule />
                         <Form
                             method="POST"
                             className="mb-4 flex items-end gap-4"
@@ -475,8 +439,78 @@ export default function Labs({ actionData, loaderData }: Route.ComponentProps) {
                             </pre>
                         </div>
                     </div>
+                    <div className="col-span-6">
+                        <TriggerControls taskId={TASK_ID} />
+                    </div>
                 </div>
             </div>
+            <Details text="Archive">
+                <Form method="POST" className="mb-4 flex items-end gap-4">
+                    <TextFormField
+                        label="Snippet Prompt"
+                        name="prompt"
+                        helperText="Write a prompt, get a VS Code snippet"
+                    />
+                    <Button type="submit" name="intent" value="createSnippet">
+                        Submit
+                    </Button>
+                </Form>
+                <div>
+                    {!isLoading && !actionData?.snippet ? (
+                        <p>Enter a prompt 👆🏻</p>
+                    ) : isLoading ? (
+                        <p>Loading...</p>
+                    ) : (
+                        <Code lang="js">{formattedSnippet}</Code>
+                    )}
+                </div>
+                <HorizontalRule />
+                <Form method="POST" className="mb-4 flex items-end gap-4">
+                    <TextFormField
+                        label="Funny Prompt"
+                        name="prompt"
+                        helperText="Say Hooo Boy! after every response"
+                    />
+                    <Button type="submit" name="intent" value="secondaryAction">
+                        Submit
+                    </Button>
+                </Form>
+                <div>
+                    {!isLoading && !actionData?.secondaryActionText ? (
+                        <p>Enter a prompt 👆🏻</p>
+                    ) : isLoading ? (
+                        <p>Loading...</p>
+                    ) : (
+                        <div>{actionData?.secondaryActionText}</div>
+                    )}
+                </div>
+                <HorizontalRule />
+                <Form method="POST" className="mb-4 flex items-end gap-4">
+                    <input
+                        type="hidden"
+                        name="stories"
+                        value={loaderData.combined}
+                    />
+                    <TextFormField
+                        label="Question the stories"
+                        name="prompt"
+                        helperText="Ask about stories"
+                    />
+                    <Button type="submit" name="intent" value="tertiaryAction">
+                        Submit
+                    </Button>
+                </Form>
+                <div>
+                    {!isLoading && !actionData?.tertiaryActionText ? (
+                        <p>Enter a prompt 👆🏻</p>
+                    ) : isLoading ? (
+                        <p>Loading...</p>
+                    ) : (
+                        <div>{actionData?.tertiaryActionText}</div>
+                    )}
+                </div>
+                <HorizontalRule />
+            </Details>
         </>
     );
 }

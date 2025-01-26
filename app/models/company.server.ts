@@ -5,6 +5,10 @@ export function getCompanyCount() {
     return prisma.company.count();
 }
 
+export function getCompanies() {
+    return prisma.company.findMany();
+}
+
 export function createCompany({
     name,
     description,
@@ -14,5 +18,11 @@ export function createCompany({
             name,
             description,
         },
+    });
+}
+
+export function deleteCompany(id: string) {
+    return prisma.company.delete({
+        where: { id },
     });
 }
