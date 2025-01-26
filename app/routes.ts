@@ -55,6 +55,7 @@ export default [
             ...prefix("admin", [
                 index("routes/admin/index.tsx"),
                 route(`analytics`, "routes/admin/analytics.tsx"),
+                route(`data`, "routes/admin/data.tsx"),
                 route(`labs`, "routes/admin/labs.tsx"),
                 route(`ui`, "routes/admin/ui.tsx"),
                 route(`studio/*`, "routes/studio/index.tsx"),

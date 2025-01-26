@@ -12,6 +12,8 @@ interface HeaderProps {
     user?: Pick<User, "email">;
 }
 
+const siteTitle = "TWS AI";
+
 export function Header({ isAdmin, user }: HeaderProps) {
     const { isDrawerOpen, closeDrawer, openDrawer } = useDrawer({});
 
@@ -22,7 +24,7 @@ export function Header({ isAdmin, user }: HeaderProps) {
                     <ul className="mr-4 flex items-center gap-4">
                         <li>
                             <Link to={Paths.DASHBOARD} className="font-bold">
-                                TWS AI
+                                {siteTitle}
                             </Link>
                         </li>
                         <li className="hidden lg:block">

@@ -13,6 +13,10 @@ export function getFiles() {
     return ai.files.list();
 }
 
+export function getPrismaFiles() {
+    return prisma.file.findMany();
+}
+
 export function getFile(fileId: string) {
     return ai.files.retrieve(fileId);
 }
@@ -51,6 +55,14 @@ export function createPrismaFile({
     });
 }
 
-export function deleteFile(fileId: string) {
-    return ai.files.del(fileId);
+export function deleteFile(id: string) {
+    return ai.files.del(id);
+}
+
+export function deletePrismaFile(id: string) {
+    return prisma.file.delete({
+        where: {
+            id,
+        },
+    });
 }

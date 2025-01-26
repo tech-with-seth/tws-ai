@@ -13,7 +13,7 @@ export default function AgentsIndexRoute() {
                 <div className="basis-2/12">
                     <ul className="space-y-4">
                         <li>
-                            <InternalLink to="/agents">
+                            <InternalLink to="/agents" end>
                                 {"View all"}
                             </InternalLink>
                         </li>

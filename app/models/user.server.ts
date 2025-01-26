@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import type { RegisterForm } from "~/utils/types.server";
 import { prisma } from "../db.server";
-import { Password, User } from "@prisma/client";
+import { Password, Role, User } from "@prisma/client";
 
 export function getUserCount() {
     return prisma.user.count();
@@ -29,6 +29,18 @@ export const createUser = async (user: RegisterForm) => {
 
     return { id: newUser.id, email: user.email };
 };
+
+export function getUsers() {
+    return prisma.user.findMany();
+}
+
+export function getUsersWithRole(role: Role) {
+    return prisma.user.findMany({
+        where: {
+            role,
+        },
+    });
+}
 
 export async function verifyLogin(
     email: User["email"],
@@ -58,4 +70,12 @@ export async function verifyLogin(
     const { password: _password, ...userWithoutPassword } = userWithPassword;
 
     return userWithoutPassword;
+}
+
+export function deleteUser(id: string) {
+    return prisma.user.delete({
+        where: {
+            id,
+        },
+    });
 }

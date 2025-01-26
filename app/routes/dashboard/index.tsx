@@ -35,6 +35,7 @@ import { Button } from "~/components/Button";
 import { createMessage } from "~/models/message.server";
 import { cache } from "~/utils/cache";
 import { ellipsisify } from "~/utils/string";
+import { ButtonLink } from "~/components/ButtonLink";
 
 export async function loader({ request }: Route.LoaderArgs) {
     const user = await getUser(request);
@@ -151,57 +152,69 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
 
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(null);
 
+    const hasAssistants =
+        loaderData.assistants && loaderData.assistants.length > 0;
+
     return (
         <>
             <div className="grid h-full grid-cols-12 grid-rows-[1fr_auto] gap-4">
                 <div className="col-span-12 row-span-1 flex w-full flex-1 flex-col">
                     <div className="flex h-full flex-col items-center justify-center gap-8 p-4">
-                        <Heading>{`${timeOfDayGreeting}, ${loaderData.user.profile?.firstName}. How can I help?`}</Heading>
-                        <newThreadFetcher.Form
-                            method="POST"
-                            className="flex w-full flex-col gap-4 rounded-xl border border-zinc-300 bg-zinc-200 p-4 md:max-w-[768px] dark:border-zinc-600 dark:bg-zinc-800"
-                        >
-                            <TextFormField
-                                className="min-h-11 w-full"
-                                helperText="What would you like to chat about?"
-                                id="prompt"
-                                label="Prompt"
-                                name="prompt"
-                                onChange={(event) =>
-                                    setChatPrompt(event.target.value)
-                                }
-                            />
-                            <div className="flex gap-4">
-                                <div className="flex-1">
-                                    <Field>
-                                        <Label>Assistant</Label>
-                                        <ComboBox
-                                            id="assistantId"
-                                            name="assistantId"
-                                            options={loaderData.assistants.map(
-                                                (assistant) => ({
-                                                    id: assistant.id,
-                                                    label: assistant.name as string,
-                                                }),
-                                            )}
-                                        />
-                                    </Field>
-                                </div>
-                                <Button
-                                    className="self-end"
-                                    iconBefore={
-                                        isCreatingThread ? (
-                                            <LoaderPinwheelIcon className="animate-spin" />
-                                        ) : (
-                                            <MessageCirclePlusIcon />
-                                        )
+                        <Heading>{`${timeOfDayGreeting}${Boolean(loaderData.user.profile) && loaderData.user.profile ? `, ${loaderData.user.profile.firstName}.` : ". "} How can I help?`}</Heading>
+                        {hasAssistants ? (
+                            <newThreadFetcher.Form
+                                method="POST"
+                                className="flex w-full flex-col gap-4 rounded-xl border border-zinc-300 bg-zinc-200 p-4 md:max-w-[768px] dark:border-zinc-600 dark:bg-zinc-800"
+                            >
+                                <TextFormField
+                                    className="min-h-11 w-full"
+                                    helperText="What would you like to chat about?"
+                                    id="prompt"
+                                    label="Prompt"
+                                    name="prompt"
+                                    onChange={(event) =>
+                                        setChatPrompt(event.target.value)
                                     }
-                                    disabled={!hasChatPrompt}
-                                >
-                                    Start chat
-                                </Button>
-                            </div>
-                        </newThreadFetcher.Form>
+                                />
+                                <div className="flex gap-4">
+                                    <div className="flex-1">
+                                        <Field>
+                                            <Label>Assistant</Label>
+                                            <ComboBox
+                                                id="assistantId"
+                                                name="assistantId"
+                                                options={loaderData.assistants.map(
+                                                    (assistant) => ({
+                                                        id: assistant.id,
+                                                        label: assistant.name as string,
+                                                    }),
+                                                )}
+                                            />
+                                        </Field>
+                                    </div>
+                                    <Button
+                                        className="self-end"
+                                        iconBefore={
+                                            isCreatingThread ? (
+                                                <LoaderPinwheelIcon className="animate-spin" />
+                                            ) : (
+                                                <MessageCirclePlusIcon />
+                                            )
+                                        }
+                                        disabled={!hasChatPrompt}
+                                    >
+                                        Start chat
+                                    </Button>
+                                </div>
+                            </newThreadFetcher.Form>
+                        ) : (
+                            <Card className="flex flex-col gap-4 p-8 text-center">
+                                <p>No assistants found.</p>
+                                <ButtonLink to="/assistants/create">
+                                    Create an assistant
+                                </ButtonLink>
+                            </Card>
+                        )}
                     </div>
                 </div>
                 <div className="col-span-full p-4">

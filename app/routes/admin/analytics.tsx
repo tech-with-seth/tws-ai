@@ -7,6 +7,7 @@ import { getProfileCount } from "~/models/profile.server";
 import { getFileCount } from "~/models/file.server";
 import { Heading } from "~/components/Heading";
 import { Route } from "../admin/+types/analytics";
+import { cache } from "~/utils/cache";
 
 export async function loader() {
     return {
@@ -19,6 +20,22 @@ export async function loader() {
         userCount: await getUserCount(),
     };
 }
+
+export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
+    if (cache.getKey("analyticsData")) {
+        return cache.getKey("analyticsData") as Awaited<
+            ReturnType<typeof serverLoader>
+        >;
+    } else {
+        const freshAnalyticsData = await serverLoader();
+        cache.set("analyticsData", freshAnalyticsData);
+        cache.save();
+
+        return freshAnalyticsData;
+    }
+}
+
+clientLoader.hydrate = true;
 
 export default function AnalyticsRoute({ loaderData }: Route.ComponentProps) {
     return (

@@ -45,6 +45,10 @@ export async function getThreadsByUserId(userId: string): Promise<any[]> {
     });
 }
 
+export function getPrismaThreads() {
+    return prisma.thread.findMany();
+}
+
 export async function getPrismaThreadsByUserId(userId: string) {
     return prisma.thread.findMany({
         where: {

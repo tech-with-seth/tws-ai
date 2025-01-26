@@ -19,6 +19,11 @@ export const buttonNavLinkVariants = cva({
                 "focus:ring-primary-300 dark:focus:ring-primary-800",
             ],
         },
+        size: {
+            sm: "px-3 py-1.5 text-sm",
+            md: "px-3.5 py-2",
+            lg: "px-6 py-3 text-xl",
+        },
     },
 });
 
@@ -34,6 +39,7 @@ export function ButtonNavLink({
     className,
     iconBefore,
     iconAfter,
+    size,
     to,
 }: PropsWithChildren<ButtonNavLinkProps>) {
     return (
@@ -45,6 +51,7 @@ export function ButtonNavLink({
                     buttonNavLinkVariants({
                         active: isActive,
                         className,
+                        size,
                     }),
                 )
             }

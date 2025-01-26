@@ -1,4 +1,4 @@
-import { ActionType, ActivityLog, User } from "@prisma/client";
+import { ActionType, User } from "@prisma/client";
 import { prisma } from "~/db.server";
 
 export function getActivityLogCount() {

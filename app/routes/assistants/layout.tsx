@@ -13,7 +13,7 @@ export default function AssistantsIndexRoute() {
                 <div className="basis-2/12">
                     <ul className="space-y-4">
                         <li>
-                            <InternalLink to="/assistants">
+                            <InternalLink to="/assistants" end>
                                 {"View all"}
                             </InternalLink>
                         </li>
