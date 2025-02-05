@@ -21,6 +21,23 @@ export async function createProfileForUser(
     });
 }
 
+export async function upsertProfileForUser(
+    data: Pick<Profile, "firstName" | "lastName"> & { userId: string },
+): Promise<Profile> {
+    return prisma.profile.upsert({
+        where: { userId: data.userId },
+        update: {
+            firstName: data.firstName,
+            lastName: data.lastName,
+        },
+        create: {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            userId: data.userId,
+        },
+    });
+}
+
 export async function getProfileById(id: string): Promise<Profile | null> {
     return prisma.profile.findUnique({
         where: { id },
@@ -45,8 +62,24 @@ export async function updateProfile(
     });
 }
 
+export async function updateProfileByUserId(
+    id: string,
+    data: Partial<Profile>,
+): Promise<Profile> {
+    return prisma.profile.update({
+        where: { userId: id },
+        data,
+    });
+}
+
 export async function deleteProfile(id: string): Promise<Profile> {
     return prisma.profile.delete({
         where: { id },
+    });
+}
+
+export async function deleteProfileByUserId(id: string): Promise<Profile> {
+    return prisma.profile.delete({
+        where: { userId: id },
     });
 }

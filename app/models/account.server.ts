@@ -1,7 +1,9 @@
 import { Account } from "@prisma/client";
 import { prisma } from "~/db.server";
 
-export async function createAccount(data: Account): Promise<Account> {
+export async function createAccount(
+    data: Pick<Account, "userId">,
+): Promise<Account> {
     return prisma.account.create({
         data,
     });

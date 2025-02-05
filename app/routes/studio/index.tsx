@@ -5,6 +5,7 @@ import { visionTool } from "@sanity/vision";
 import { schemaTypes } from "./schemaTypes";
 
 const config = defineConfig({
+    apiVersion: "2024-01-01",
     projectId: "goagq6ib",
     dataset: "production",
     CorsOrigin: "http://localhost:5173",

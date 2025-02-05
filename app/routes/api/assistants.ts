@@ -15,7 +15,7 @@ import { Paths } from "~/utils/paths";
 import { Route } from "./+types/assistants";
 import { createLog } from "~/models/activity.server";
 
-export async function action({ request, params }: Route.ActionArgs) {
+export async function action({ request }: Route.ActionArgs) {
     const userId = await getUserId(request);
     invariant(userId, "User ID is undefined");
 

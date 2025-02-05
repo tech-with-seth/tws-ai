@@ -7,21 +7,14 @@
         "type": "git",
         "url": "https://github.com/sethdavis512/tws-ai.git"
     },
-    "beachball": {
-        "publish": false,
-        "verbose": true
-    },
     "scripts": {
         "build": "react-router build",
+        "db": "docker compose up -d",
+        "deploy": "fly deploy",
         "dev": "react-router dev",
         "format": "prettier --write .",
         "start": "react-router-serve ./build/server/index.js",
-        "typecheck": "react-router typegen && tsc --build --noEmit",
-        "change": "beachball change",
-        "change:check": "beachball check",
-        "bump": "beachball bump",
-        "publish": "beachball publish",
-        "deploy": "fly deploy"
+        "typecheck": "react-router typegen && tsc --build --noEmit"
     },
     "dependencies": {
         "@ai-sdk/openai": "^1.0.5",
@@ -30,8 +23,10 @@
         "@prisma/client": "^6.2.1",
         "@react-router/node": "^7.0.1",
         "@react-router/serve": "^7.0.1",
-        "@sanity/client": "^6.24.3",
+        "@sanity/client": "^6.27.2",
+        "@sanity/preview-url-secret": "^2.1.4",
         "@sanity/vision": "^3.69.0",
+        "@sanity/visual-editing": "^2.12.10",
         "@trigger.dev/react-hooks": "^3.3.12",
         "@trigger.dev/sdk": "^3.3.12",
         "ai": "^4.0.7",
@@ -65,7 +60,6 @@
         "@types/react": "^18.3.12",
         "@types/react-dom": "^18.3.1",
         "autoprefixer": "^10.4.20",
-        "beachball": "^2.51.0",
         "color": "^4.2.3",
         "postcss": "^8.4.49",
         "prettier": "^3.4.1",

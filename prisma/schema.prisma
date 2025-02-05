@@ -26,6 +26,7 @@ model User {
     role       Role          @default(USER)
     companies  Company[]
     activity   ActivityLog[]
+    messages   Message[]
 }
 
 model Company {
@@ -81,6 +82,17 @@ model Assistant {
     vectorStoreId String?
 }
 
+model Message {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    oId       String   @unique
+    thread    Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+    threadId  String
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    String
+}
+
 model Thread {
     id          String    @id @default(cuid())
     createdAt   DateTime  @default(now())
@@ -92,6 +104,7 @@ model Thread {
     slug        String?   @unique
     assistant   Assistant @relation(fields: [assistantId], references: [id], onDelete: Cascade)
     assistantId String
+    Message     Message[]
 }
 
 model File {
@@ -126,4 +139,13 @@ model ActivityLog {
     userId    String
     action    ActionType // Enforce enum for consistency
     meta      Json? // Flexible field for additional information
+}
+
+model Article {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    title     String
+    content   String
+    sanityId  String   @unique
 }

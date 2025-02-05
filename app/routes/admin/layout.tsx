@@ -43,8 +43,8 @@ export default function AdminRoute({ loaderData }: Route.ComponentProps) {
                     <ButtonNavLink size="sm" to="admin/analytics">
                         Analytics
                     </ButtonNavLink>
-                    <ButtonNavLink size="sm" to="admin/data">
-                        Data
+                    <ButtonNavLink size="sm" to="admin/data-manager">
+                        Data Manager
                     </ButtonNavLink>
                     <ButtonNavLink size="sm" to="admin/studio">
                         Studio

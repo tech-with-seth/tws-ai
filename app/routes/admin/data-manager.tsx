@@ -4,7 +4,6 @@ import {
     getAssistants,
     getPrismaAssistants,
 } from "~/models/assistant.server";
-import { Route } from "../admin/+types/data";
 import { Heading } from "~/components/Heading";
 import { Card } from "~/components/Card";
 import { Button } from "~/components/Button";
@@ -23,23 +22,28 @@ import {
 import { deletePrismaThread, getPrismaThreads } from "~/models/thread.server";
 import { getUser } from "~/utils/auth.server";
 import { cache } from "~/utils/cache";
+import { getArticles } from "~/models/article.server";
+import { Route } from "./+types/data-manager";
 
 export async function loader({ request }: Route.LoaderArgs) {
-    const user = await getUser(request);
-
-    if (!user?.email.toLowerCase().includes("seth")) {
-        return redirect("/admin");
-    }
+    // const user = await getUser(request);
+    const articles = await getArticles();
+    const companies = await getCompanies();
+    const assistants = await getAssistants();
+    const prismaAssistants = await getPrismaAssistants();
+    const users = await getUsersWithRole("USER");
+    const files = await getFiles();
 
     return {
-        assistants: await getAssistants(),
-        prismaAssistants: await getPrismaAssistants(),
-        companies: await getCompanies(),
-        files: await getFiles(),
+        assistants,
+        prismaAssistants,
+        articles,
+        companies,
+        files,
         prismaFiles: await getPrismaFiles(),
         profiles: await getProfiles(),
         prismaThreads: await getPrismaThreads(),
-        users: await getUsersWithRole("USER"),
+        users,
     };
 }
 
@@ -174,7 +178,7 @@ const DataBlock = ({
     );
 };
 
-export default function DataRoute({ loaderData }: Route.ComponentProps) {
+export default function DataManagerRoute({ loaderData }: Route.ComponentProps) {
     return (
         <div className="space-y-4 p-4">
             <Heading as="h1" className="mb-8 text-6xl font-bold">
@@ -215,6 +219,12 @@ export default function DataRoute({ loaderData }: Route.ComponentProps) {
                 heading="Threads"
                 items={loaderData.prismaThreads}
                 showKey="name"
+            />
+            <DataBlock
+                id="articles"
+                heading="Articles"
+                items={loaderData.articles}
+                showKey="title"
             />
         </div>
     );

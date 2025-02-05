@@ -1,4 +1,4 @@
-import { Outlet } from "react-router";
+import { Outlet, redirect } from "react-router";
 import invariant from "tiny-invariant";
 
 import { getUser } from "~/utils/auth.server";
@@ -9,6 +9,11 @@ import { Route } from "./+types/app";
 export async function loader({ request }: Route.LoaderArgs) {
     const user = await getUser(request);
     const userId = user?.id;
+
+    if (!userId) {
+        return redirect("/login");
+    }
+
     invariant(userId, "User ID is not defined");
 
     return {

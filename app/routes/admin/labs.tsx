@@ -35,17 +35,24 @@ import { AssistantSchema, CompanySchema, SnippetSchema } from "~/utils/schemas";
 import { cache } from "~/utils/cache";
 import { generateText, tool } from "ai";
 import { z } from "zod";
-import { createProfileForUser } from "~/models/profile.server";
+import {
+    createProfileForUser,
+    deleteProfileByUserId,
+    updateProfileByUserId,
+    upsertProfileForUser,
+} from "~/models/profile.server";
 import { Route } from "../admin/+types/labs";
 import { Details } from "~/components/Details";
 import { auth } from "@trigger.dev/sdk/v3";
 import { useRealtimeRun, useTaskTrigger } from "@trigger.dev/react-hooks";
+import { TriggerCard } from "~/components/TriggerCard";
 
 // const RUN_ID = "run_y8yz63qdmrztywrigonbi";
 const TASK_ID = "document-updater";
 
 export async function loader() {
     const articles = await client.fetch('*[_type == "article"]');
+    // console.log("===== LOG =====", JSON.stringify({ articles }, null, 4));
 
     const combined = articles.reduce(
         (
@@ -89,6 +96,7 @@ clientLoader.hydrate = true;
 
 export async function action({ request }: Route.ActionArgs) {
     const userId = await getUserId(request);
+    console.log("===== LOG =====", JSON.stringify({ userId }, null, 4));
     invariant(userId, "User ID not found");
 
     const form = await request.formData();
@@ -232,28 +240,79 @@ Question: ${prompt}
 
     if (intent === "toolsAction2") {
         const { text: answer, steps } = await generateText({
-            model: openai("gpt-4o", { structuredOutputs: true }),
+            model: openai("gpt-4o-mini"),
             tools: {
                 createProfile: tool({
-                    description:
-                        "Manage user profiles, including creating, updating, and retrieving profile data.",
+                    description: "Add a new profile to a user",
                     parameters: z.object({
-                        userId: z.string(),
                         firstName: z.string(),
                         lastName: z.string(),
                     }),
-                    execute: async ({ userId, firstName, lastName }) => {
-                        return await createProfileForUser({
+                    execute: async ({ firstName, lastName }) => {
+                        console.log(
+                            "===== LOG =====",
+                            JSON.stringify(
+                                { userId, firstName, lastName },
+                                null,
+                                4,
+                            ),
+                        );
+
+                        const response = await upsertProfileForUser({
                             userId,
                             firstName,
                             lastName,
                         });
+
+                        return response;
+                    },
+                }),
+                updateProfile: tool({
+                    description: "Update a user profile",
+                    parameters: z.object({
+                        firstName: z.string(),
+                        lastName: z.string(),
+                    }),
+                    execute: async ({ firstName, lastName }) => {
+                        const userId = (await getUserId(request)) as string;
+                        const response = await updateProfileByUserId(userId, {
+                            firstName,
+                            lastName,
+                        });
+
+                        return response;
+                    },
+                }),
+                deleteProfile: tool({
+                    description: "Deletes a user's profile",
+                    parameters: z.object({}),
+                    execute: async () => {
+                        const response = await deleteProfileByUserId(userId);
+
+                        return response;
                     },
                 }),
             },
             maxSteps: 5,
-            system: `Your goal is to create a profile. Get all of the user's information and create a profile for them.`,
-            prompt,
+            system: `Your goal is to perform CRUD operations on a user's profile.`,
+            prompt: `User ID is ${userId}. ${prompt}`,
+            onStepFinish({
+                text,
+                toolCalls,
+                toolResults,
+                finishReason,
+                usage,
+            }) {
+                // your own logic, e.g. for saving the chat history or recording usage
+                console.log(
+                    "===== LOG =====",
+                    JSON.stringify(
+                        { text, toolCalls, toolResults, finishReason, usage },
+                        null,
+                        4,
+                    ),
+                );
+            },
         });
 
         return {
@@ -262,50 +321,8 @@ Question: ${prompt}
         };
     }
 
-    if (intent === "triggerAction") {
-        console.log("Trigger action");
-    }
-
     return null;
 }
-
-const TriggerControls = ({ taskId }: { taskId: string }) => {
-    const {
-        submit: triggerIt,
-        handle,
-        error,
-        isLoading: isTriggerLoading,
-    } = useTaskTrigger(taskId);
-
-    return (
-        <>
-            {JSON.stringify({ handle, isTriggerLoading, error })}
-            <Button
-                onClick={() => {
-                    triggerIt({}, {});
-                }}
-            >
-                Trigger
-            </Button>
-            {handle && handle.id && <RunContainer runId={handle.id} />}
-        </>
-    );
-};
-
-const RunContainer = ({ runId }: { runId: string }) => {
-    const { run } = useRealtimeRun(runId);
-
-    return (
-        <>
-            <pre>
-                <code>{JSON.stringify(run?.output, null, 4)}</code>
-            </pre>
-            <Details text="Full results">
-                {JSON.stringify(run, null, 4)}
-            </Details>
-        </>
-    );
-};
 
 export default function Labs({ actionData, loaderData }: Route.ComponentProps) {
     const navigation = useNavigation();
@@ -361,7 +378,8 @@ export default function Labs({ actionData, loaderData }: Route.ComponentProps) {
                             <TextFormField
                                 label="Functions & tools 🤯🤯🤯"
                                 name="prompt"
-                                helperText="Create a profile attached to a user via prompt"
+                                helperText="Create or update a profile attached to a user via prompt"
+                                defaultValue={`First name Seth, last name Davis`}
                             />
                             <Button
                                 type="submit"
@@ -440,7 +458,10 @@ export default function Labs({ actionData, loaderData }: Route.ComponentProps) {
                         </div>
                     </div>
                     <div className="col-span-6">
-                        <TriggerControls taskId={TASK_ID} />
+                        <TriggerCard
+                            cta={`Trigger "document-updater"`}
+                            taskId={TASK_ID}
+                        />
                     </div>
                 </div>
             </div>
