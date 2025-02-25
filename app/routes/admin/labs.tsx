@@ -1,6 +1,7 @@
 import { Form, useNavigation } from "react-router";
 import { useEffect } from "react";
 import { openai } from "@ai-sdk/openai";
+import { CoreMessage } from "ai";
 
 import Prism from "prismjs";
 import "prismjs/themes/prism-tomorrow.css";
@@ -52,8 +53,6 @@ const TASK_ID = "document-updater";
 
 export async function loader() {
     const articles = await client.fetch('*[_type == "article"]');
-    // console.log("===== LOG =====", JSON.stringify({ articles }, null, 4));
-
     const combined = articles.reduce(
         (
             combinedString: string,
@@ -96,7 +95,6 @@ clientLoader.hydrate = true;
 
 export async function action({ request }: Route.ActionArgs) {
     const userId = await getUserId(request);
-    console.log("===== LOG =====", JSON.stringify({ userId }, null, 4));
     invariant(userId, "User ID not found");
 
     const form = await request.formData();
@@ -239,59 +237,56 @@ Question: ${prompt}
     }
 
     if (intent === "toolsAction2") {
+        const createProfileTool = tool({
+            description: "Add a new profile to a user",
+            parameters: z.object({
+                firstName: z.string(),
+                lastName: z.string(),
+            }),
+            execute: async ({ firstName, lastName }) => {
+                const response = await upsertProfileForUser({
+                    userId,
+                    firstName,
+                    lastName,
+                });
+
+                return response;
+            },
+        });
+
+        const updateProfileTool = tool({
+            description: "Update a user profile",
+            parameters: z.object({
+                firstName: z.string(),
+                lastName: z.string(),
+            }),
+            execute: async ({ firstName, lastName }) => {
+                const userId = (await getUserId(request)) as string;
+                const response = await updateProfileByUserId(userId, {
+                    firstName,
+                    lastName,
+                });
+
+                return response;
+            },
+        });
+
+        const deleteProfileTool = tool({
+            description: "Deletes a user's profile",
+            parameters: z.object({}),
+            execute: async () => {
+                const response = await deleteProfileByUserId(userId);
+
+                return response;
+            },
+        });
+
         const { text: answer, steps } = await generateText({
             model: openai("gpt-4o-mini"),
             tools: {
-                createProfile: tool({
-                    description: "Add a new profile to a user",
-                    parameters: z.object({
-                        firstName: z.string(),
-                        lastName: z.string(),
-                    }),
-                    execute: async ({ firstName, lastName }) => {
-                        console.log(
-                            "===== LOG =====",
-                            JSON.stringify(
-                                { userId, firstName, lastName },
-                                null,
-                                4,
-                            ),
-                        );
-
-                        const response = await upsertProfileForUser({
-                            userId,
-                            firstName,
-                            lastName,
-                        });
-
-                        return response;
-                    },
-                }),
-                updateProfile: tool({
-                    description: "Update a user profile",
-                    parameters: z.object({
-                        firstName: z.string(),
-                        lastName: z.string(),
-                    }),
-                    execute: async ({ firstName, lastName }) => {
-                        const userId = (await getUserId(request)) as string;
-                        const response = await updateProfileByUserId(userId, {
-                            firstName,
-                            lastName,
-                        });
-
-                        return response;
-                    },
-                }),
-                deleteProfile: tool({
-                    description: "Deletes a user's profile",
-                    parameters: z.object({}),
-                    execute: async () => {
-                        const response = await deleteProfileByUserId(userId);
-
-                        return response;
-                    },
-                }),
+                createProfile: createProfileTool,
+                updateProfile: updateProfileTool,
+                deleteProfile: deleteProfileTool,
             },
             maxSteps: 5,
             system: `Your goal is to perform CRUD operations on a user's profile.`,

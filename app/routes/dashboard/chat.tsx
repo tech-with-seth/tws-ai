@@ -8,7 +8,7 @@ import Markdown from "react-markdown";
 import { Button } from "~/components/Button";
 import { getAssistant } from "~/models/assistant.server";
 import { getThreadByOpenId, getThreadMessages } from "~/models/thread.server";
-import { getThreadStream, Paths } from "~/utils/paths";
+import { getThreadsApiPath, getThreadStream, Paths } from "~/utils/paths";
 import { Heading } from "~/components/Heading";
 import { Message } from "~/components/Message";
 import { shapeMessages } from "~/utils/common";
@@ -81,7 +81,10 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
                         ? String(messageInput.value)
                         : "A new thread",
                 },
-                { action: Paths.API_THREADS, method: "PUT" },
+                {
+                    action: getThreadsApiPath(),
+                    method: "PUT",
+                },
             );
         }
 

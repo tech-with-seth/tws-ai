@@ -3,18 +3,20 @@ import { Route } from "./+types/threads";
 import {
     createBareThread,
     createPrismaBareThread,
+    deletePrismaThread,
+    getThreadByOpenId,
     updatePrismaThread,
     updateThread,
 } from "~/models/thread.server";
 import { data, redirect } from "react-router";
 import invariant from "tiny-invariant";
-import { getChatPath } from "~/utils/paths";
+import { deleteThreadPath, getChatPath } from "~/utils/paths";
 import { createCompletion } from "~/models/completion.server";
 import { getPrismaAssistantByOpenId } from "~/models/assistant.server";
 import { createLog } from "~/models/activity.server";
 import { ThreadTitleSchema } from "~/utils/schemas";
 
-export async function action({ request }: Route.ActionArgs) {
+export async function action({ request, params }: Route.ActionArgs) {
     const userId = await getUserId(request);
     invariant(userId, "User ID does not exist");
 
@@ -72,6 +74,19 @@ export async function action({ request }: Route.ActionArgs) {
         });
 
         return data({ message: "Success" }, 200);
+    }
+
+    if (request.method === "DELETE") {
+        const { threadId } = params;
+        invariant(threadId, "Thread ID not found");
+
+        const retrieved = await getThreadByOpenId(threadId);
+        invariant(retrieved, "Thread not found");
+
+        await deleteThreadPath(retrieved.oId);
+        await deletePrismaThread(retrieved.id);
+
+        return data({ message: "Deleted" }, 200);
     }
 
     return data({ message: "Invalid" }, 405);

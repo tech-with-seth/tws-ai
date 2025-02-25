@@ -21,7 +21,7 @@ export default [
             route(Paths.DASHBOARD, "routes/dashboard/index.tsx", [
                 layout("./routes/dashboard/drawer.tsx", [
                     route(
-                        Paths.CREATE_THREAD,
+                        `create-thread`,
                         "routes/dashboard/create-thread.tsx",
                     ),
                     route(
@@ -29,44 +29,40 @@ export default [
                         "routes/dashboard/chat.tsx",
                     ),
                     route(
-                        `:assistantId/${Paths.CREATE_FILE}`,
+                        `:assistantId/create-file`,
                         "routes/dashboard/create-file.tsx",
                     ),
                 ]),
             ]),
             layout("routes/assistants/layout.tsx", [
-                route(Paths.ASSISTANTS, "routes/assistants/index.tsx"),
-                route(
-                    `${Paths.ASSISTANTS}/${Paths.CREATE_ASSISTANT}`,
-                    "routes/assistants/create.tsx",
-                ),
+                route(Paths.ASSISTANTS, "routes/assistants/index.tsx", [
+                    route(`create`, "routes/assistants/create.tsx"),
+                ]),
             ]),
             layout("routes/agents/layout.tsx", [
-                route(Paths.AGENTS, "routes/agents/index.tsx"),
-                route(
-                    `${Paths.AGENTS}/${Paths.CREATE_AGENT}`,
-                    "routes/agents/create.tsx",
-                ),
+                route(Paths.AGENTS, "routes/agents/index.tsx", [
+                    route(`create`, "routes/agents/create.tsx"),
+                ]),
             ]),
             route(Paths.PROFILE, "routes/profile/index.tsx"),
             route(`:assistantId`, "routes/assistants/assistant-details.tsx"),
         ]),
         layout("./routes/admin/layout.tsx", [
-            ...prefix("admin", [
+            ...prefix(Paths.ADMIN, [
                 index("routes/admin/index.tsx"),
-                route(`analytics`, "routes/admin/analytics.tsx"),
-                route(`data-manager`, "routes/admin/data-manager.tsx"),
-                route(`labs`, "routes/admin/labs.tsx"),
-                route(`ui`, "routes/admin/ui.tsx"),
-                route(`studio/*`, "routes/studio/index.tsx"),
+                route(Paths.ANALYTICS, "routes/admin/analytics.tsx"),
+                route(Paths.DATA_MANAGER, "routes/admin/data-manager.tsx"),
+                route(Paths.LABS, "routes/admin/labs.tsx"),
+                route(Paths.UI, "routes/admin/ui.tsx"),
+                route(Paths.STUDIO, "routes/studio/index.tsx"),
             ]),
         ]),
     ]),
     ...prefix(Paths.API, [
         route(Paths.ASSISTANTS, "routes/api/assistants.ts"),
         route(Paths.FILES, "routes/api/files.ts"),
+        route(Paths.MESSAGES, "routes/api/messages.ts"),
         route(Paths.THREADS, "routes/api/threads.ts"),
-        route(`${Paths.THREADS}/:threadId`, "routes/api/thread.ts"),
         route(`${Paths.STREAM}/:assistantId/:threadId`, "routes/api/stream.ts"),
     ]),
 ] satisfies RouteConfig;

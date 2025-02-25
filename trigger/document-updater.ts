@@ -14,26 +14,35 @@ export const documentUpdater = task({
             (article: { title: string; details: string }) => {
                 return `#${article.title}
 ${blocksToText(article.details)}
----
-`;
+---`;
             },
         );
 
-        await Promise.all(
-            articles.map((article: any) =>
-                upsertArticle(
-                    article._id,
-                    article.title,
-                    blocksToText(article.details),
+        try {
+            await Promise.all(
+                articles.map((article: any) =>
+                    upsertArticle(
+                        article._id,
+                        article.title,
+                        blocksToText(article.details),
+                    ),
                 ),
-            ),
-        );
+            );
+        } catch (e) {
+            console.error("Error updating articles");
+            console.error(e);
+        }
 
-        await createFileAndAddToVectorStore({
-            assistantId: "asst_VRSc5x3ELbNQMFVICuqzSwCK",
-            content: mappedArticles.join("\n"),
-            fileName: "sanity-articles",
-        });
+        try {
+            await createFileAndAddToVectorStore({
+                assistantId: "asst_l3AAo6dmGvu0ABow1VLuQZoZ",
+                content: mappedArticles.join("\n"),
+                fileName: "sanity-articles",
+            });
+        } catch (e) {
+            console.error("Error creating file and adding to vector store");
+            console.error(e);
+        }
 
         // logger.log("Hello, world!", { payload, ctx });
 

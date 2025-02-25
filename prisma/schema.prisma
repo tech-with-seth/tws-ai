@@ -82,15 +82,22 @@ model Assistant {
     vectorStoreId String?
 }
 
+enum MessageRole {
+    USER
+    ASSISTANT
+}
+
 model Message {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    oId       String   @unique
-    thread    Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+    id        String      @id @default(cuid())
+    createdAt DateTime    @default(now())
+    updatedAt DateTime    @updatedAt
+    oId       String      @unique
+    thread    Thread      @relation(fields: [threadId], references: [id], onDelete: Cascade)
     threadId  String
-    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId    String
+    role      MessageRole
+    content   String
 }
 
 model Thread {
@@ -104,7 +111,7 @@ model Thread {
     slug        String?   @unique
     assistant   Assistant @relation(fields: [assistantId], references: [id], onDelete: Cascade)
     assistantId String
-    Message     Message[]
+    messages    Message[]
 }
 
 model File {

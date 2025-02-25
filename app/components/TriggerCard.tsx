@@ -3,6 +3,7 @@ import { Card } from "./Card";
 import { useRealtimeRun, useTaskTrigger } from "@trigger.dev/react-hooks";
 import { Button } from "./Button";
 import { Details } from "./Details";
+import { LoaderPinwheelIcon } from "lucide-react";
 
 interface TriggerCardProps {
     cta: string;
@@ -37,7 +38,12 @@ export function TriggerCard({
 
     return (
         <Card>
-            <div>{JSON.stringify({ handle, isTriggerLoading, error })}</div>
+            <div>
+                {isTriggerLoading && (
+                    <LoaderPinwheelIcon className="my-4 animate-spin" />
+                )}
+            </div>
+            {/* <div>{JSON.stringify({ handle, isTriggerLoading, error })}</div> */}
             <Button
                 onClick={() => {
                     submit({}, {});

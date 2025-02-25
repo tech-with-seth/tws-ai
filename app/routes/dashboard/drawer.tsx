@@ -13,7 +13,7 @@ export default function DrawerLayout() {
 
     const { isDrawerOpen, closeDrawer } = useDrawer({
         openOnRender: true,
-        onClose: () => navigate(Paths.DASHBOARD),
+        onClose: () => navigate(`/${Paths.DASHBOARD}`),
     });
 
     const [drawerSize, setDrawerSize] = useState<"sm" | "md" | "lg">("md");

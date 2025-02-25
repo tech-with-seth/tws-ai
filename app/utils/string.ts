@@ -20,7 +20,7 @@ export function getEnvVariable(key: string): string {
         throw Error(`"${key}" is undefined`);
     }
 
-    const value = process.env[key];
+    const value = import.meta.env[key];
 
     if (!value) {
         throw Error(

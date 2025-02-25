@@ -1,71 +1,77 @@
 export enum Paths {
-    BASE = "/",
-    API = "/api",
-    DASHBOARD = "/dashboard",
-    JOIN = "/join",
-    LOGIN = "/login",
-    LOGOUT = "/logout",
-    LABS = "/labs",
-    // AGENT ==========
+    ADMIN = "admin",
     AGENTS = "agents",
-    CREATE_AGENT = "create",
-    // ASSISTANT ==========
+    ANALYTICS = "analytics",
+    API = "api",
+    ASSISTANT_DETAILS = "assistant-details",
     ASSISTANTS = "assistants",
+    BASE = "/",
+    CREATE_AGENT = "create",
     CREATE_ASSISTANT = "create",
-    API_ASSISTANTS = "/api/assistants",
-    ASSISTANT_DETAILS = "/assistant-details",
-    // PROFILE ==========
-    PROFILE = "/profile",
-    // THREAD ==========
-    THREADS = "threads",
-    CREATE_THREAD = "create-thread",
-    API_THREADS = "/api/threads",
-    // STREAM ==========
-    STREAM = "/stream",
-    // FILE ==========
-    FILES = "files",
     CREATE_FILE = "create-file",
-    API_FILES = "/api/files",
-    STUDIO = "/studio",
+    CREATE_THREAD = "create-thread",
+    DASHBOARD = "dashboard",
+    DATA_MANAGER = "data-manager",
+    FILES = "files",
+    JOIN = "join",
+    LABS = "labs",
+    LOGIN = "login",
+    LOGOUT = "logout",
+    MESSAGES = "messages",
+    PROFILE = "profile",
+    STREAM = "stream",
+    STUDIO = "studio/*", // SPECIAL, DO NOT REMOVE
+    THREADS = "threads",
+    UI = "ui",
 }
 
 // ASSISTANTS ==========
 export function getAssistantPath(assistantId: string) {
-    return `${Paths.ASSISTANTS}/${assistantId}`;
+    return `${Paths.BASE}${Paths.ASSISTANTS}/${assistantId}`;
 }
 
 export function getAssistantFilesPath(assistantId: string) {
-    return `${Paths.API}${Paths.ASSISTANTS}/${assistantId}${Paths.FILES}`;
+    return `${Paths.BASE}${Paths.API}/${Paths.ASSISTANTS}/${assistantId}${Paths.FILES}`;
 }
 
-export function getAssistantAPIPath(assistantId: string) {
-    return `${Paths.API}${Paths.ASSISTANTS}/${assistantId}`;
+export function getAssistantsApiPath() {
+    return `${Paths.BASE}${Paths.API}/${Paths.ASSISTANTS}`;
 }
 
 // AUTH ==========
 export function getLoginPath(searchParams: string) {
-    return `${Paths.LOGIN}?${searchParams}`;
+    return `${Paths.BASE}${Paths.LOGIN}?${searchParams}`;
 }
 
 // CHAT ==========
 export function getChatPath(assistantId: string, threadId: string) {
-    return `${Paths.DASHBOARD}/${assistantId}/${threadId}`;
+    return `${Paths.BASE}${Paths.DASHBOARD}/${assistantId}/${threadId}`;
 }
 
 export function getThreadStream(assistantId: string, threadId: string) {
-    return `${Paths.API}/stream/${assistantId}/${threadId}`;
+    return `${Paths.BASE}${Paths.API}/${Paths.STREAM}/${assistantId}/${threadId}`;
 }
 
 // FILES ==========
 export function getFilePath(fileId: string) {
-    return `${Paths.FILES}/${fileId}`;
+    return `${Paths.BASE}${Paths.FILES}/${fileId}`;
 }
 
 export function getFileCreatePath(assistantId: string) {
-    return `${Paths.DASHBOARD}/${assistantId}/files/create`;
+    return `${Paths.BASE}${Paths.DASHBOARD}/${assistantId}/files/create`;
+}
+
+// MESSAGES ==========
+
+export function getMessagesApiPath() {
+    return `${Paths.BASE}${Paths.API}/${Paths.MESSAGES}`;
 }
 
 // THREADS ==========
+export function getThreadsApiPath() {
+    return `${Paths.BASE}${Paths.API}/${Paths.THREADS}`;
+}
+
 export function deleteThreadPath(threadId: string) {
-    return `${Paths.API}${Paths.THREADS}/${threadId}`;
+    return `${Paths.BASE}${Paths.API}/${Paths.THREADS}/${threadId}`;
 }

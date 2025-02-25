@@ -7,7 +7,7 @@ import { createUser } from "~/models/user.server";
 import { getLoginPath, Paths } from "./paths";
 import { getEnvVariable } from "./string";
 
-const sessionSecret = getEnvVariable("SESSION_SECRET");
+const sessionSecret = getEnvVariable("VITE_SESSION_SECRET");
 
 const storage = createCookieSessionStorage({
     cookie: {

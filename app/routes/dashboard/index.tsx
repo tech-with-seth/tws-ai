@@ -36,6 +36,7 @@ import { createMessage } from "~/models/message.server";
 import { cache } from "~/utils/cache";
 import { ellipsisify } from "~/utils/string";
 import { ButtonLink } from "~/components/ButtonLink";
+import { getMessagesApiPath, Paths } from "~/utils/paths";
 
 export async function loader({ request }: Route.LoaderArgs) {
     const user = await getUser(request);
@@ -102,7 +103,10 @@ export async function action({ request }: Route.ActionArgs) {
         prismaAssistant.id,
     );
 
-    await createMessage(thread.id, prompt);
+    await fetch(getMessagesApiPath(), {
+        method: "POST",
+        body: form,
+    });
 
     const completedThreadName = await createCompletion(prompt);
     const updatedThreadName =
@@ -165,6 +169,7 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
                             <newThreadFetcher.Form
                                 method="POST"
                                 className="flex w-full flex-col gap-4 rounded-xl border border-zinc-300 bg-zinc-200 p-4 md:max-w-[768px] dark:border-zinc-600 dark:bg-zinc-800"
+                                action={getMessagesApiPath()}
                             >
                                 <TextFormField
                                     className="min-h-11 w-full"

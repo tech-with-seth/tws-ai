@@ -3,7 +3,7 @@ import { Button } from "~/components/Button";
 import { Heading } from "~/components/Heading";
 import { TextareaFormField } from "~/components/form/TextareaFormField";
 import { TextFormField } from "~/components/form/TextFormField";
-import { Paths } from "~/utils/paths";
+import { getAssistantsApiPath } from "~/utils/paths";
 import { PlusIcon } from "lucide-react";
 
 export default function CreateAssistant() {
@@ -15,7 +15,7 @@ export default function CreateAssistant() {
             <assistantFetcher.Form
                 className="space-y-4"
                 method="POST"
-                action={Paths.API_ASSISTANTS}
+                action={getAssistantsApiPath()}
             >
                 <TextFormField
                     id="name"
