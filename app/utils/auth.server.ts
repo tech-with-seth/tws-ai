@@ -5,9 +5,8 @@ import { prisma } from "../db.server";
 import { LoginForm, RegisterForm } from "./types.server";
 import { createUser } from "~/models/user.server";
 import { getLoginPath, Paths } from "./paths";
-import { getEnvVariable } from "./string";
 
-const sessionSecret = getEnvVariable("VITE_SESSION_SECRET");
+const sessionSecret = import.meta.env.VITE_SOME_KEY;
 
 const storage = createCookieSessionStorage({
     cookie: {
