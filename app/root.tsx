@@ -36,6 +36,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <Links />
             </head>
             <body className="h-full">
+                {JSON.stringify(import.meta.env)}
                 {children}
                 <ScrollRestoration />
                 <Scripts />
