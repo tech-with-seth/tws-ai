@@ -15,22 +15,6 @@ export function getUniqueId(
     return `${prefix ? `${prefix}-` : ""}${hash}`;
 }
 
-export function getEnvVariable(key: string): string {
-    if (key === undefined) {
-        throw Error(`"${key}" is undefined`);
-    }
-
-    const value = import.meta.env[key];
-
-    if (!value) {
-        throw Error(
-            `Environment variable "${key}" does not exist on process.env`,
-        );
-    }
-
-    return value;
-}
-
 export function kebab(str: string) {
     return kebabCase(str);
 }
