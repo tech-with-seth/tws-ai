@@ -6,7 +6,7 @@ import { LoginForm, RegisterForm } from "./types.server";
 import { createUser } from "~/models/user.server";
 import { getLoginPath, Paths } from "./paths";
 
-const sessionSecret = import.meta.env.VITE_SOME_KEY;
+const sessionSecret = import.meta.env.VITE_SESSION_SECRET;
 
 const storage = createCookieSessionStorage({
     cookie: {
